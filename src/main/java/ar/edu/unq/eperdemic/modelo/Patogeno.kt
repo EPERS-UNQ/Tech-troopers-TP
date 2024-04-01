@@ -15,4 +15,5 @@ class Patogeno(val tipo: String) : Serializable{
         cantidadDeEspecies++
         return Especie(this, nombreEspecie, paisDeOrigen)
     }
+
 }
