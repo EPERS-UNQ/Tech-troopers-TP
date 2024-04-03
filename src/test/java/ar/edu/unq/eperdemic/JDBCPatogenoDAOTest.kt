@@ -11,19 +11,21 @@ class JDBCPatogenoDAOTest {
 
     private val dao: PatogenoDAO = JDBCPatogenoDAO()
     lateinit var patogeno: Patogeno
+    lateinit var patogeno2: Patogeno
 
     @BeforeEach
     fun crearModelo() {
+
         patogeno = Patogeno("Coronavirus")
+        dao.crear(patogeno)
+
     }
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
 
-        dao.crear(patogeno)
-
         //Los patogenos son iguales
-        val otroPatogeno = dao.recuperar(1)
+        val otroPatogeno = dao.recuperar(patogeno.id!!)
         Assertions.assertEquals(patogeno.id, otroPatogeno.id)
         Assertions.assertEquals(patogeno.cantidadDeEspecies, otroPatogeno.cantidadDeEspecies)
 
@@ -33,9 +35,44 @@ class JDBCPatogenoDAOTest {
 
     }
 
+    @Test
+    fun alCrearEspecieDeUnPatogenoYLuegoActualizarYRecuperarLaCantidadDeEspeciesDelObjetoAumenta() {
+
+        var cont: Int = patogeno.cantidadDeEspecies
+
+        this.patogeno.crearEspecie("SARS-CoV-2", "China")
+
+        // persistimos el patogeno actualizado y obtenemos un nuevo objeto desde la base de datos
+        dao.actualizar(patogeno)
+        val otroPatogeno = dao.recuperar(patogeno.id!!)
+
+        Assertions.assertEquals(cont + 1, otroPatogeno.cantidadDeEspecies)
+        Assertions.assertEquals(patogeno.cantidadDeEspecies, otroPatogeno.cantidadDeEspecies)
+
+    }
+
+    @Test
+    fun a() {
+
+        patogeno2 = Patogeno("Dengue")
+        dao.crear(patogeno2)
+
+        val patogenos: List<Patogeno> = dao.recuperarATodos()
+
+        Assertions.assertEquals(patogeno.id, patogenos.get(0).id)
+        Assertions.assertEquals(patogeno2.id, patogenos.get(1).id)
+        /*
+        patogenos.forEach { pat ->
+            Assertions.assertTrue(patogenos2.any { it.id == pat.id })
+        }
+
+         */
+        dao.eliminar(patogeno2)
+    }
+
     @AfterEach
-    fun recuperarModelo() {
-        //dao.recuperarATodos()
+    fun emilinarModelo() {
+        dao.eliminar(patogeno)
     }
 
 }

@@ -19,10 +19,17 @@ class JDBCPatogenoDAO : PatogenoDAO {
                         ps.execute()
 
                         val generatedKeys = ps.generatedKeys
+                        generatedKeys.next()
+                        patogeno.id = generatedKeys.getLong(1)
+
+                        /*
+                        val generatedKeys = ps.generatedKeys
                         if (generatedKeys.next()) {
                             val generatedId = generatedKeys.getLong(1)
                             patogeno.id = generatedId
                         }
+
+                         */
 
                         patogeno
                     }
@@ -36,7 +43,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
                     .use { ps ->
                         ps.setString(1, patogeno.toString())
                         ps.setInt(2, patogeno.cantidadDeEspecies)
-                        //patogeno.id?.let { ps.setLong(3, it) }
+
                         ps.setLong(3, patogeno.id!!)
 
                         if(patogeno.id == null) {
@@ -90,12 +97,23 @@ class JDBCPatogenoDAO : PatogenoDAO {
         }
     }
 
+    override fun eliminar(patogeno: Patogeno) {
+        execute { conn: Connection ->
+            conn.prepareStatement("DELETE FROM patogeno WHERE id =  ? ")
+                .use { ps ->
+                    ps.setLong(1, patogeno.id!!)
+                    ps.execute()
+                }
+        }
+    }
+
     init {
         val initializeScript = javaClass.classLoader.getResource("createAll.sql").readText()
         execute {
             val ps = it.prepareStatement(initializeScript)
             ps.execute()
             ps.close()
+
             null
         }
     }
