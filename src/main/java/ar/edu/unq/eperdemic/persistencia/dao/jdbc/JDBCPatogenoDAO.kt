@@ -20,7 +20,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
 
                         val generatedKeys = ps.generatedKeys
                         if (generatedKeys.next()) {
-                            val generatedId = generatedKeys.getInt(1)
+                            val generatedId = generatedKeys.getLong(1)
                             patogeno.id = generatedId
                         }
 
@@ -37,7 +37,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
                         ps.setString(1, patogeno.toString())
                         ps.setInt(2, patogeno.cantidadDeEspecies)
                         //patogeno.id?.let { ps.setLong(3, it) }
-                        ps.setInt(3, patogeno.id!!)
+                        ps.setLong(3, patogeno.id!!)
 
                         if(patogeno.id == null) {
                             throw RuntimeException("El id del patogeno no puede ser null")
@@ -63,7 +63,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
                                 throw RuntimeException("Existe mas de un patogeno con el id $patogenoId")
                             }
                             patogeno = Patogeno(resultSet.getString("tipo"))
-                            patogeno.id = resultSet.getInt("id")
+                            patogeno.id = resultSet.getLong("id")
                             patogeno.cantidadDeEspecies = resultSet.getInt("cantidadDeEspecies")
                         }
 
@@ -81,7 +81,7 @@ class JDBCPatogenoDAO : PatogenoDAO {
 
                         while (resultSet.next()) {
                             val patogeno = Patogeno(resultSet.getString("tipo"))
-                            patogeno.id = resultSet.getInt("id")
+                            patogeno.id = resultSet.getLong("id")
                             patogeno.cantidadDeEspecies = resultSet.getInt("cantidadDeEspecies")
                             patogenos.add(patogeno)
                         }

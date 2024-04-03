@@ -19,16 +19,18 @@ class JDBCPatogenoDAOTest {
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
+
         dao.crear(patogeno)
 
         //Los patogenos son iguales
-        val otroPatogeno = dao.recuperar(5)
+        val otroPatogeno = dao.recuperar(1)
         Assertions.assertEquals(patogeno.id, otroPatogeno.id)
         Assertions.assertEquals(patogeno.cantidadDeEspecies, otroPatogeno.cantidadDeEspecies)
 
         //Pero no son el mismo objeto =(
         //A esto nos referimos con "perdida de identidad"
         Assertions.assertTrue(patogeno !== otroPatogeno)
+
     }
 
     @AfterEach
