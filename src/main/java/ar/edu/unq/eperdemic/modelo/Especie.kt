@@ -4,5 +4,3 @@ class Especie(val patogeno: Patogeno,
               val nombre: String,
               val paisDeOrigen: String) {
 }
-
-        //hola :)
