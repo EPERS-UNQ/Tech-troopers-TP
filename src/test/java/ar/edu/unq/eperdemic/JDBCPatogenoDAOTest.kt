@@ -29,8 +29,7 @@ class JDBCPatogenoDAOTest {
         Assertions.assertEquals(patogeno.id, otroPatogeno.id)
         Assertions.assertEquals(patogeno.cantidadDeEspecies, otroPatogeno.cantidadDeEspecies)
 
-        //Pero no son el mismo objeto =(
-        //A esto nos referimos con "perdida de identidad"
+        //No tiene la misma identidad... hay "perdida de identidad" ya que no son el mismo objeto.
         Assertions.assertTrue(patogeno !== otroPatogeno)
 
     }
@@ -52,7 +51,7 @@ class JDBCPatogenoDAOTest {
     }
 
     @Test
-    fun a() {
+    fun seGuardaUnPatogenoMasYSeRecuperanTodosDeLaDB() {
 
         patogeno2 = Patogeno("Dengue")
         dao.crear(patogeno2)
