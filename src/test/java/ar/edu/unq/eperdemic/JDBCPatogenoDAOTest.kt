@@ -7,7 +7,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
 @TestInstance(PER_CLASS)
-class JDBCPersonajeDAOTest {
+class JDBCPatogenoDAOTest {
 
     private val dao: PatogenoDAO = JDBCPatogenoDAO()
     lateinit var patogeno: Patogeno
@@ -21,8 +21,8 @@ class JDBCPersonajeDAOTest {
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
         dao.crear(patogeno)
 
-        //Los personajes son iguales
-        val otroPatogeno = dao.recuperar(1)
+        //Los patogenos son iguales
+        val otroPatogeno = dao.recuperar(5)
         Assertions.assertEquals(patogeno.id, otroPatogeno.id)
         Assertions.assertEquals(patogeno.cantidadDeEspecies, otroPatogeno.cantidadDeEspecies)
 
@@ -31,11 +31,9 @@ class JDBCPersonajeDAOTest {
         Assertions.assertTrue(patogeno !== otroPatogeno)
     }
 
-
-    /*
     @AfterEach
-    fun emilinarModelo() {
-        dao
+    fun recuperarModelo() {
+        //dao.recuperarATodos()
     }
-    */
+
 }
