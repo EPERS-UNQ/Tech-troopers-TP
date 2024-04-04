@@ -28,7 +28,6 @@ class JDBCPatogenoDAO : PatogenoDAO {
                             val generatedId = generatedKeys.getLong(1)
                             patogeno.id = generatedId
                         }
-
                          */
 
                         patogeno

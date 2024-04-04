@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.assertThrows
 
 @TestInstance(PER_CLASS)
 class JDBCPatogenoDAOTest {
@@ -67,6 +68,26 @@ class JDBCPatogenoDAOTest {
 
          */
         dao.eliminar(patogeno2)
+    }
+
+    @Test
+    fun cuandoSeQuiereActualizarUnPatogenoYElIDDeEsteNoExiste() {
+
+        patogeno2 = Patogeno("Vinchuca")
+
+        assertThrows<RuntimeException> {
+            dao.actualizar(patogeno2)
+        }
+        // No se elimina el patogeno2 porque este no existe en la base de datos ya que no se usa el dao.crear()
+    }
+
+    @Test
+    fun cuandoSeQuiereRecuperarUnPatogenoYElIDNoExiste() {
+
+        assertThrows<RuntimeException> {
+            dao.recuperar(10)
+        }
+
     }
 
     @AfterEach
