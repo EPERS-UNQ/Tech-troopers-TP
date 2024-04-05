@@ -89,7 +89,7 @@ class JDBCPatogenoDAOTest {
         }
 
     }
-
+|
     @AfterEach
     fun emilinarModelo() {
         dao.eliminar(patogeno)
