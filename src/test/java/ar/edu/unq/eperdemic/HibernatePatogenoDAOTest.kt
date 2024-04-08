@@ -2,15 +2,15 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCPatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.jdbc.HibernatePatogenoDAO
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.assertThrows
 
 @TestInstance(PER_CLASS)
-class JDBCPatogenoDAOTest {
+class HibernatePatogenoDAOTest {
 
-    private val dao: PatogenoDAO = JDBCPatogenoDAO()
+    private val dao: PatogenoDAO = HibernatePatogenoDAO()
     lateinit var patogeno: Patogeno
     lateinit var patogeno2: Patogeno
 

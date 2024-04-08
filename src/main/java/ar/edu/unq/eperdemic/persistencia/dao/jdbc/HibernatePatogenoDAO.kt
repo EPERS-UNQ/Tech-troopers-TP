@@ -3,11 +3,11 @@ package ar.edu.unq.eperdemic.persistencia.dao.jdbc
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.JDBCConnector.execute
+import ar.edu.unq.eperdemic.persistencia.dao.jdbc.HibernateDAO.execute
 import java.sql.*
 
 
-class JDBCPatogenoDAO : PatogenoDAO {
+class HibernatePatogenoDAO : PatogenoDAO {
 
     override fun crear(patogeno: Patogeno): Patogeno {
         return execute { conn: Connection ->
