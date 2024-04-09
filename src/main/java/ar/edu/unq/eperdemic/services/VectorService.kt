@@ -6,4 +6,10 @@ interface VectorService {
 
     fun crear(vector: Vector): Vector
 
+    fun updatear(vector: Vector)
+
+    fun recuperar(vectorId: Long): Vector
+
+    fun recuperarTodos(): List<Vector>
+
 }

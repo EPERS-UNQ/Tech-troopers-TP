@@ -1,7 +1,5 @@
 package ar.edu.unq.eperdemic.modelo
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import javax.persistence.*
 @Entity
 class Vector() {
@@ -13,8 +11,8 @@ class Vector() {
     var tipo:   String? = null //Cambiar -> Template Method -> Plantilla general y 3 particulares para cada vector de como contagia.
     var nombre: String? = null
 
-    //@ManyToMany(mappedBy = "vectoresInfectados", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    //var patogenos: MutableSet<Patogeno> = HashSet()
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var patogenos: MutableSet<Patogeno> = HashSet()
 
     @ManyToOne
     var ubicacion: Ubicacion? = null

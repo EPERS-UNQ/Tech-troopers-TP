@@ -11,6 +11,4 @@ interface UbicacionDAO {
 
     fun recuperarTodos() : Collection<Ubicacion>
 
-    fun eliminar(ubicacion: Ubicacion)
-
 }

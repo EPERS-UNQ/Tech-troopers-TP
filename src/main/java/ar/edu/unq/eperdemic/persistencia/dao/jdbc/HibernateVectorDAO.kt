@@ -7,19 +7,18 @@ import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
     VectorDAO {
 
-    override fun recuperar(idVector: Long): Vector {
+    override fun recuperar(vectorId: Long): Vector {
         val session = HibernateTransactionRunner.currentSession
-        return session.get(Vector::class.java, idVector)
+        return session.get(Vector::class.java, vectorId)
     }
 
-    override fun recuperarTodos(): Collection<Vector> {
+    override fun recuperarTodos(): List<Vector> {
         val session = HibernateTransactionRunner.currentSession
         val hql = "select i " +
-                  "from vector i"
+                  "from Vector i"
         val query = session.createQuery(hql, Vector::class.java)
 
         return query.resultList
     }
-
 
 }

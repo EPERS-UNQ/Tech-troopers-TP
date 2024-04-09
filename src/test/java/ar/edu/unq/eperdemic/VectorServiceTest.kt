@@ -16,26 +16,60 @@ class VectorServiceTest {
     lateinit var service: VectorService
     lateinit var dataService: DataService
     lateinit var humano: Vector
-    lateinit var vaca:   Vector
+    lateinit var golondrina: Vector
 
     @BeforeEach
     fun prepare() {
 
         this.service = VectorServiceImp(HibernateVectorDAO())
-        this.dataService = DataServiceImpl(HibernateDataDAO()) //Va en el After each.
+        this.dataService = DataServiceImpl(HibernateDataDAO())
 
         humano = Vector("Pedro")
-        // Por el momento no lo uso...
-        vaca = Vector("Marta")
+        golondrina = Vector("Pepita")
+
+        service.crear(humano)
 
     }
 
     @Test
     fun testDeCreacionDeUnVector(){
-        var pedro = service.crear(humano)
+        val pepita = service.crear(golondrina)
 
-        Assertions.assertEquals(1, pedro.id)
+        Assertions.assertEquals(2, pepita.id)
     }
+
+    @Test
+    fun testDeActualizacionDeUnVector(){
+        val pepita = service.crear(golondrina)
+
+        Assertions.assertEquals("Pepita", pepita.nombre)
+
+        golondrina.nombre = "Marta"
+        service.updatear(pepita)
+
+        Assertions.assertEquals("Marta", pepita.nombre)
+    }
+
+    @Test
+    fun testDeRecuperarUnVector(){
+        val otroHumano = service.recuperar(humano.id!!)
+
+        Assertions.assertEquals(otroHumano.id, humano.id)
+        Assertions.assertEquals(otroHumano.nombre, humano.nombre)
+    }
+
+    @Test
+    fun testDeRecuperarTodosLosVectores(){
+        val pepita = service.crear(golondrina)
+
+        val listaDeVectores = service.recuperarTodos()
+
+        Assertions.assertEquals(humano.id, listaDeVectores.get(0).id)
+        Assertions.assertEquals(humano.nombre, listaDeVectores.get(0).nombre)
+        Assertions.assertEquals(pepita.id, listaDeVectores.get(1).id)
+        Assertions.assertEquals(pepita.nombre, listaDeVectores.get(1).nombre)
+    }
+
 
     @AfterEach
     fun cleanup() {

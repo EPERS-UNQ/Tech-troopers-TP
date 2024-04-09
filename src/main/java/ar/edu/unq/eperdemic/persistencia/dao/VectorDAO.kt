@@ -9,8 +9,6 @@ interface VectorDAO {
 
     fun recuperar(vectorId: Long): Vector
 
-    fun recuperarTodos() : Collection<Vector>
-
-    fun eliminar(vector: Vector)
+    fun recuperarTodos() : List<Vector>
 
 }
