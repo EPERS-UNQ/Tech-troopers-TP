@@ -18,11 +18,14 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
     }
     override fun actualizar(patogeno: Patogeno) {
 
-        val pat = this.recuperar(patogeno.id!!)
+        /*val pat = this.recuperar(patogeno.id!!)
         if (pat.id == null) {
             throw RuntimeException("El id del patogeno no puede ser null")
         }
         this.guardar(pat)
+        */
+        this.actualizar(patogeno)
+
     }
 
     override fun recuperarATodos(): List<Patogeno> {
@@ -40,7 +43,7 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
 
     override fun eliminar(patogeno: Patogeno) {
 
-        val session = HibernateTransactionRunner.currentSession
+        /*val session = HibernateTransactionRunner.currentSession
         val pat = (this.recuperar(patogeno.id!!))
 
         val hql = """
@@ -49,6 +52,8 @@ open class HibernatePatogenoDAO : HibernateDAO<Patogeno>(Patogeno::class.java), 
                      where id = ${pat.id}
         """
         session.createQuery(hql, Patogeno::class.java)
+        */
+        this.eliminar(patogeno)
 
     }
 
