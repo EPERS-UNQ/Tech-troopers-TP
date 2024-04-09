@@ -5,20 +5,25 @@ import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.impl.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
+import ar.edu.unq.unidad3.dao.helper.dao.HibernateDataDAO
+import ar.edu.unq.unidad3.dao.helper.service.DataService
+import ar.edu.unq.unidad3.dao.helper.service.DataServiceImpl
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import org.junit.jupiter.api.assertThrows
 
 @TestInstance(PER_CLASS)
 class PatogenoServiceTest {
 
-    private val dao: PatogenoDAO = HibernatePatogenoDAO()
+    lateinit var dataService : DataService
     lateinit var patogeno: Patogeno
     lateinit var servicio: PatogenoService
+
+    private val dao: PatogenoDAO = HibernatePatogenoDAO()
 
     @BeforeEach
     fun crearModelo() {
 
+        dataService = DataServiceImpl( HibernateDataDAO() )
         this.servicio = PatogenoServiceImpl(dao)
         this.patogeno = Patogeno("Coronavirus")
         dao.crear(patogeno)
@@ -26,14 +31,29 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testCrearPatogeno() {
-        servicio.crearPatogeno(patogeno)
+    fun testCrearYRecuperarPatogeno() {
 
-    val covid = servicio.recuperarPatogeno(patogeno.id!!)
-    Assertions.assertEquals("Coronavirus",covid.toString())
+        this.servicio.crearPatogeno(patogeno)
+
+        val covid = this.servicio.recuperarPatogeno(patogeno.id!!)
+        Assertions.assertEquals("Coronavirus",covid.toString())
 
     }
 
+    /*@Test
+    fun testActualizarPatogeno() {
 
+        this.servicio.crearPatogeno(patogeno)
+
+        this.servicio.updatearPatogeno(patogeno)
+        Assertions.assertEquals("Coronavirus",covid.toString())
+
+    }
+    */
+
+    @AfterEach
+    fun borrarRegistros() {
+        dataService.cleanAll()
+    }
 
 }
