@@ -4,12 +4,12 @@ import ar.edu.unq.eperdemic.modelo.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
-//Con la palabra "open" quiere decir que la clase puede ser heredada. Sin esta palabra, es final por defecto.
 open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
     VectorDAO {
-    override fun recuperar(vectorId: Long): Vector {
+
+    override fun recuperar(idVector: Long): Vector {
         val session = HibernateTransactionRunner.currentSession
-        return session.get(Vector::class.java, vectorId)
+        return session.get(Vector::class.java, idVector)
     }
 
     override fun recuperarTodos(): Collection<Vector> {

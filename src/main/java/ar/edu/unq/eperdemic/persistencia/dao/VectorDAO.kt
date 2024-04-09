@@ -3,7 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao
 import ar.edu.unq.eperdemic.modelo.Vector
 
 interface VectorDAO {
-    fun crear(vector: Vector)
+    fun crear(vector: Vector): Vector
 
     fun actualizar(vector: Vector)
 
