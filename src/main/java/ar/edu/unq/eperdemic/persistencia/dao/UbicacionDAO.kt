@@ -7,7 +7,7 @@ interface UbicacionDAO {
 
     fun actualizar(ubicacion: Ubicacion)
 
-    fun recuperar(nombre: String): Ubicacion
+    fun recuperar(ubicacionId: Long): Ubicacion
 
     fun recuperarTodos() : Collection<Ubicacion>
 

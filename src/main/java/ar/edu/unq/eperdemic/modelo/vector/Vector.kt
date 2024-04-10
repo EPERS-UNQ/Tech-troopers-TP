@@ -1,8 +1,10 @@
-package ar.edu.unq.eperdemic.modelo
+package ar.edu.unq.eperdemic.modelo.vector
 
+import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import javax.persistence.*
-@Entity
-class Vector() {
+@MappedSuperclass
+abstract class Vector() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +23,9 @@ class Vector() {
         this.nombre = nombre
     }
 
-    fun infectar(vectorId: Long, especieId: Ubicacion){
-    // COMPLETAR
-    }
+    abstract fun infectar(vectorId: Long, especieId: Long)
 
-    fun enfermedad(){
-    // COMPLETAR
+    fun enfermedad(vectorId: Long): List<Especie>{
+        TODO("COMPLETAR")
     }
 }

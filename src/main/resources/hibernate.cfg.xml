@@ -17,7 +17,9 @@
 
         <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <mapping class="ar.edu.unq.eperdemic.modelo.Vector" />
+        <mapping class="ar.edu.unq.eperdemic.modelo.vector.Vector" />
+        <mapping class="ar.edu.unq.eperdemic.modelo.vector.Humano" />
+        <mapping class="ar.edu.unq.eperdemic.modelo.vector.Animal" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Ubicacion" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Patogeno" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Especie" />

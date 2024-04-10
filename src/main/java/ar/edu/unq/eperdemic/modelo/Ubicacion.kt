@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
 
 @Entity
