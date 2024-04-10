@@ -18,16 +18,17 @@ class Patogeno() : Serializable {
     var cantidadDeEspecies: Int = 0
     var tipo : String? = null
 
-    @ManyToMany(mappedBy = "patogenos", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var vectoresInfectados: MutableSet<Vector> = HashSet()
+    @OneToMany(mappedBy = "patogeno", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var especies: MutableSet<Especie> = HashSet()
 
     override fun toString(): String {
         return tipo!!
     }
 
+    /*
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
         cantidadDeEspecies++
         return Especie(this, nombreEspecie, paisDeOrigen)
     }
-
+    */
 }
