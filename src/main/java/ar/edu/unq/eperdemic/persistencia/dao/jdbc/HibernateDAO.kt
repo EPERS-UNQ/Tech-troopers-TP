@@ -6,9 +6,10 @@ import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
 open class HibernateDAO<T>(private val entityType: Class<T>) {
 
-    open fun crear(entity: T) {
+    open fun crear(entity: T): T {
         val session = HibernateTransactionRunner.currentSession
-        session.save(entity)
+        session.persist(entity)
+        return entity
     }
 
     open fun actualizar(entity: T) {

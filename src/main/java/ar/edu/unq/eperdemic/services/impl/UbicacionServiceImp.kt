@@ -11,7 +11,7 @@ class UbicacionServiceImp : UbicacionService {
 
     private val dao: UbicacionDAO = HibernateUbicacionDAO()
 
-    override fun crear(ubicacion: Ubicacion) {
+    override fun crear(ubicacion: Ubicacion) : Ubicacion {
         return runTrx { dao.crear(ubicacion) }
     }
 
@@ -25,6 +25,13 @@ class UbicacionServiceImp : UbicacionService {
 
     override fun recuperarTodos(): Collection<Ubicacion> {
         return runTrx { dao.recuperarTodos() }
+    }
+
+    override fun mover(vectorId: Long, ubicacionId: Long) {
+        runTrx {
+
+
+        }
     }
 
 }
