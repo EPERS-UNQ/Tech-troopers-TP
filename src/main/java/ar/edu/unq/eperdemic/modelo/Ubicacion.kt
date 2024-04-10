@@ -23,4 +23,11 @@ class Ubicacion {
         this.nombre= ""
     }
 
+    fun eliminarVector(vector: Vector) {
+        vectores.remove(vector)
+    }
+
+    fun agregarVector(vector: Vector) {
+        vectores.add(vector)
+    }
 }

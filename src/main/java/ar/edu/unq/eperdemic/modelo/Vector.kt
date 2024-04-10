@@ -10,10 +10,27 @@ class Vector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    var tipo:   String? = null //Cambiar -> Template Method -> Plantilla general y 3 particulares para cada vector de como contagia.
+    var tipo: String? = null //Template Method -> Plantilla general y 3 particulares para cada vector de como contagia.
     var nombre: String? = null
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var especies: MutableSet<Especie> = HashSet()
 
     @ManyToOne
     var ubicacion: Ubicacion? = null
+
+    constructor(nombre: String) {
+        this.nombre = nombre
+    }
+
+    constructor()
+
+    fun enfermedad(vectorId: Long): List<Especie>{
+        TODO("COMPLETAR")
+    }
+
+    fun contagiar(vector: Vector) {
+
+    }
 
 }
