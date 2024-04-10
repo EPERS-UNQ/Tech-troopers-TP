@@ -7,12 +7,20 @@ import java.util.Objects
 class Ubicacion {
 
     @Id
-    var nombre: String
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var nombre: String? = null
+
+    @OneToMany(mappedBy = "ubicacion", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var vectores: MutableSet<Vector> = HashSet()
 
     constructor(nombre: String) {
         this.nombre = nombre
     }
+
+    constructor() {
+        this.nombre= ""
+    }
+
 }

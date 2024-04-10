@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+/*package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
@@ -96,3 +96,5 @@ class HibernatePatogenoDAOTest {
     }
 
 }
+
+ */

@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.services.impl
+/*package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -29,3 +29,5 @@ class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {
     }
 
 }
+
+ */
