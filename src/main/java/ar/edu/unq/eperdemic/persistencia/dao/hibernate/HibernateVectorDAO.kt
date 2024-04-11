@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.persistencia.dao.jdbc
+package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO

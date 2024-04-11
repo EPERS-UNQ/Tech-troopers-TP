@@ -1,7 +1,5 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Ubicacion
 import javax.persistence.*
 @Entity
 open class Vector() {
