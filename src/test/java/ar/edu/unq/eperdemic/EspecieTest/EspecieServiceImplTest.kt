@@ -4,8 +4,7 @@ import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
 import org.junit.jupiter.api.AfterEach
@@ -28,7 +27,7 @@ class EspecieServiceImplTest {
     @BeforeEach
     fun crearModelo() {
         patogeno = Patogeno("Wachiturro")
-        especie  = Especie("Bacteria", patogeno, "Argentina" )
+        especie  = Especie("Bacteria", patogeno, "Argentina")
 
         service     = EspecieServiceImpl( HibernateEspecieDAO() )
         dataService = DataServiceImpl( HibernateDataDAO() )
@@ -45,12 +44,12 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especie.paisDeOrigen, otraEspecie.paisDeOrigen)
     }
 
-    /*@Test
+    @Test
     fun alUpdatearUnPatogenoLaInformacionDelMismoCmabia() {
         service.updatear(especie)
 
 
-    }*/
+    }
 
 
     @Test
@@ -58,7 +57,7 @@ class EspecieServiceImplTest {
         especie2 = Especie("Virus", patogeno, "Brasil")
         service.crear(especie2)
 
-        val listaEspeciesRecuperadas : MutableList<Especie> = service.recuperarTodos()
+        val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
         Assertions.assertEquals(especie.id,  listaEspeciesRecuperadas.get(0).id)
         Assertions.assertEquals(especie.nombre, listaEspeciesRecuperadas.get(0).nombre)
