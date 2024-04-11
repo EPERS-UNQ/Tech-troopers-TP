@@ -16,6 +16,7 @@ open class HibernateDAO<T>(private val entityType: Class<T>) {
         session.update(entity)
     }
 
+
     open fun recuperar(id: Long?): T {
         val session = HibernateTransactionRunner.currentSession
         return session.get(entityType, id)
