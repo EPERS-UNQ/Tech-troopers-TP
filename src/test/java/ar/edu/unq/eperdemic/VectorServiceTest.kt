@@ -26,8 +26,8 @@ class VectorServiceTest {
         this.service = VectorServiceImp(HibernateVectorDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
-        humano = Humano("Pedro")
-        golondrina = Animal("Pepita")
+        humano = Vector("Pedro")
+        golondrina = Vector("Pepita")
 
         service.crear(humano)
 
