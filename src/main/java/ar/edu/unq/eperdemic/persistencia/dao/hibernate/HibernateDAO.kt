@@ -1,6 +1,5 @@
-package ar.edu.unq.eperdemic.persistencia.dao.impl
+package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
 

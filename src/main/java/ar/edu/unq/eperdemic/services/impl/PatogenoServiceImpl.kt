@@ -1,14 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.impl.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-import javax.persistence.CascadeType
-import javax.persistence.FetchType
-import javax.persistence.ManyToMany
 
 
 class PatogenoServiceImpl(val patogenoDAO: PatogenoDAO) : PatogenoService {

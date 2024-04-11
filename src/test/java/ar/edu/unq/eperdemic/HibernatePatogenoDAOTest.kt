@@ -2,7 +2,7 @@ package ar.edu.unq.eperdemic
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.impl.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.unidad3.dao.helper.dao.HibernateDataDAO
