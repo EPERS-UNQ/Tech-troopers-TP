@@ -2,9 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.jdbc.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
@@ -12,7 +10,7 @@ import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 class UbicacionServiceImp : UbicacionService {
 
     private val dao: UbicacionDAO = HibernateUbicacionDAO()
-    private val vec: VectorDAO = HibernateVectorDAO()
+    private val vec: UbicacionDAO = HibernateVectorDAO()
 
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {

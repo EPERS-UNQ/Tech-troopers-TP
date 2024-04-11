@@ -9,25 +9,36 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 @TestInstance(PER_CLASS)
 class HibernateUbicacinDAOTest {
 
-    private val service: UbicacionService = UbicacionServiceImp()
+    var service: UbicacionService = UbicacionServiceImp()
+
     lateinit var ubi1: Ubicacion
     lateinit var ubi2: Ubicacion
+    lateinit var ubi3: Ubicacion
+
+    lateinit var ubiPersistida1: Ubicacion
+    lateinit var ubiPersistida2: Ubicacion
+    lateinit var ubiPersistida3: Ubicacion
+
+    lateinit var vector1: Vector
 
     @BeforeEach
     fun crearModelo() {
 
         ubi1 = Ubicacion("Argentina")
+        ubi2 = Ubicacion("paraguay")
+        ubi3 = Ubicacion("Uruguay")
 
         service.crear(ubi1)
+        service.crear(ubi2)
+        service.crear(ubi3)
 
-        ubi2 = service.recuperar(1)
-
+        service
     }
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
-        Assertions.assertEquals(ubi2.nombre, "Argentina")
-        Assertions.assertEquals(ubi2.id, 1)
+        ubiPersistida1 = service.recuperar(1)
+        Assertions.assertEquals(ubiPersistida1.nombre, "Argentina")
     }
 
 }

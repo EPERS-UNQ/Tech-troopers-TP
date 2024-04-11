@@ -1,16 +1,15 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+
 interface UbicacionDAO {
 
-    fun crear(ubicacion: Ubicacion) : Ubicacion
+    fun crear(vector: Ubicacion): Ubicacion
 
-    fun actualizar(ubicacion: Ubicacion)
+    fun actualizar(vector: Ubicacion)
 
-    fun recuperar(ubicacionId: Long?): Ubicacion
+    fun recuperar(vectorId: Long): Ubicacion
 
-    fun eliminar(ubicacion: Ubicacion)
-
-    fun recuperarTodos() : Collection<Ubicacion>
+    fun recuperarTodos(): List<Ubicacion>
 
 }

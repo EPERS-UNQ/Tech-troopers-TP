@@ -1,8 +1,7 @@
-package ar.edu.unq.eperdemic.persistencia.dao.jdbc
+package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.eperdemic.modelo.Ubicacion;
 
 
