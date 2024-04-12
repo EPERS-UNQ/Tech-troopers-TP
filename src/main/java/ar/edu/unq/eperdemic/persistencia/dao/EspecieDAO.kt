@@ -8,7 +8,7 @@ interface EspecieDAO {
 
     fun actualizar(entity: Especie)
 
-    fun recuperar(id: Long) : Especie
+    fun recuperar(id: Long?) : Especie
 
     fun recuperarTodos() : List<Especie>
 

@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.modelo
 
 
 import java.io.Serializable
-import java.util.*
 import javax.persistence.*
 import kotlin.collections.HashSet
 

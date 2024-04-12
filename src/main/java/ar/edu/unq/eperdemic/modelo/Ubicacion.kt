@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
-import java.util.Objects
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 @Entity
 class Ubicacion {

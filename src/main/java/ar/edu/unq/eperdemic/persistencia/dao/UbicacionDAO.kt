@@ -4,12 +4,14 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface UbicacionDAO {
 
-    fun crear(vector: Ubicacion): Ubicacion
+    fun crear(ubicacion: Ubicacion): Ubicacion
 
-    fun actualizar(vector: Ubicacion)
+    fun actualizar(ubicacion: Ubicacion)
 
-    fun recuperar(vectorId: Long): Ubicacion
+    fun recuperar(id: Long?): Ubicacion
 
     fun recuperarTodos(): List<Ubicacion>
+
+    fun eliminar(ubicacion: Ubicacion)
 
 }
