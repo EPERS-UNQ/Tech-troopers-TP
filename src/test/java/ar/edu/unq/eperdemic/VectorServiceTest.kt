@@ -7,6 +7,10 @@ import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
+import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
@@ -14,19 +18,25 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 class VectorServiceTest {
 
     lateinit var service: VectorService
+    lateinit var serviceUbicacion: UbicacionService
     lateinit var dataService: DataService
+
     lateinit var humano: Vector
     lateinit var golondrina: Vector
+    lateinit var ubicacion: Ubicacion
 
     @BeforeEach
     fun prepare() {
 
         this.service = VectorServiceImp(HibernateVectorDAO())
+        this.serviceUbicacion = UbicacionServiceImp()
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
-        humano = Vector("Pedro")
-        golondrina = Vector("Pepita")
+        ubicacion = Ubicacion("Argentina")
+        humano     = Vector("Pedro", ubicacion)
+        golondrina = Vector("Pepita", ubicacion)
 
+        serviceUbicacion.crear(ubicacion)
         service.crear(humano)
 
     }

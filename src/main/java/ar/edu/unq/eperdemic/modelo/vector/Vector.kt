@@ -18,8 +18,9 @@ open class Vector() {
     @ManyToOne
     var ubicacion: Ubicacion? = null
 
-    constructor(nombre: String):this() {
+    constructor(nombre: String, ubicacion: Ubicacion):this() {
         this.nombre = nombre
+        this.ubicacion = ubicacion
     }
 
     open fun infectar(vectorId: Long, especieId: Long) {}
