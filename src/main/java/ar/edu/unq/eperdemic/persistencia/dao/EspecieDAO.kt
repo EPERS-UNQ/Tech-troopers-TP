@@ -4,11 +4,11 @@ import ar.edu.unq.eperdemic.modelo.Especie
 
 interface EspecieDAO {
 
-    fun crear(especie: Especie) : Especie
+    fun crear(entity: Especie) : Especie
 
-    fun actualizar(especie: Especie)
+    fun actualizar(entity: Especie)
 
-    fun recuperar(especieId: Long) : Especie
+    fun recuperar(id: Long) : Especie
 
     fun recuperarTodos() : List<Especie>
 

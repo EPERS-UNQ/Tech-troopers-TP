@@ -6,9 +6,6 @@ import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
 open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
     EspecieDAO {
-    override fun recuperar(especieId: Long): Especie {
-        TODO("Not yet implemented")
-    }
 
     override fun recuperarTodos(): List<Especie> {
         val session = HibernateTransactionRunner.currentSession
