@@ -4,6 +4,7 @@ package ar.edu.unq.eperdemic.modelo
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*
+import kotlin.collections.HashSet
 
 @Entity
 class Patogeno() : Serializable {
@@ -18,16 +19,18 @@ class Patogeno() : Serializable {
     var cantidadDeEspecies: Int = 0
     var tipo : String? = null
 
-    //@ManyToMany(mappedBy = "patogenos", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    //var vectoresInfactados: MutableSet<Vector> = HashSet()
+    @OneToMany(mappedBy = "patogeno", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var especies: MutableSet<Especie> = HashSet()
 
     override fun toString(): String {
         return tipo!!
     }
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
+        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
+        especies.add(nuevaEspecie)
         cantidadDeEspecies++
-        return Especie(this, nombreEspecie, paisDeOrigen)
+        return nuevaEspecie
     }
 
 }

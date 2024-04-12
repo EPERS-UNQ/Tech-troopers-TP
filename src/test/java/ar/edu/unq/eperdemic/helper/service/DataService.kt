@@ -1,5 +1,7 @@
-package ar.edu.unq.unidad3.dao.helper.service
+package ar.edu.unq.eperdemic.helper.service
 
 interface DataService {
+
     fun cleanAll()
+
 }

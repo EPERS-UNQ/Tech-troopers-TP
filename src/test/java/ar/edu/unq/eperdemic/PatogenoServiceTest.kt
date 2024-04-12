@@ -1,13 +1,16 @@
 package ar.edu.unq.eperdemic
 
+import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
+import ar.edu.unq.eperdemic.helper.service.DataService
+import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.unidad3.dao.helper.dao.HibernateDataDAO
-import ar.edu.unq.unidad3.dao.helper.service.DataService
-import ar.edu.unq.unidad3.dao.helper.service.DataServiceImpl
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
@@ -19,24 +22,25 @@ class PatogenoServiceTest {
     lateinit var servicio: PatogenoService
 
     private val dao: PatogenoDAO = HibernatePatogenoDAO()
+    private val especieDao: EspecieDAO = HibernateEspecieDAO()
 
     @BeforeEach
     fun crearModelo() {
 
         dataService = DataServiceImpl( HibernateDataDAO() )
-        this.servicio = PatogenoServiceImpl(dao)
+        this.servicio = PatogenoServiceImpl(dao, especieDao)
         this.patogeno = Patogeno("Coronavirus")
-        dao.crear(patogeno)
+
+        this.servicio.crear(patogeno)
 
     }
 
     @Test
     fun testCrearYRecuperarPatogeno() {
 
-        this.servicio.crearPatogeno(patogeno)
-
-        val covid = this.servicio.recuperarPatogeno(patogeno.id!!)
+        val covid = this.servicio.recuperar(patogeno.id!!)
         Assertions.assertEquals("Coronavirus",covid.toString())
+        Assertions.assertEquals(1, covid.id)
 
     }
 
@@ -50,6 +54,15 @@ class PatogenoServiceTest {
 
     }
     */
+
+    @Test
+    fun alAgregarUnaEspecieAUnPatogenoLaMismaApareceEnElPatogeno() {
+        var especie: Especie = servicio.agregarEspecie(patogeno.id!!, "Virus", "Corea")
+
+        var otroPatogeno : Patogeno = servicio.recuperar(patogeno.id!!)
+
+        Assertions.assertTrue(otroPatogeno.especies.contains(especie))
+    }
 
     @AfterEach
     fun borrarRegistros() {

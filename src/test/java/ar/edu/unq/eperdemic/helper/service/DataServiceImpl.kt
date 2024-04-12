@@ -1,7 +1,7 @@
-package ar.edu.unq.unidad3.dao.helper.service
+package ar.edu.unq.eperdemic.helper.service
 
+import ar.edu.unq.eperdemic.helper.dao.DataDAO
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-import ar.edu.unq.unidad3.dao.helper.dao.DataDAO
 
 class DataServiceImpl (
     private val dataDAO: DataDAO
@@ -12,5 +12,4 @@ class DataServiceImpl (
             dataDAO.clear()
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package ar.edu.unq.unidad3.dao.helper.dao
+package ar.edu.unq.eperdemic.helper.dao
 
 interface DataDAO {
 
