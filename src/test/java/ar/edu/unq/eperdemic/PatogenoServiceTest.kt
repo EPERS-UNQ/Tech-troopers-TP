@@ -21,14 +21,14 @@ class PatogenoServiceTest {
     lateinit var patogeno: Patogeno
     lateinit var servicio: PatogenoService
 
-    private val dao: PatogenoDAO = HibernatePatogenoDAO()
+    private val patogenoDao: PatogenoDAO = HibernatePatogenoDAO()
     private val especieDao: EspecieDAO = HibernateEspecieDAO()
 
     @BeforeEach
     fun crearModelo() {
 
         dataService = DataServiceImpl( HibernateDataDAO() )
-        this.servicio = PatogenoServiceImpl(dao, especieDao)
+        this.servicio = PatogenoServiceImpl(patogenoDao, especieDao)
         this.patogeno = Patogeno("Coronavirus")
 
         this.servicio.crear(patogeno)
@@ -38,23 +38,36 @@ class PatogenoServiceTest {
     @Test
     fun testCrearYRecuperarPatogeno() {
 
+
         val covid = this.servicio.recuperar(patogeno.id!!)
         Assertions.assertEquals("Coronavirus",covid.toString())
         Assertions.assertEquals(1, covid.id)
 
     }
 
-    /*@Test
+
+    @Test
     fun testActualizarPatogeno() {
 
-        this.servicio.crearPatogeno(patogeno)
+        val covid = this.servicio.recuperar(patogeno.id!!)
+        covid.crearEspecie("Especie 1", "Arg")
+        this.servicio.updatear(covid)
 
-        this.servicio.updatearPatogeno(patogeno)
-        Assertions.assertEquals("Coronavirus",covid.toString())
+        Assertions.assertEquals(1,covid.cantidadDeEspecies)
+        Assertions.assertEquals(1, covid.id)
 
     }
-    */
 
+    @Test
+    fun seRecuperanTodosLosPatogenos() {
+
+        val covid = this.servicio.recuperar(patogeno.id!!)
+
+        Assertions.assertTrue(servicio.recuperarTodos().contains(covid))
+
+    }
+
+    /*
     @Test
     fun alAgregarUnaEspecieAUnPatogenoLaMismaApareceEnElPatogeno() {
         var especie: Especie = servicio.agregarEspecie(patogeno.id!!, "Virus", "Corea")
@@ -68,5 +81,6 @@ class PatogenoServiceTest {
     fun borrarRegistros() {
         dataService.cleanAll()
     }
+    */
 
 }
