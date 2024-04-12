@@ -12,7 +12,7 @@ class HibernateSessionFactoryProvider private constructor() {
     init {
         val env = System.getenv()
         val user = "root"
-        val password = "12345"
+        val password = "root"
         val dataBase = "epers_tp2"
         val host = "localhost"
 

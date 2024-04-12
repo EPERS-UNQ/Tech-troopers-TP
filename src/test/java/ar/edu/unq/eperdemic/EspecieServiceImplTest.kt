@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
@@ -41,7 +42,7 @@ class EspecieServiceImplTest {
         especie  = Especie("Bacteria", patogeno, "Argentina")
 
         servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
-        service = EspecieServiceImpl(HibernateEspecieDAO())
+        service = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
         dataService = DataServiceImpl(HibernateDataDAO())
 
         servicePatogeno.crear(patogeno)
@@ -57,12 +58,15 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especiePersistida.paisDeOrigen, otraEspecie.paisDeOrigen)
     }
 
-    /*@Test
+    @Test
     fun alUpdatearUnPatogenoLaInformacionDelMismoCmabia() {
-        service.updatear(especie)
+        var especieRecuperada = service.recuperar(especiePersistida.id!!)
+        especieRecuperada.paisDeOrigen = "Chile"
 
+        service.updatear(especieRecuperada)
 
-    }*/
+        Assertions.assertEquals("Chile", service.recuperar(especieRecuperada.id!!).paisDeOrigen)
+    }
 
 
     @Test
@@ -81,6 +85,13 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especiePersistida2.nombre, listaEspeciesRecuperadas.get(1).nombre)
         Assertions.assertEquals(especiePersistida2.paisDeOrigen, listaEspeciesRecuperadas.get(1).paisDeOrigen)
     }
+
+    /*@Test
+    fun verificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
+
+        service.cantidadDeInfectados(especiePersistida.id!!)
+
+    }*/
 
     @AfterEach
     fun borrarRegistros() {
