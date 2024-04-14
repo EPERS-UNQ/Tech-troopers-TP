@@ -24,4 +24,8 @@ class Especie() {
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
     }
+
+    fun agregarVector(vector: Vector) {
+        vectores.add(vector)
+    }
 }
