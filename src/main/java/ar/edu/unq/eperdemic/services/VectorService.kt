@@ -12,4 +12,5 @@ interface VectorService {
 
     fun recuperarTodos(): List<Vector>
 
+    fun infectar(vectorId: Long, especieId: Long)
 }

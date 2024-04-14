@@ -7,25 +7,47 @@ open class Vector() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    private var id: Long? = null
 
-    var tipo: String? = null //Template Method -> Plantilla general y 3 particulares para cada vector de como contagia.
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING) // Se persiste como String.
+    lateinit var tipo: TipoVector
+
     var nombre: String? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var especies: MutableSet<Especie> = HashSet()
+    var especies: MutableSet<Especie> = HashSet() // Set para que las especies no sean repetidas.
 
     @ManyToOne
     var ubicacion: Ubicacion? = null
 
-    constructor(nombre: String, ubicacion: Ubicacion):this() {
+    constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
         this.nombre = nombre
         this.ubicacion = ubicacion
+        this.tipo = tipoVector
     }
 
-    open fun infectar(vectorId: Long, especieId: Long) {}
+    fun getId(): Long? {
+        return this.id!!
+    }
 
-    fun enfermedad(vectorId: Long): List<Especie>{
-        TODO("COMPLETAR")
+    fun estaInfectado(): Boolean{
+        return this.especies.isNotEmpty()
+    }
+
+    open fun infectar(especie: Especie) {
+        this.especies.add(especie)
+        especie.agregarVector(this)
+    }
+
+    //Nota: Si no puede contagiar no hace nada.
+    fun contargiarA(vector: Vector, especie: Especie){
+        if (this.tipo.puedeContagiarA(vector.tipo)){
+            vector.infectar(especie)
+        }
+    }
+
+    fun enfermedadesDelVector(): List<Especie>{
+        return this.especies.toList()
     }
 }

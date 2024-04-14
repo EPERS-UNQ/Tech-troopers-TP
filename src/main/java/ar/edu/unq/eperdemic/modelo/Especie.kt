@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 
 @Entity
@@ -13,8 +14,8 @@ class Especie() {
     @Column(nullable = false)
     var paisDeOrigen: String? = null
 
-    /*@ManyToMany(mappedBy = "especies", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var vectores:  MutableSet<Vector> = HashSet()*/
+    @ManyToMany(mappedBy = "especies", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var vectores:  MutableSet<Vector> = HashSet()
 
     @ManyToOne
     var patogeno: Patogeno? = null
@@ -22,5 +23,9 @@ class Especie() {
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
+    }
+
+    fun agregarVector(vector: Vector){
+        this.vectores.add(vector)
     }
 }
