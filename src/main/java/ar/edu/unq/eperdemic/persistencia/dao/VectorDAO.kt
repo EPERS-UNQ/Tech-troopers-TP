@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 interface VectorDAO {
@@ -10,5 +11,7 @@ interface VectorDAO {
     fun recuperar(id: Long?): Vector
 
     fun recuperarTodos() : List<Vector>
+
+    fun infectar(vector: Vector, especie: Especie)
 
 }

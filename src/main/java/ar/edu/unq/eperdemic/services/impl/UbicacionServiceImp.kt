@@ -47,13 +47,14 @@ class UbicacionServiceImp : UbicacionService {
 
             vector.ubicacion = nuevaUbicacion
             vec.actualizar(vector)
-
-            if(vector.especies.isNotEmpty()) {
+            /*
+            if(vector.estaInfectado()) {
                 nuevaUbicacion.vectores.map {
                     // vector.contagiar(it)
                     // vec.actualizar(it)
                 }
             }
+            */
 
         }
     }

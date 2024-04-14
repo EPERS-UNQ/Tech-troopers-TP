@@ -11,7 +11,7 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
 
     override fun recuperarTodos(): List<Ubicacion> {
         val session = HibernateTransactionRunner.currentSession
-        val hql = "select i from ubicacion"
+        val hql = "select i from Ubicacion"
         val query = session.createQuery(hql, Ubicacion::class.java)
 
         return query.resultList
