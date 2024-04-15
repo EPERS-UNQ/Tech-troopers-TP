@@ -15,6 +15,7 @@ repositories {
 dependencies {
     testImplementation group: 'io.kotlintest', name: 'kotlintest-runner-junit5', version: '3.4.2'
 
+
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.2'
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
@@ -24,6 +25,10 @@ dependencies {
 }
 
 tasks.test {
+    useJUnitPlatform()
+}
+
+test {
     useJUnitPlatform()
 }
 

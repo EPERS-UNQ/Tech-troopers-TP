@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -13,32 +14,31 @@ import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
 
-class UbicacionServiceImp : UbicacionService {
-
-    private val dao: UbicacionDAO = HibernateUbicacionDAO()
-    private val vec: VectorDAO = HibernateVectorDAO()
-
+class UbicacionServiceImp(
+    private val daoUbicacion: UbicacionDAO,
+    private val daoVector: VectorDAO
+) : UbicacionService {
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx { dao.crear(ubicacion) }
+        return runTrx { daoUbicacion.crear(ubicacion) }
     }
 
     override fun updatear(ubicacion: Ubicacion) {
-        runTrx { dao.actualizar(ubicacion) }
+        runTrx { daoUbicacion.actualizar(ubicacion) }
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        return runTrx { dao.recuperar(id) }
+        return runTrx { daoUbicacion.recuperar(id) }
     }
 
     override fun recuperarTodos(): Collection<Ubicacion> {
-        return runTrx { dao.recuperarTodos() }
+        return runTrx { daoUbicacion.recuperarTodos() }
     }
 
     override fun mover(vectorId: Long, ubicacionId: Long) {
         runTrx {
-            val vector = vec.recuperar(vectorId)
-            val nuevaUbicacion = dao.recuperar(ubicacionId)
+            val vector = daoVector.recuperar(vectorId)
+            val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
 
             if (nuevaUbicacion == null || vector == null) {
                 throw IllegalArgumentException("La ubicación o el vector no existen," +
@@ -46,12 +46,14 @@ class UbicacionServiceImp : UbicacionService {
             }
 
             vector.ubicacion = nuevaUbicacion
-            vec.actualizar(vector)
-            val todosLosVectores = vec.recuperarTodos()
+            daoVector.actualizar(vector)
+
+            val todosLosVectores = daoVector.recuperarTodosDe(nuevaUbicacion.id!!)
+
             if(vector.estaInfectado()) {
                 todosLosVectores.map {
                     vector.contargiarA(it)
-                    vec.actualizar(it)
+                    daoVector.actualizar(it)
                 }
             }
 

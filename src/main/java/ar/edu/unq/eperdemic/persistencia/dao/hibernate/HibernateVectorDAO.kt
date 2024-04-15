@@ -17,6 +17,10 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
+    override fun recuperarTodosDe(ubicacionId: Long): List<Vector> {
+        TODO("Not yet implemented")
+    }
+
     override fun infectar(vector: Vector, especie: Especie) {
         vector.infectar(especie)
         this.actualizar(vector)
