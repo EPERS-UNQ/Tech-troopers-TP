@@ -1,21 +1,18 @@
 package ar.edu.unq.eperdemic
 
-import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
+import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
-import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
@@ -50,7 +47,7 @@ class EspecieServiceImplTest {
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro")
 
-        service        = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
+        service         = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
         dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -94,25 +91,24 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especiePersistida2.paisDeOrigen, listaEspeciesRecuperadas.get(1).paisDeOrigen)
     }
 
-    /*@Test
+    @Test
     fun testVerificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
-        ubicacion = Ubicacion("Argentina")
-        /*
-        * humano     = Vector("Pedro", ubicacion, TipoDeVector.HUMANO)
-        * golondrina = Vector("Pepita", ubicacion, TipoDeVector.ANIMAL)
-        * */
-        // serviceVector  = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
+        ubicacion  = Ubicacion("Argentina")
+        humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
+        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+
+        serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp()
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
         serviceVector.crear(golondrina)
 
-        //humano.infectar(especiePersistida)
-        //golondrina.infectar(especiePersistida)
+        serviceVector.infectar(humano.getId()!!, especiePersistida.id!!)
+        serviceVector.infectar(golondrina.getId()!!, especiePersistida.id!!)
 
         Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.id!!))
 
-    }*/
+    }
 
     @AfterEach
     fun borrarRegistros() {

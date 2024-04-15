@@ -100,9 +100,9 @@ class VectorServiceTest {
     fun testDeInfectarAUnVector(){
         Assertions.assertFalse(humano.estaInfectado())
 
-        humano.infectar(especie)
+        service.infectar(humano.getId()!!, especie.id!!)
 
-        Assertions.assertTrue(humano.estaInfectado())
+        Assertions.assertTrue(service.recuperar(humano.getId()!!).estaInfectado())
     }
 
     @AfterEach

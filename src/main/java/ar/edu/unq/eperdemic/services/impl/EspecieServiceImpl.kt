@@ -25,8 +25,7 @@ class EspecieServiceImpl (
 
     override fun cantidadDeInfectados(especieId: Long): Int {
         return runTrx {
-            val listaDeVectores = especieDAO.recuperar(especieId!!).vectores
-            listaDeVectores.size
+            especieDAO.recuperar(especieId).vectores.size
         }
     }
 
