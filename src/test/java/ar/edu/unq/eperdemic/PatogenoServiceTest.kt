@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -20,13 +21,14 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
 @TestInstance(PER_CLASS)
 class PatogenoServiceTest {
 
-    lateinit var dataService : DataService
+    lateinit var dataService: DataService
     lateinit var covid: Patogeno
     lateinit var salmonella: Patogeno
     lateinit var china: Ubicacion
@@ -36,7 +38,6 @@ class PatogenoServiceTest {
     lateinit var servicioUbicacion: UbicacionService
     lateinit var servicioVector: VectorService
 
-
     private val patogenoDao: PatogenoDAO = HibernatePatogenoDAO()
     private val especieDao: EspecieDAO = HibernateEspecieDAO()
     private val vectorDao: VectorDAO = HibernateVectorDAO()
@@ -45,28 +46,31 @@ class PatogenoServiceTest {
     @BeforeEach
     fun crearModelo() {
 
-        dataService = DataServiceImpl( HibernateDataDAO() )
+        dataService = DataServiceImpl(HibernateDataDAO())
         this.servicio = PatogenoServiceImpl(patogenoDao, especieDao, ubicacionDao, vectorDao)
         this.servicioUbicacion = UbicacionServiceImp()
+        this.servicioVector = VectorServiceImp(vectorDao, especieDao)
         this.covid = Patogeno("Coronavirus")
         this.salmonella = Patogeno("Salmonella")
         this.china = Ubicacion("Corea")
         this.corea = Ubicacion("Corea")
-        this.humano = Vector("Pedro")
+        this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
 
         this.servicio.crear(covid)
         //this.servicioUbicacion.crear(china)
         //this.servicioUbicacion.crear(corea)
-        this.servicioVector.crear(humano)
+        //this.servicioVector.crear(humano)
+
+        //humano.infectar(bongori)
 
     }
-    /*
+
     @Test
     fun testCrearYRecuperarPatogeno() {
 
         val covid = this.servicio.recuperar(covid.id!!)
 
-        Assertions.assertEquals("Coronavirus",covid.toString())
+        Assertions.assertEquals("Coronavirus", covid.toString())
         Assertions.assertEquals(1, covid.id)
 
     }
@@ -78,8 +82,8 @@ class PatogenoServiceTest {
         covid.crearEspecie("Especie 1", "Arg")
         this.servicio.updatear(covid)
 
-        Assertions.assertEquals(1, covid.cantidadDeEspecies)
-        Assertions.assertEquals(1, covid.id)
+        Assertions.assertEquals(covid.cantidadDeEspecies, 1)
+        Assertions.assertEquals(covid.id, 1)
 
     }
 
@@ -119,19 +123,22 @@ class PatogenoServiceTest {
         Assertions.assertEquals(especies[1].nombre, bongori.nombre)
 
     }
-    */
+
     @Test
     fun seSabeSiEsPandemia() {
 
         this.servicio.crear(salmonella)
+        this.servicioUbicacion.crear(corea)
+        this.servicioVector.crear(humano)
 
         val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", "Corea")
-        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", "Corea")
-        val especie1: Especie = servicio.agregarEspecie(covid.id!!, "a", "China")
 
-        Assertions.assertTrue(servicio.esPandemia(bongori.id!!))
+        this.servicioVector.infectar(1,enterica.id!!)
+
+        Assertions.assertTrue(servicio.esPandemia(3))
 
     }
+
 
     @AfterEach
     fun borrarRegistros() {

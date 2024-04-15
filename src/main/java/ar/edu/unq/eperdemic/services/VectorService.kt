@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services
 
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.Especie
 
 interface VectorService {
 
@@ -12,4 +13,7 @@ interface VectorService {
 
     fun recuperarTodos(): List<Vector>
 
+    fun infectar(vectorId: Long, especieId: Long)
+
+    fun enfermedades(vectorId: Long): List<Especie>
 }
