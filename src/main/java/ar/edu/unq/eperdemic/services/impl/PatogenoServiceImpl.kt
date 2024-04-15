@@ -2,9 +2,11 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
@@ -12,7 +14,8 @@ import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 class PatogenoServiceImpl(
     private val patogenoDAO: PatogenoDAO,
     private val especieDAO: EspecieDAO,
-    private val ubicacionDAO: UbicacionDAO
+    private val ubicacionDAO: UbicacionDAO,
+    private val vectoresDAO: VectorDAO
     ) : PatogenoService {
 
 
@@ -36,6 +39,8 @@ class PatogenoServiceImpl(
         return runTrx {
             val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
             val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen)
+            //val ubicaciones = ubicacionDAO.recuperarTodos()
+            //val ubicacion = ubicaciones.find { it.nombre == paisDeOrigen }
             patogenoDAO.actualizar(patogeno)
             especieDAO.crear(especie)
             especie
@@ -51,11 +56,23 @@ class PatogenoServiceImpl(
         }
     }
 
-    override fun esPademia(especieId: Long): Boolean {
+    override fun esPandemia(especieId: Long): Boolean {
         return runTrx {
-            val ubicaciones = ubicacionDAO.recuperarTodos()
-            //val resultado = ubicacionDAO.apareceEnMasDePaises(ubicaciones, especieId)
-            true
+
+            val especie = especieDAO.recuperar(especieId)
+            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
+            val vectores = vectoresDAO.recuperarTodos()
+            //val vectoresConEspecie = vectores.stream().filter {
+            //    it.especies.contains(especie)
+            //}
+            val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
+            for (v in vectores) {
+                if (v.especies.contains(especie)) {
+                    ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
+                }
+            }
+
+            ubicacionesDeVectoresConEspecie.size > cantUbicaciones/ 2
         }
     }
 
