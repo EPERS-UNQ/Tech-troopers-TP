@@ -44,7 +44,7 @@ class UbicacionServiceTest {
             HibernateEspecieDAO()
     )
 
-    var serviceEspecie: EspecieService = EspecieServiceImpl(HibernateEspecieDAO())
+    var serviceEspecie: EspecieService = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
 
 
     private var dataService: DataService = DataServiceImpl(HibernateDataDAO())

@@ -47,7 +47,7 @@ class VectorServiceTest {
             HibernateUbicacionDAO(),
             HibernateVectorDAO()
         )
-        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
         this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -105,7 +105,6 @@ class VectorServiceTest {
         Assertions.assertEquals(pepita.nombre, listaDeVectores.get(1).nombre)
     }
 
-    @Test
     @Test
     fun testDeInfectarAUnVector(){
 
