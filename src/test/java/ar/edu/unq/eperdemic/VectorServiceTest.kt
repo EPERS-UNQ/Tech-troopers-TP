@@ -124,6 +124,9 @@ class VectorServiceTest {
         Assertions.assertFalse(service.enfermedades(humano.getId()!!).isEmpty())
         Assertions.assertEquals(service.recuperar(humano.getId()!!).enfermedadesDelVector().first().id, especie.id)
 
+        service.infectar(humano.getId()!!, especie.id!!)
+
+        Assertions.assertTrue(service.recuperar(humano.getId()!!).estaInfectado())
     }
 
     @AfterEach
