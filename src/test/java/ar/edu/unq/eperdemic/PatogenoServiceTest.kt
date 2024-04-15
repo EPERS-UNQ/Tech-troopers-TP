@@ -44,6 +44,7 @@ class PatogenoServiceTest {
     fun testCrearYRecuperarPatogeno() {
 
         val covid = this.servicio.recuperar(covid.id!!)
+
         Assertions.assertEquals("Coronavirus",covid.toString())
         Assertions.assertEquals(1, covid.id)
 
@@ -67,7 +68,7 @@ class PatogenoServiceTest {
         val covid = this.servicio.recuperar(covid.id!!)
         val patogenos = this.servicio.recuperarTodos()
 
-        Assertions.assertEquals(patogenos.first().toString(), covid.toString())
+        Assertions.assertEquals(patogenos[0].toString(), covid.toString())
 
     }
 
@@ -93,8 +94,8 @@ class PatogenoServiceTest {
         val especies = this.servicio.especiesDePatogeno(salmonella.id!!)
 
         Assertions.assertEquals(especies.size, 2)
-        Assertions.assertEquals(especies.get(0).nombre, enterica.nombre)
-        Assertions.assertEquals(especies.get(1).nombre, bongori.nombre)
+        Assertions.assertEquals(especies[0].nombre, enterica.nombre)
+        Assertions.assertEquals(especies[1].nombre, bongori.nombre)
 
     }
 
