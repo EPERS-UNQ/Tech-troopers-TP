@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
@@ -40,7 +41,7 @@ class EspecieServiceImplTest {
         patogeno = Patogeno("Wachiturro")
         especie  = Especie("Bacteria", patogeno, "Argentina")
 
-        servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
+        servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO())
         service = EspecieServiceImpl(HibernateEspecieDAO())
         dataService = DataServiceImpl(HibernateDataDAO())
 
