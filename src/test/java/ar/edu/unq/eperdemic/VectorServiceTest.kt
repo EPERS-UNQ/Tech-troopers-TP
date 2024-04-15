@@ -13,8 +13,10 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
@@ -25,6 +27,7 @@ class VectorServiceTest {
 
     lateinit var service: VectorService
     lateinit var serviceUbicacion: UbicacionService
+    lateinit var serviceEspecie: EspecieService
     lateinit var servicePatogeno: PatogenoService
     lateinit var dataService: DataService
 
@@ -40,6 +43,7 @@ class VectorServiceTest {
 
         this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
         this.serviceUbicacion = UbicacionServiceImp()
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
         this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -98,13 +102,14 @@ class VectorServiceTest {
 
     @Test
     fun testDeInfectarAUnVector(){
-        Assertions.assertFalse(humano.estaInfectado())
 
-        humano.infectar(especie)
+        Assertions.assertFalse(humano.estaInfectado()) // Cambiar a service
 
-        Assertions.assertTrue(humano.estaInfectado())
+        service.infectar(humano.getId()!!, especie.id!!)
+
+        Assertions.assertTrue(service.recuperar(humano.getId()!!).estaInfectado()) // Cambiar a service
+        // Assertions.assertEquals(otraEspecie.id, especie.id) // REVISAR
     }
-
     @AfterEach
     fun cleanup() {
         // Destroy cierra la session factory y fuerza a que, la proxima vez, una nueva tenga que ser creada.
