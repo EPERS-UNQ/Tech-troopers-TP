@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
-import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import javax.persistence.*
 
 
 @Entity
@@ -25,7 +25,8 @@ class Especie() {
         this.paisDeOrigen = paisDeOrigen
     }
 
-    fun agregarVector(vector: Vector){
-        this.vectores.add(vector)
+
+    fun agregarVector(vector: Vector) {
+        vectores.add(vector)
     }
 }

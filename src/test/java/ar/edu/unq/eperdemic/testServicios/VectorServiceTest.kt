@@ -106,6 +106,7 @@ class VectorServiceTest {
     }
 
     @Test
+    @Test
     fun testDeInfectarAUnVector(){
 
         Assertions.assertFalse(service.recuperar(humano.getId()!!).estaInfectado())
