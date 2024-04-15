@@ -14,4 +14,6 @@ interface VectorDAO {
 
     fun infectar(vector: Vector, especie: Especie)
 
+    fun enfermedades(vector: Vector): List<Especie>
+
 }

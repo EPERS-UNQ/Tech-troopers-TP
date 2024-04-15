@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -32,5 +33,9 @@ class VectorServiceImp (
             vectorDAO.infectar(vectorDAO.recuperar(vectorId), especie)
             especieDAO.actualizar(especie)
         }
+    }
+
+    override fun enfermedades(vectorId: Long): List<Especie> {
+        return runTrx { vectorDAO.enfermedades(vectorDAO.recuperar(vectorId)) }
     }
 }

@@ -103,13 +103,29 @@ class VectorServiceTest {
     @Test
     fun testDeInfectarAUnVector(){
 
-        Assertions.assertFalse(humano.estaInfectado()) // Cambiar a service
+        Assertions.assertFalse(service.recuperar(humano.getId()!!).estaInfectado())
 
         service.infectar(humano.getId()!!, especie.id!!)
 
-        Assertions.assertTrue(service.recuperar(humano.getId()!!).estaInfectado()) // Cambiar a service
-        // Assertions.assertEquals(otraEspecie.id, especie.id) // REVISAR
+        val otroHumano = service.recuperar(humano.getId()!!)
+
+        Assertions.assertTrue(otroHumano.estaInfectado())
+        Assertions.assertEquals(otroHumano.enfermedadesDelVector().first().id, especie.id)
+
     }
+
+    @Test
+    fun testDeEnfermedadesDeUnVector(){
+
+        Assertions.assertTrue(service.enfermedades(humano.getId()!!).isEmpty())
+
+        service.infectar(humano.getId()!!, especie.id!!)
+
+        Assertions.assertFalse(service.enfermedades(humano.getId()!!).isEmpty())
+        Assertions.assertEquals(service.recuperar(humano.getId()!!).enfermedadesDelVector().first().id, especie.id)
+
+    }
+
     @AfterEach
     fun cleanup() {
         // Destroy cierra la session factory y fuerza a que, la proxima vez, una nueva tenga que ser creada.

@@ -22,4 +22,8 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         this.actualizar(vector)
     }
 
+    override fun enfermedades(vector: Vector): List<Especie> {
+        return vector.enfermedadesDelVector()
+    }
+
 }
