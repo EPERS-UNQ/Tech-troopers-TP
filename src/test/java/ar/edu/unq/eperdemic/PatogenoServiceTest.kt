@@ -61,7 +61,7 @@ class PatogenoServiceTest {
 
         var otroPatogeno : Patogeno = servicio.recuperar(patogeno.id!!)
 
-        Assertions.assertTrue(otroPatogeno.especies.contains(especie))
+        Assertions.assertEquals(otroPatogeno.especies.first().id, especie.id)
     }
 
     @AfterEach
