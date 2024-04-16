@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -8,6 +8,7 @@ import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -98,7 +99,7 @@ class EspecieServiceImplTest {
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
-        serviceUbicacion = UbicacionServiceImp()
+        serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
         serviceVector.crear(golondrina)
