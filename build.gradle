@@ -22,15 +22,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.12.Final'
+
 }
 
 tasks.test {
     useJUnitPlatform()
 }
 
-test {
-    useJUnitPlatform()
-}
 
 
 compileKotlin {
