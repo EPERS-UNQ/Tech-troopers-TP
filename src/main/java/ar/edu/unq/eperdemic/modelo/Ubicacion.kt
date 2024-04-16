@@ -8,7 +8,7 @@ class Ubicacion() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long? = null
+    var id: Long? = null
 
     @Column(unique = true)
     var nombre: String? = null

@@ -34,6 +34,7 @@ class PatogenoServiceTest {
     lateinit var china: Ubicacion
     lateinit var corea: Ubicacion
     lateinit var humano: Vector
+    lateinit var humano1: Vector
     lateinit var servicio: PatogenoService
     lateinit var servicioUbicacion: UbicacionService
     lateinit var servicioVector: VectorService
@@ -52,16 +53,14 @@ class PatogenoServiceTest {
         this.servicioVector = VectorServiceImp(vectorDao, especieDao)
         this.covid = Patogeno("Coronavirus")
         this.salmonella = Patogeno("Salmonella")
-        this.china = Ubicacion("Corea")
+        this.china = Ubicacion("China")
         this.corea = Ubicacion("Corea")
         this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
+        this.humano1 = Vector("Pepe", china, TipoVector.HUMANO)
 
         this.servicio.crear(covid)
-        //this.servicioUbicacion.crear(china)
-        //this.servicioUbicacion.crear(corea)
-        //this.servicioVector.crear(humano)
-
-        //humano.infectar(bongori)
+        this.servicioUbicacion.crear(corea)
+        this.servicioUbicacion.crear(china)
 
     }
 
@@ -100,7 +99,7 @@ class PatogenoServiceTest {
     @Test
     fun seAgregaUnaEspecieNueva() {
 
-        val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", "Corea")
+        val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", corea.id!!)
         val covid = this.servicio.recuperar(covid.id!!)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
@@ -113,8 +112,8 @@ class PatogenoServiceTest {
 
         this.servicio.crear(salmonella)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", "Corea")
-        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", "China")
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", china.id!!)
+        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", corea.id!!)
 
         val especies = this.servicio.especiesDePatogeno(salmonella.id!!)
 
@@ -128,17 +127,17 @@ class PatogenoServiceTest {
     fun seSabeSiEsPandemia() {
 
         this.servicio.crear(salmonella)
-        this.servicioUbicacion.crear(corea)
         this.servicioVector.crear(humano)
+        this.servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", "Corea")
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
 
-        this.servicioVector.infectar(1,enterica.id!!)
+        this.servicioVector.infectar(humano.getId()!!,enterica.id!!)
+        this.servicioVector.infectar(humano1.getId()!!,enterica.id!!)
 
-        Assertions.assertTrue(servicio.esPandemia(3))
+        Assertions.assertTrue(servicio.esPandemia(enterica.id!!))
 
     }
-
 
     @AfterEach
     fun borrarRegistros() {

@@ -126,7 +126,7 @@ class VectorServiceTest {
         Assertions.assertEquals(service.recuperar(humano.getId()!!).enfermedadesDelVector().first().id, especie.id)
 
     }
-    /*
+
     @AfterEach
     fun cleanup() {
         // Destroy cierra la session factory y fuerza a que, la proxima vez, una nueva tenga que ser creada.
@@ -134,6 +134,5 @@ class VectorServiceTest {
         dataService.cleanAll()
     }
 
-     */
-
 }
+
