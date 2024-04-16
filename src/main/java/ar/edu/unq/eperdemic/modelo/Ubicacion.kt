@@ -8,13 +8,24 @@ class Ubicacion() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    private var id: Long? = null
 
     @Column(unique = true)
-    var nombre: String? = null
+    private var nombre: String? = null
 
     constructor(nombre: String): this() {
         this.nombre = nombre
     }
 
+    fun getNombre(): String? {
+        return this.nombre
+    }
+
+    fun setNombre(nombre: String) {
+        this.nombre = nombre
+    }
+
+    fun getId(): Long? {
+        return this.id
+    }
 }

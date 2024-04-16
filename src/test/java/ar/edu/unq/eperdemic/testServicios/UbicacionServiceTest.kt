@@ -61,6 +61,7 @@ class UbicacionServiceTest {
     lateinit var vector2: Vector
     lateinit var vector3: Vector
 
+
     lateinit var patogeno1: Patogeno
 
     lateinit var especie1: Especie
@@ -80,8 +81,8 @@ class UbicacionServiceTest {
 
 
         patogeno1 = servicePatogeno.crear(Patogeno())
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.nombre!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.nombre!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.getNombre()!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.getNombre()!!)
     }
 
     @Test
@@ -90,7 +91,7 @@ class UbicacionServiceTest {
 
         ubiPersistida1 = serviceUbicacion.recuperar(4)
 
-        Assertions.assertEquals(ubiPersistida1.nombre, "Uruguay")
+        Assertions.assertEquals(ubiPersistida1.getNombre(), "Uruguay")
     }
 
     @Test
@@ -107,19 +108,19 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoSeUpdateaUnaUbicacionValidaSeActualizaLaBaseDeDatos() {
-        ubi1.nombre = "Estados Unidos"
+        ubi1.setNombre("Estados Unidos")
         serviceUbicacion.updatear(ubi1)
 
         // Volvemos a obtener la entidad de la base de datos
-        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.id!!)
+        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId()!!)
 
         // El nombre del objeto ya no es el mismo con el que inicializo
         Assertions.assertFalse(
-                ubi1Actualizada.nombre == "Argentina"
+                ubi1Actualizada.getNombre() == "Argentina"
         )
 
         // El nombre cambio a Estados Unidos
-        Assertions.assertEquals(ubi1Actualizada.nombre, "Estados Unidos")
+        Assertions.assertEquals(ubi1Actualizada.getNombre(), "Estados Unidos")
     }
 
     @Test
@@ -136,37 +137,68 @@ class UbicacionServiceTest {
 
         // Comprobamos que los nombres de las ubcaciones sean los de la lista
         for (u in todasLasUbicaiones) {
-            nombres.any { it == u.nombre }
+            nombres.any { it == u.getNombre() }
         }
     }
 
     @Test
     fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.id!!)
+        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
 
         val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
         val ubicacionNueva = vectorTemporal.ubicacion!!
 
         // Comprobamos que la ubicacion del vector fue actualizada
-        Assertions.assertEquals(ubicacionNueva.nombre, ubi2.nombre)
+        Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
     }
 
     @Test
     fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
 
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.id!!)
+        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
 
         serviceVector.infectar(vector1.getId()!!, especie1.id!!)
         serviceVector.infectar(vector1.getId()!!, especie2.id!!)
 
 
         // Obtenemos los vectores que esten en la nueva ubicacion
-        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.id == ubi2.id }
+        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
 
-        vectoresDeNuevaUbicacion.all {
-            v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
+        Assertions.assertTrue(
+            vectoresDeNuevaUbicacion.all {
+                v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
+            }
+        )
+    }
+
+    @Test
+    fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
+        val vector4 = serviceVector.crear(Vector("Miguel", ubi2, TipoVector.HUMANO))
+
+        // Restrinjo la prueba a un solo vector infectado
+        serviceVector.infectar(vector4.getId()!!, especie1.id!!)
+        serviceUbicacion.expandir(ubi2.getId()!!)
+
+        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
+
+        Assertions.assertTrue(
+            vectoresUbicacion.all {
+                   it.enfermedadesDelVector().any { it.id == especie1.id!! }
+            }
+        )
+    }
+
+    @Test
+    fun cuandoSeEnviaElMensajeExpandirSiNoHayUnVenctorInfectadoEnLaUbicacionNoHayCambios() {
+        val vector4 = serviceVector.crear(Vector("Miguel", ubi2, TipoVector.HUMANO))
+
+        serviceUbicacion.expandir(ubi2.getId()!!)
+
+        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
+
+        for (v in vectoresUbicacion) {
+            Assertions.assertFalse( v.estaInfectado() )
         }
-
     }
 
 

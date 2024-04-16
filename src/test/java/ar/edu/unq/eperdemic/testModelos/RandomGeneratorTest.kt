@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testModelos
 
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import org.junit.jupiter.api.Assertions

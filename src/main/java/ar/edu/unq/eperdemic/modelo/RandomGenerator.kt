@@ -22,4 +22,5 @@ class RandomGenerator {
         val rIndex = random.nextInt(list.size)
         return list[rIndex]
     }
+
 }

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
@@ -48,7 +49,7 @@ class UbicacionServiceImp(
             vector.ubicacion = nuevaUbicacion
             daoVector.actualizar(vector)
 
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.id!!)
+            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
 
             if(vector.estaInfectado()) {
                 todosLosVectores.map {
@@ -60,4 +61,39 @@ class UbicacionServiceImp(
         }
     }
 
+    override fun expandir( ubicacionId: Long) {
+        runTrx {
+            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
+            val todosLosVectoresInf = todosLosVectores.filter { it.estaInfectado() }
+
+            if (todosLosVectoresInf.isNotEmpty()) {
+                val random: RandomGenerator = RandomGenerator()
+                val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
+
+                for (v in todosLosVectores) {
+                    vectorInf.contargiarA(v)
+                    daoVector.actualizar(v)
+                }
+
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

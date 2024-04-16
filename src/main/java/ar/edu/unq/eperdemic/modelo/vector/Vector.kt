@@ -47,7 +47,7 @@ open class Vector() {
         }
     }
 
-    fun enfermedadesDelVector(): List<Especie>{
+    fun enfermedadesDelVector(): List<Especie> {
         return this.especies.toList()
     }
 }
