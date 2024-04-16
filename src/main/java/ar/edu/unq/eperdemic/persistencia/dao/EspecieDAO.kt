@@ -12,4 +12,6 @@ interface EspecieDAO {
 
     fun recuperarTodos() : List<Especie>
 
+    fun lider() : Especie
+
 }
