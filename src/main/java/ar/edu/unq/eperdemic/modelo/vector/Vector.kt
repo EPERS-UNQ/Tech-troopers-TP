@@ -43,11 +43,15 @@ open class Vector() {
     //Nota: Si no puede contagiar no hace nada.
     fun contargiarA(vector: Vector){
         if (this.tipo.puedeContagiarA(vector.tipo)){
-            this.enfermedadesDelVector().map{ this.infectar(it) }
+            this.enfermedadesDelVector().map{ vector.infectar(it) }
         }
     }
 
     fun enfermedadesDelVector(): List<Especie>{
         return this.especies.toList()
+    }
+
+    fun incluyeA(especie: Especie): Boolean {
+        return especies.contains(especie)
     }
 }

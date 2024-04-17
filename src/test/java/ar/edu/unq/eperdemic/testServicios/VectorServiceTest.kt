@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
@@ -46,6 +46,12 @@ class VectorServiceTest {
         this.serviceUbicacion = UbicacionServiceImp()
         this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
         this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
+        this.serviceUbicacion = UbicacionServiceImp(
+            HibernateUbicacionDAO(),
+            HibernateVectorDAO()
+        )
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
+        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
         ubicacion = Ubicacion("Argentina")
@@ -61,6 +67,7 @@ class VectorServiceTest {
         especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
 
     }
+
 
     @Test
     fun testDeCreacionDeUnVector(){
@@ -135,4 +142,5 @@ class VectorServiceTest {
     }
 
 }
+
 

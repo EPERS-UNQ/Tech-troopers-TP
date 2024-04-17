@@ -30,6 +30,7 @@ class VectorServiceImp (
     override fun infectar(vectorId: Long, especieId: Long) {
         runTrx {
             val especie = especieDAO.recuperar(especieId)
+
             vectorDAO.infectar(vectorDAO.recuperar(vectorId), especie)
             especieDAO.actualizar(especie)
         }

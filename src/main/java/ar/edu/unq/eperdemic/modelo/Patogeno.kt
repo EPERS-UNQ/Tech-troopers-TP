@@ -1,9 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
-
 import java.io.Serializable
 import javax.persistence.*
-import kotlin.collections.HashSet
 
 @Entity
 class Patogeno() : Serializable {
@@ -17,6 +15,11 @@ class Patogeno() : Serializable {
 
     var cantidadDeEspecies: Int = 0
     var tipo : String? = null
+    var capContagioHumano : Int = 0
+    var capContagioAnimal : Int = 0
+    var capContagioInsecto : Int = 0
+    var defensa : Int = 0
+    var capDeBiomecanizacion : Int = 0
 
     override fun toString(): String {
         return tipo!!

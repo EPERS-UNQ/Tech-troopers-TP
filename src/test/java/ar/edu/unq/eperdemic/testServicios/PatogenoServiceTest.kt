@@ -1,5 +1,6 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -49,7 +50,7 @@ class PatogenoServiceTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
         this.servicio = PatogenoServiceImpl(patogenoDao, especieDao, ubicacionDao, vectorDao)
-        this.servicioUbicacion = UbicacionServiceImp()
+        this.servicioUbicacion = UbicacionServiceImp(ubicacionDao, vectorDao)
         this.servicioVector = VectorServiceImp(vectorDao, especieDao)
         this.covid = Patogeno("Coronavirus")
         this.salmonella = Patogeno("Salmonella")
@@ -58,7 +59,7 @@ class PatogenoServiceTest {
         this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
         this.humano1 = Vector("Pepe", china, TipoVector.HUMANO)
 
-        this.servicio.crear(covid)
+        //this.servicio.crear(covid)
         this.servicioUbicacion.crear(corea)
         this.servicioUbicacion.crear(china)
 
@@ -67,19 +68,30 @@ class PatogenoServiceTest {
     @Test
     fun testCrearYRecuperarPatogeno() {
 
-        val covid = this.servicio.recuperar(covid.id!!)
+        servicio.crear(covid)
+        val covid = servicio.recuperar(covid.id!!)
 
-        Assertions.assertEquals("Coronavirus", covid.toString())
-        Assertions.assertEquals(1, covid.id)
+        Assertions.assertEquals(covid.toString(), "Coronavirus")
+        Assertions.assertEquals(covid.id, 1)
+
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnPatogenoQueNoExiste() {
+
+        Assertions.assertEquals(servicio.recuperar(15), null)
 
     }
 
     @Test
     fun testActualizarPatogeno() {
 
-        val covid = this.servicio.recuperar(covid.id!!)
+        servicio.crear(covid)
+
+        val covid = servicio.recuperar(covid.id!!)
         covid.crearEspecie("Especie 1", "Arg")
-        this.servicio.updatear(covid)
+
+        servicio.updatear(covid)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
         Assertions.assertEquals(covid.id, 1)
@@ -89,18 +101,34 @@ class PatogenoServiceTest {
     @Test
     fun seRecuperanTodosLosPatogenos() {
 
-        val covid = this.servicio.recuperar(covid.id!!)
-        val patogenos = this.servicio.recuperarTodos()
+        servicio.crear(covid)
+        servicio.crear(salmonella)
 
+        val covid = servicio.recuperar(covid.id!!)
+        val patogenos = servicio.recuperarTodos()
+
+        Assertions.assertEquals(patogenos.size, 2)
         Assertions.assertEquals(patogenos[0].toString(), covid.toString())
+
+    }
+
+    @Test
+    fun seTrataDeRecuperarTodosLosPatogenosPeroNoHay() {
+
+        val patogenos = servicio.recuperarTodos()
+
+        Assertions.assertEquals(patogenos.size, 0)
 
     }
 
     @Test
     fun seAgregaUnaEspecieNueva() {
 
+        servicio.crear(covid)
+        servicioVector.crear(humano)
+
         val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", corea.id!!)
-        val covid = this.servicio.recuperar(covid.id!!)
+        val covid = servicio.recuperar(covid.id!!)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
         Assertions.assertEquals(especie.patogeno.toString(), covid.toString())
@@ -110,12 +138,14 @@ class PatogenoServiceTest {
     @Test
     fun seRecuperanTodasLasEspeciesDelPatogeno() {
 
-        this.servicio.crear(salmonella)
+        servicio.crear(salmonella)
+        servicioVector.crear(humano)
+        servicioVector.crear(humano1)
 
         val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", china.id!!)
         val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", corea.id!!)
 
-        val especies = this.servicio.especiesDePatogeno(salmonella.id!!)
+        val especies = servicio.especiesDePatogeno(salmonella.id!!)
 
         Assertions.assertEquals(especies.size, 2)
         Assertions.assertEquals(especies[0].nombre, enterica.nombre)
@@ -124,18 +154,52 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun seSabeSiEsPandemia() {
+    fun seTrataDeRecuperarTodasLasEspeciesDelPatogenoEsteNoTiene() {
 
-        this.servicio.crear(salmonella)
-        this.servicioVector.crear(humano)
-        this.servicioVector.crear(humano1)
+        servicio.crear(covid)
+        val especies = servicio.especiesDePatogeno(covid.id!!)
+
+        Assertions.assertEquals(especies.size, 0)
+
+    }
+
+    @Test
+    fun seSabeSiNoEsPandemia() {
+
+        servicio.crear(salmonella)
+        servicioVector.crear(humano)
 
         val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
 
-        this.servicioVector.infectar(humano.getId()!!,enterica.id!!)
-        this.servicioVector.infectar(humano1.getId()!!,enterica.id!!)
+        servicioVector.infectar(humano.getId()!!,enterica.id!!)
+
+        Assertions.assertFalse(servicio.esPandemia(enterica.id!!))
+
+    }
+
+    @Test
+    fun seSabeSiEsPandemia() {
+
+        servicio.crear(salmonella)
+        servicioVector.crear(humano)
+        servicioVector.crear(humano1)
+
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+
+        servicioVector.infectar(humano.getId()!!,enterica.id!!)
+        servicioVector.infectar(humano1.getId()!!,enterica.id!!)
 
         Assertions.assertTrue(servicio.esPandemia(enterica.id!!))
+
+    }
+
+    @Test
+    fun errorNoHayVectoresEnUbicacion() {
+
+        Assertions.assertThrows(NoHayVectorException::class.java) {
+            servicio.crear(salmonella)
+            servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+        }
 
     }
 

@@ -19,4 +19,5 @@ class Ubicacion() {
     constructor(nombre: String) : this() {
         this.nombre = nombre
     }
+
 }
