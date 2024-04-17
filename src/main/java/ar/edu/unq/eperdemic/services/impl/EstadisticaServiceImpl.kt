@@ -13,7 +13,7 @@ class EstadisticaServiceImpl (
     }
 
     override fun lideres(): List<Especie> {
-        TODO("Not yet implemented")
+        return runTrx { especieDAO.todosLosLideres() }
     }
 
 }

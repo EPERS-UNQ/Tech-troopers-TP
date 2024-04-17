@@ -32,11 +32,15 @@ class EstadisticaServiceTest {
 
     lateinit var especie   : Especie
     lateinit var especie2  : Especie
+    lateinit var especie3  : Especie
     lateinit var patogeno  : Patogeno
 
     lateinit var humano     : Vector
     lateinit var humano2    : Vector
+    lateinit var humano3    : Vector
     lateinit var golondrina: Vector
+    lateinit var insecto:  Vector
+    lateinit var insecto2: Vector
 
     lateinit var ubicacion: Ubicacion
 
@@ -51,26 +55,24 @@ class EstadisticaServiceTest {
 
         patogeno  = Patogeno("Wachiturro")
         servicePatogeno.crear(patogeno)
-        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
+        especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
+        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", "Peru")
 
         ubicacion = Ubicacion("Argentina")
 
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
+        humano2    = Vector("Juan", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
-
-
+        serviceVector.crear(humano2)
+        serviceVector.crear(golondrina)
     }
 
     @Test
     fun testEspecieLider() {
 
-        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", "Peru")
-        humano2 = Vector("Juan", ubicacion, TipoVector.HUMANO)
-        serviceVector.crear(humano2)
-        serviceVector.crear(golondrina)
         serviceVector.infectar(humano.getId()!!, especie.id!!)
         serviceVector.infectar(humano.getId()!!, especie2.id!!)
         serviceVector.infectar(humano2.getId()!!, especie.id!!)
@@ -78,6 +80,38 @@ class EstadisticaServiceTest {
 
         Assertions.assertEquals(especie.id, service.especieLider().id)
         Assertions.assertFalse(especie2.id!! == service.especieLider().id)
+
+    }
+
+    @Test
+    fun testDeLosLideres() {
+
+        especie3 = servicePatogeno.agregarEspecie(patogeno.id!!, "Adenovirus", "Bolivia")
+        humano3  = Vector("Bautista", ubicacion, TipoVector.HUMANO)
+        insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
+        insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+        serviceVector.crear(humano3)
+        serviceVector.crear(insecto)
+        serviceVector.crear(insecto2)
+
+        serviceVector.infectar(humano.getId()!!,  especie.id!!)
+        serviceVector.infectar(humano2.getId()!!, especie.id!!)
+        serviceVector.infectar(insecto.getId()!!, especie.id!!)
+        serviceVector.infectar(insecto2.getId()!!, especie.id!!)
+
+        serviceVector.infectar(humano.getId()!!,  especie2.id!!)
+        serviceVector.infectar(humano3.getId()!!, especie2.id!!)
+        serviceVector.infectar(golondrina.getId()!!, especie2.id!!)
+
+        serviceVector.infectar(humano.getId()!!, especie3.id!!)
+
+        // especie2 -> Infectó dos humanos y un animal. Es mas lider esta.
+        // especie  -> Infectó dos humanos y dos insecto.
+        // especie3 -> Infectó un humano.
+
+        Assertions.assertEquals(especie2.id, service.lideres().first().id)
+        Assertions.assertEquals(especie.id , service.lideres()[1].id)
+        Assertions.assertEquals(especie3.id , service.lideres()[2].id)
 
     }
 

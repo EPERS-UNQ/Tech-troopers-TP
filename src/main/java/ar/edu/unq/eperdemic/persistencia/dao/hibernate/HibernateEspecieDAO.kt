@@ -34,4 +34,21 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
         return query.singleResult
     }
 
+    override fun todosLosLideres(): List<Especie> {
+        val session = HibernateTransactionRunner.currentSession
+
+        val hql   = """
+                        select e
+                        from Especie e
+                        join e.vectores v
+                        where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
+                        group by e
+                        order by count(v) desc
+                    """
+
+        val query = session.createQuery(hql, Especie::class.java)
+
+        return query.resultList
+    }
+
 }

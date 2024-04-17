@@ -14,4 +14,6 @@ interface EspecieDAO {
 
     fun lider() : Especie
 
+    fun todosLosLideres() : List<Especie>
+
 }
