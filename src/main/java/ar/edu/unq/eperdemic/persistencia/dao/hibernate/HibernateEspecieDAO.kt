@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
@@ -38,7 +39,7 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
     override fun todosLosLideres(): List<Especie> {
         val session = HibernateTransactionRunner.currentSession
 
-        val hql   = """
+        val hql = """
                         select e
                         from Especie e
                         join e.vectores v
@@ -67,6 +68,21 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
         query.maxResults = 1
 
         return query.singleResult.nombre!!
+    }
+
+    override fun especiesDelPatogeno(patogenoBuscado: Patogeno): List<Especie> {
+
+        val session = HibernateTransactionRunner.currentSession
+
+        val hql = (" select e "
+                 + " from Especie e "
+                 + " where e.patogeno = :patogenoBuscado ")
+
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("patogenoBuscado", patogenoBuscado)
+
+        return query.resultList
+
     }
 
 }

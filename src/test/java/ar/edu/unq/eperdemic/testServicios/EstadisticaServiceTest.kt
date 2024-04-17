@@ -49,14 +49,14 @@ class EstadisticaServiceTest {
 
         service     = EstadisticaServiceImpl( HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl( HibernateDataDAO() )
-        servicePatogeno  = PatogenoServiceImpl( HibernatePatogenoDAO(), HibernateEspecieDAO() )
+        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
 
         patogeno  = Patogeno("Wachiturro")
         servicePatogeno.crear(patogeno)
-        especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
-        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", "Peru")
+        especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", ubicacion.id!!)
 
         ubicacion = Ubicacion("Argentina")
 
@@ -86,7 +86,7 @@ class EstadisticaServiceTest {
     @Test
     fun testDeLosLideres() {
 
-        especie3 = servicePatogeno.agregarEspecie(patogeno.id!!, "Adenovirus", "Bolivia")
+        especie3 = servicePatogeno.agregarEspecie(patogeno.id!!, "Adenovirus", ubicacion.id!!)
         humano3  = Vector("Bautista", ubicacion, TipoVector.HUMANO)
         insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
         insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)

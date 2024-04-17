@@ -15,7 +15,7 @@
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">false</property>
 
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
         <mapping class="ar.edu.unq.eperdemic.modelo.vector.Vector" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Ubicacion" />

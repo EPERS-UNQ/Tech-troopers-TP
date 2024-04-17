@@ -49,11 +49,16 @@ class EspecieServiceImplTest {
         patogeno  = Patogeno("Wachiturro")
 
         service         = EspecieServiceImpl(HibernateEspecieDAO())
-        servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
+
+        servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
+        service = EspecieServiceImpl(HibernateEspecieDAO())
+        service         = EspecieServiceImpl(HibernateEspecieDAO())
+
+        servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         dataService = DataServiceImpl(HibernateDataDAO())
 
         servicePatogeno.crear(patogeno)
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
     }
 
     @Test
@@ -81,7 +86,7 @@ class EspecieServiceImplTest {
     fun testAlRecuperarTodasLasEspeciesLasMismasSonSimiliaresALasYaExistentes() {
         patogeno2 = Patogeno("Otaku")
         servicePatogeno.crear(patogeno2)
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", "Brasil")
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", ubicacion.id!!)
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 

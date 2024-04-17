@@ -22,4 +22,12 @@ class RandomGenerator {
         val rIndex = random.nextInt(list.size)
         return list[rIndex]
     }
+
+    fun porcentajeExistoso(porcentaje: Int): Boolean {
+        if (1 <= porcentaje && porcentaje <= 100) {
+            return (porcentaje - random.nextInt(100)) > 0
+        }
+        throw IllegalArgumentException("El porcentaje debe estar entre 1 y 100.")
+    }
+
 }
