@@ -74,7 +74,7 @@ class PatogenoServiceImpl(
             val vectores = vectorDAO.recuperarTodos()
             val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
             for (v in vectores) {
-                if (v.incluyeA(especie)) {
+                if (v.estaInfectadoCon(especie)) {
                     ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
                 }
             }

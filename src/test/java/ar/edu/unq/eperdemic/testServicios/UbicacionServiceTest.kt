@@ -41,11 +41,12 @@ class UbicacionServiceTest {
 
     var servicePatogeno: PatogenoService = PatogenoServiceImpl(
             HibernatePatogenoDAO(),
-            HibernateEspecieDAO()
+            HibernateEspecieDAO(),
+            HibernateUbicacionDAO(),
+            HibernateVectorDAO()
     )
 
     var serviceEspecie: EspecieService = EspecieServiceImpl(HibernateEspecieDAO())
-
 
     private var dataService: DataService = DataServiceImpl(HibernateDataDAO())
 
@@ -80,8 +81,8 @@ class UbicacionServiceTest {
 
 
         patogeno1 = servicePatogeno.crear(Patogeno())
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.nombre!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.nombre!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.id!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.id!!)
     }
 
     @Test

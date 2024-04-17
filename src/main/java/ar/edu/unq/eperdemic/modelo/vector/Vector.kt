@@ -58,4 +58,8 @@ open class Vector() {
     fun enfermedadesDelVector(): List<Especie>{
         return this.especies.toList()
     }
+
+    fun estaInfectadoCon(especie: Especie): Boolean {
+        return especies.contains(especie)
+    }
 }
