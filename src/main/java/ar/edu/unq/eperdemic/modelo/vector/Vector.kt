@@ -43,15 +43,9 @@ open class Vector() {
     //Nota: Si no puede contagiar no hace nada.
     fun contargiarA(vector: Vector){
         if (this.tipo.puedeContagiarA(vector.tipo)){
-            this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }
+            this.enfermedadesDelVector().map{ this.infectar(it) }
         }
     }
-
-    fun intentarInfectar(vector: Vector, especie: Especie){
-        val random = RandomGenerator()
-        val porcentajeDeContagioExitoso = random.getNumberoRandom() + capacidadDeContagio
-    }
-
     fun enfermedadesDelVector(): List<Especie>{
         return this.especies.toList()
     }
