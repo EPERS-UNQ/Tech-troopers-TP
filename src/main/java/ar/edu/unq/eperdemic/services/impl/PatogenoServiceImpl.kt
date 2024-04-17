@@ -1,16 +1,24 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
 
 class PatogenoServiceImpl(
     private val patogenoDAO: PatogenoDAO,
-    private val especieDAO: EspecieDAO
+    private val especieDAO: EspecieDAO,
+    private val ubicacionDAO: UbicacionDAO,
+    private val vectorDAO: VectorDAO
     ) : PatogenoService {
 
 
@@ -30,10 +38,20 @@ class PatogenoServiceImpl(
         return runTrx { patogenoDAO.recuperarATodos() }
     }
 
-    override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, paisDeOrigen: String): Especie {
+    override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
+
         return runTrx {
-            var patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
-            var especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen)
+
+            val randomize = RandomGenerator()
+            val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
+            val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
+            val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.nombre!!)
+            val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
+            if (vectoresEnUbicacion.isEmpty()) {
+                throw NoHayVectorException()
+            }
+            val vectorAInfectar = randomize.getElementoRandomEnLista(vectoresEnUbicacion)
+            vectorDAO.infectar(vectorAInfectar, especie)
             patogenoDAO.actualizar(patogeno)
             especieDAO.crear(especie)
             especie
@@ -41,11 +59,27 @@ class PatogenoServiceImpl(
     }
 
     override fun especiesDePatogeno(patogenoId: Long): List<Especie> {
-        TODO("Not yet implemented")
+        return runTrx {
+            val patogeno: Patogeno = patogenoDAO.recuperar(patogenoId)
+            val especies = especieDAO.especiesDelPatogeno(patogeno)
+            especies
+        }
     }
 
-    override fun esPademia(especieId: Long): Boolean {
-        TODO("Not yet implemented")
+    override fun esPandemia(especieId: Long): Boolean {
+        return runTrx {
+
+            val especie = especieDAO.recuperar(especieId)
+            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
+            val vectores = vectorDAO.recuperarTodos()
+            val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
+            for (v in vectores) {
+                if (v.incluyeA(especie)) {
+                    ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
+                }
+            }
+            ubicacionesDeVectoresConEspecie.size > cantUbicaciones/ 2
+        }
     }
 
 }

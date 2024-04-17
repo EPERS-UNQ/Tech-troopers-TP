@@ -43,6 +43,9 @@ class VectorServiceTest {
     fun prepare() {
 
         this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
+        this.serviceUbicacion = UbicacionServiceImp()
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
+        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         this.serviceUbicacion = UbicacionServiceImp(
             HibernateUbicacionDAO(),
             HibernateVectorDAO()
@@ -142,3 +145,5 @@ class VectorServiceTest {
     }
 
 }
+
+

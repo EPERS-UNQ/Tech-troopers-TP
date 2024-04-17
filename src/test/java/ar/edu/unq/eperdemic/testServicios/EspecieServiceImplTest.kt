@@ -48,7 +48,13 @@ class EspecieServiceImplTest {
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro")
 
+<<<<<<< HEAD
         service         = EspecieServiceImpl(HibernateEspecieDAO())
+=======
+        servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
+        service = EspecieServiceImpl(HibernateEspecieDAO())
+        service         = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
+>>>>>>> feature/PatogenoService
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
         dataService = DataServiceImpl(HibernateDataDAO())
 
