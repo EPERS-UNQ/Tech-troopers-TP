@@ -5,6 +5,7 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -27,7 +28,6 @@ class EstadisticaServiceTest {
     lateinit var dataService: DataService
     lateinit var serviceVector   : VectorService
     lateinit var serviceUbicacion: UbicacionService
-    lateinit var serviceEspecie  : EspecieService
     lateinit var servicePatogeno : PatogenoService
 
     lateinit var especie   : Especie
@@ -47,7 +47,7 @@ class EstadisticaServiceTest {
     @BeforeEach
     fun crearModelo() {
 
-        service     = EstadisticaServiceImpl( HibernateEspecieDAO() )
+        service     = EstadisticaServiceImpl( HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl( HibernateDataDAO() )
         servicePatogeno  = PatogenoServiceImpl( HibernatePatogenoDAO(), HibernateEspecieDAO() )
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
@@ -113,6 +113,22 @@ class EstadisticaServiceTest {
         Assertions.assertEquals(especie.id , service.lideres()[1].id)
         Assertions.assertEquals(especie3.id , service.lideres()[2].id)
 
+    }
+
+    @Test
+    fun testReporteDeContagios() {
+        insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
+        serviceVector.crear(insecto)
+
+        serviceVector.infectar(humano.getId()!!,  especie.id!!)
+        serviceVector.infectar(humano2.getId()!!, especie.id!!)
+        serviceVector.infectar(golondrina.getId()!!, especie2.id!!)
+
+        val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacion.nombre!!)
+
+        Assertions.assertEquals(4, reporte.cantidadVectores)
+        Assertions.assertEquals(3, reporte.cantidadInfectados)
+        Assertions.assertEquals("Bacteria", reporte.especiePrevalente)
     }
 
     @AfterEach

@@ -19,4 +19,6 @@ interface VectorDAO {
 
     fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>
 
+    fun cantidadDeInfectados(ubicacionId: Long) : Int
+
 }

@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 interface EspecieDAO {
 
@@ -15,5 +16,7 @@ interface EspecieDAO {
     fun lider() : Especie
 
     fun todosLosLideres() : List<Especie>
+
+    fun especiePrevalente(vectoresUbicados: List<Vector>): String
 
 }

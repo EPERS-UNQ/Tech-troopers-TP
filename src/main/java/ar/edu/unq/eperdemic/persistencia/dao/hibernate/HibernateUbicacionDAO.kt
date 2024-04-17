@@ -17,4 +17,15 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         return query.resultList
     }
 
+    override fun recuperarPorNombre(nombreUbicacion: String): Ubicacion {
+        val session = HibernateTransactionRunner.currentSession
+
+        val hql = "select u from Ubicacion u where u.nombre = :nombreUbicacion"
+
+        val query = session.createQuery(hql, Ubicacion::class.java)
+        query.setParameter("nombreUbicacion", nombreUbicacion)
+
+        return query.singleResult
+    }
+
 }

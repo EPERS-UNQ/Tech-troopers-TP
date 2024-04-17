@@ -63,6 +63,7 @@ class EspecieServiceImplTest {
         Assertions.assertEquals(especiePersistida.id, otraEspecie.id)
         Assertions.assertEquals(especiePersistida.nombre, otraEspecie.nombre)
         Assertions.assertEquals(especiePersistida.paisDeOrigen, otraEspecie.paisDeOrigen)
+        Assertions.assertEquals(especiePersistida.patogeno!!.id, otraEspecie.patogeno!!.id)
     }
 
     @Test
