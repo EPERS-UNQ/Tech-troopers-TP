@@ -48,7 +48,7 @@ class UbicacionServiceImp(
             vector.ubicacion = nuevaUbicacion
             daoVector.actualizar(vector)
 
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.id!!)
+            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
 
             if(vector.estaInfectado()) {
                 todosLosVectores.map {

@@ -19,7 +19,7 @@ class Patogeno() : Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Long? = null
+    private var id : Long? = null
 
     var cantidadDeEspecies: Int = 0
     var tipo : String? = null
@@ -31,6 +31,14 @@ class Patogeno() : Serializable {
 
     override fun toString(): String {
         return tipo!!
+    }
+
+    fun getId(): Long? {
+        return this.id!!
+    }
+
+    fun setId(idNew : Long?) {
+        this.id = idNew
     }
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {

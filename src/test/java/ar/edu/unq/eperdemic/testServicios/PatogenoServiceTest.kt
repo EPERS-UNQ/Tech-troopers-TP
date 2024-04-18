@@ -69,10 +69,10 @@ class PatogenoServiceTest {
     fun testCrearYRecuperarPatogeno() {
 
         servicio.crear(covid)
-        val covid = servicio.recuperar(covid.id!!)
+        val covid = servicio.recuperar(covid.getId()!!)
 
         Assertions.assertEquals(covid.toString(), "Coronavirus")
-        Assertions.assertEquals(covid.id, 1)
+        Assertions.assertEquals(covid.getId(), 1)
 
     }
 
@@ -90,13 +90,13 @@ class PatogenoServiceTest {
 
         servicio.crear(covid)
 
-        val covid = servicio.recuperar(covid.id!!)
+        val covid = servicio.recuperar(covid.getId()!!)
         covid.crearEspecie("Especie 1", "Arg")
 
         servicio.updatear(covid)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
-        Assertions.assertEquals(covid.id, 1)
+        Assertions.assertEquals(covid.getId(), 1)
 
     }
 
@@ -106,7 +106,7 @@ class PatogenoServiceTest {
         servicio.crear(covid)
         servicio.crear(salmonella)
 
-        val covid = servicio.recuperar(covid.id!!)
+        val covid = servicio.recuperar(covid.getId()!!)
         val patogenos = servicio.recuperarTodos()
 
         Assertions.assertEquals(patogenos.size, 2)
@@ -129,8 +129,8 @@ class PatogenoServiceTest {
         servicio.crear(covid)
         servicioVector.crear(humano)
 
-        val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", corea.id!!)
-        val covid = servicio.recuperar(covid.id!!)
+        val especie: Especie = servicio.agregarEspecie(covid.getId()!!, "Virus", corea.getId()!!)
+        val covid = servicio.recuperar(covid.getId()!!)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
         Assertions.assertEquals(especie.patogeno.toString(), covid.toString())
@@ -144,10 +144,10 @@ class PatogenoServiceTest {
         servicioVector.crear(humano)
         servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", china.id!!)
-        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Enterica", china.getId()!!)
+        val bongori: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Bongori", corea.getId()!!)
 
-        val especies = servicio.especiesDePatogeno(salmonella.id!!)
+        val especies = servicio.especiesDePatogeno(salmonella.getId()!!)
 
         Assertions.assertEquals(especies.size, 2)
         Assertions.assertEquals(especies[0].nombre, enterica.nombre)
@@ -159,7 +159,7 @@ class PatogenoServiceTest {
     fun seTrataDeRecuperarTodasLasEspeciesDelPatogenoEsteNoTiene() {
 
         servicio.crear(covid)
-        val especies = servicio.especiesDePatogeno(covid.id!!)
+        val especies = servicio.especiesDePatogeno(covid.getId()!!)
 
         Assertions.assertEquals(especies.size, 0)
 
@@ -171,11 +171,11 @@ class PatogenoServiceTest {
         servicio.crear(salmonella)
         servicioVector.crear(humano)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Enterica", corea.getId()!!)
 
-        servicioVector.infectar(humano.getId()!!,enterica.id!!)
+        servicioVector.infectar(humano.getId()!!,enterica.getId()!!)
 
-        Assertions.assertFalse(servicio.esPandemia(enterica.id!!))
+        Assertions.assertFalse(servicio.esPandemia(enterica.getId()!!))
 
     }
 
@@ -186,12 +186,12 @@ class PatogenoServiceTest {
         servicioVector.crear(humano)
         servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Enterica", corea.getId()!!)
 
-        servicioVector.infectar(humano.getId()!!,enterica.id!!)
-        servicioVector.infectar(humano1.getId()!!,enterica.id!!)
+        servicioVector.infectar(humano.getId()!!,enterica.getId()!!)
+        servicioVector.infectar(humano1.getId()!!,enterica.getId()!!)
 
-        Assertions.assertTrue(servicio.esPandemia(enterica.id!!))
+        Assertions.assertTrue(servicio.esPandemia(enterica.getId()!!))
 
     }
 
@@ -200,7 +200,7 @@ class PatogenoServiceTest {
 
         Assertions.assertThrows(NoHayVectorException::class.java) {
             servicio.crear(salmonella)
-            servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+            servicio.agregarEspecie(salmonella.getId()!!, "Enterica", corea.getId()!!)
         }
 
     }

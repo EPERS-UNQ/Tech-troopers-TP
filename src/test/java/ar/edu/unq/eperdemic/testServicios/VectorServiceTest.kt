@@ -58,7 +58,7 @@ class VectorServiceTest {
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
+        especie = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
 
     }
 
@@ -109,12 +109,12 @@ class VectorServiceTest {
 
         Assertions.assertFalse(pepita.estaInfectado())
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         val otraGolondrina = service.recuperar(pepita.getId()!!)
 
         Assertions.assertTrue(otraGolondrina.estaInfectado())
-        Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().id, especie.id)
+        Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().getId(), especie.getId())
 
     }
 
@@ -123,12 +123,12 @@ class VectorServiceTest {
 
         val pepita = service.crear(golondrina)
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         Assertions.assertFalse(service.enfermedades(pepita.getId()!!).isEmpty())
-        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().id, especie.id)
+        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().getId(), especie.getId())
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         Assertions.assertTrue(service.recuperar(pepita.getId()!!).estaInfectado())
     }

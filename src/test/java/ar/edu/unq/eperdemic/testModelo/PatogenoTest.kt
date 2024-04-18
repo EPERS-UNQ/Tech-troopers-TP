@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.junit.jupiter.api.Assertions
@@ -16,14 +16,14 @@ class PatogenoTest {
 
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
 
-        salmonella.id = 1
+        salmonella.setId(1)
         salmonella.cantidadDeEspecies = 0
 
     }
 
     @Test
     fun seSabeElIdDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.id, 1)
+        Assertions.assertEquals(salmonella.getId(), 1)
     }
 
     @Test

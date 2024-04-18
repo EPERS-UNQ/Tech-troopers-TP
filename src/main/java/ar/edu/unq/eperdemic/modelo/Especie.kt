@@ -9,7 +9,7 @@ import javax.persistence.*
 class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    private var id: Long? = null
     var nombre: String? = null
 
     @Column(nullable = false)
@@ -25,6 +25,10 @@ class Especie() {
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
+    }
+
+    fun getId(): Long? {
+        return this.id!!
     }
 
     fun agregarVector(vector: Vector) {
