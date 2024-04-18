@@ -14,6 +14,4 @@ interface UbicacionDAO {
 
     fun eliminar(ubicacion: Ubicacion)
 
-    fun recuperarPorNombre(nombreUbicacion: String) : Ubicacion
-
 }

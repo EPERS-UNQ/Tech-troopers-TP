@@ -16,10 +16,4 @@ interface EspecieDAO {
 
     fun especiesDelPatogeno(patogeno: Patogeno): List<Especie>
 
-    fun lider() : Especie
-
-    fun todosLosLideres() : List<Especie>
-
-    fun especiePrevalente(vectoresUbicados: List<Vector>): String
-
 }

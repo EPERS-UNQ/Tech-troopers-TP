@@ -43,17 +43,4 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-    override fun cantidadDeInfectados(ubicacionId: Long): Int {
-        val vectoresUbicados = recuperarTodosDeUbicacion(ubicacionId)
-        var cantidadInfectados = 0;
-
-        vectoresUbicados.forEach { vector ->
-            if (vector.estaInfectado()) {
-                cantidadInfectados++
-            }
-        }
-
-        return cantidadInfectados
-    }
-
 }
