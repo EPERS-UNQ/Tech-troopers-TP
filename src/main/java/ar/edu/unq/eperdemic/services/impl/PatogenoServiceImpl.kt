@@ -51,7 +51,7 @@ class PatogenoServiceImpl(
                 throw NoHayVectorException()
             }
             val vectorAInfectar = randomize.getElementoRandomEnLista(vectoresEnUbicacion)
-            vectorDAO.infectar(vectorAInfectar, especie)
+            vectorAInfectar.infectar(especie)
             patogenoDAO.actualizar(patogeno)
             especieDAO.crear(especie)
             especie

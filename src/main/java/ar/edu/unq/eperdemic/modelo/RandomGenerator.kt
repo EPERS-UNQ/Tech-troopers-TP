@@ -4,7 +4,7 @@ import java.util.Random
 class RandomGenerator {
     private val random = Random()
 
-    fun getNumberoRandom(): Int {
+    fun getNumeroRandom(): Int {
         return (1..10).random()
     }
 

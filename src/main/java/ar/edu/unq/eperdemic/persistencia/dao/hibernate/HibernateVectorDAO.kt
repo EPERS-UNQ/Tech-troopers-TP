@@ -21,12 +21,12 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-
+/*
     override fun infectar(vector: Vector, especie: Especie) {
         vector.infectar(especie)
         this.actualizar(vector)
     }
-
+ */
     override fun enfermedades(vector: Vector): List<Especie> {
         return vector.enfermedadesDelVector()
     }

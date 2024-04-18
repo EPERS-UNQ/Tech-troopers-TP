@@ -49,7 +49,7 @@ open class Vector() {
 
     fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator()
-        val porcentajeDeContagioExitoso = random.getNumberoRandom() + especie.capacidadDeContagioPara(vector.tipo)
+        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.tipo)
         if (random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
         }
