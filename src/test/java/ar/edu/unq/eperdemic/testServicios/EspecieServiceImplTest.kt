@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-/*
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
 
@@ -46,7 +46,7 @@ class EspecieServiceImplTest {
 
     @BeforeEach
     fun crearModelo() {
-        patogeno  = Patogeno("Wachiturro")
+        patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         ubicacion = Ubicacion("Argentina")
         humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
@@ -86,7 +86,7 @@ class EspecieServiceImplTest {
 
     @Test
     fun testAlRecuperarTodasLasEspeciesLasMismasSonSimiliaresALasYaExistentes() {
-        patogeno2 = Patogeno("Otaku")
+        patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
         especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", ubicacion.id!!)
 
@@ -119,5 +119,3 @@ class EspecieServiceImplTest {
     }
 
 }
-
- */

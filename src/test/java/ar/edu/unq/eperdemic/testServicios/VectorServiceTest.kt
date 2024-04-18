@@ -22,7 +22,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-/*
+
 @TestInstance(PER_CLASS)
 class VectorServiceTest {
 
@@ -52,7 +52,7 @@ class VectorServiceTest {
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 
-        patogeno = Patogeno("Wachiturro")
+        patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
         serviceUbicacion.crear(ubicacion)
         service.crear(humano)
@@ -142,5 +142,3 @@ class VectorServiceTest {
 
 }
 
-
- */

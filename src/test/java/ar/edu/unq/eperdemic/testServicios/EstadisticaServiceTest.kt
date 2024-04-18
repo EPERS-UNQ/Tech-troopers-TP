@@ -59,7 +59,7 @@ class EstadisticaServiceTest {
 
         serviceVector.crear(humano)
 
-        patogeno  = Patogeno("Wachiturro")
+        patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         servicePatogeno.crear(patogeno)
         especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
     }
