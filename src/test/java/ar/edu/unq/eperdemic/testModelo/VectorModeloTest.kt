@@ -60,6 +60,8 @@ class VectorModeloTest {
         Assertions.assertTrue(humano.estaInfectadoCon(viruela))
     }
 
+    // BORRAR COMENTARIOS/EXPLICACIÓN...
+
     // Revisar! Es correcto que el porcentajeExistoso sea menor o igual a 100?
     // Que pasa si este tiene una capacidad de contagio de 100 y a este le sumo el número random? Sobrepasa 100 y me tira error.
     // Eso hay que cabiarlo ya que es correcto que dé mayor a 100 este porcentaje de exito.

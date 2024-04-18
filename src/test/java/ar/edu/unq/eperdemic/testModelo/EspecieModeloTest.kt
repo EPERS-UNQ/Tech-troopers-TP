@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EspecieTest {
+class EspecieModeloTest {
 
     lateinit var especie  : Especie
     lateinit var patogeno : Patogeno

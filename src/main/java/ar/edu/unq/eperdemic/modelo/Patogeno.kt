@@ -1,11 +1,10 @@
 package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
-import java.io.Serializable
 import javax.persistence.*
 
 @Entity
-class Patogeno() : Serializable {
+class Patogeno() {
     constructor(tipo : String, contagioHumanos : Int,
                 contagioAnimales : Int, contagioInsectos : Int,
                 defensa : Int,
@@ -63,7 +62,7 @@ class Patogeno() : Serializable {
         return nuevaEspecie
     }
 
-    fun esCampoValido(campoAComprobar : Int) : Boolean {
+    private fun esCampoValido(campoAComprobar : Int) : Boolean {
         return (campoAComprobar > 0) && (campoAComprobar < 101)
     }
 

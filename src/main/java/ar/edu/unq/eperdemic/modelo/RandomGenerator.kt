@@ -25,7 +25,7 @@ class RandomGenerator {
 
     //Revisar! Ver archivo VectorModeloTest test: unVectorIntentaContagiarAOtroVectorYLoLogra
     fun porcentajeExistoso(porcentaje: Int): Boolean {
-        if (1 <= porcentaje && porcentaje <= 110) {
+        if (1 <= porcentaje && porcentaje <= 110) { //110 por la capacidad de contagio mas la sumo del nro random.
             return (porcentaje - random.nextInt(100)) > 0
         }
         throw IllegalArgumentException("El porcentaje debe estar entre 1 y 100.")

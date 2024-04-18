@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -108,6 +109,15 @@ class EspecieServiceImplTest {
         serviceVector.infectar(golondrina.getId()!!, especiePersistida.getId()!!)
 
         Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.getId()!!))
+
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnaEspecieQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaEspecie::class.java) {
+            service.recuperar(15)
+        }
 
     }
 

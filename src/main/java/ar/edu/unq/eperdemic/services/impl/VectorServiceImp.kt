@@ -1,6 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -19,8 +22,14 @@ class VectorServiceImp (
         return runTrx { vectorDAO.actualizar(vector) }
     }
 
-    override fun recuperar(vectorId: Long): Vector {
-        return runTrx { vectorDAO.recuperar(vectorId) }
+    override fun recuperar(idVector: Long): Vector {
+        return runTrx {
+            val vector = vectorDAO.recuperar(idVector)
+            if (vector == null) {
+                throw NoExisteElVector()
+            }
+            vector
+        }
     }
 
     override fun recuperarTodos(): List<Vector> {

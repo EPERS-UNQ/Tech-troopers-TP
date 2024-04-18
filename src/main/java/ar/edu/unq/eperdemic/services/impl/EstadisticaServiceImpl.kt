@@ -19,14 +19,7 @@ class EstadisticaServiceImpl (
     }
 
     override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
-        return runTrx { estadisticaDAO.reporteContagios(nombreDeLaUbicacion)
-            /*val idUbicacion = ubicacionDAO.recuperarPorNombre(nombreDeLaUbicacion).id
-            val vectoresUbicados = vectorDAO.recuperarTodosDeUbicacion(idUbicacion!!)
-
-            ReporteDeContagios(vectoresUbicados.size,
-                               vectorDAO.cantidadDeInfectados(idUbicacion!!),
-                               especieDAO.especiePrevalente(vectoresUbicados))*/
-        }
+        return runTrx { estadisticaDAO.reporteContagios(nombreDeLaUbicacion)  }
     }
 
 }

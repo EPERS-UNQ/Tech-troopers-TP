@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
@@ -131,6 +132,15 @@ class VectorServiceTest {
         service.infectar(pepita.getId()!!, especie.getId()!!)
 
         Assertions.assertTrue(service.recuperar(pepita.getId()!!).estaInfectado())
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnVectorQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteElVector::class.java) {
+            service.recuperar(15)
+        }
+
     }
 
     @AfterEach
