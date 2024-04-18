@@ -2,13 +2,11 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
 class EspecieServiceImpl (
-    private val especieDAO : EspecieDAO,
-    private val vectorDAO  : VectorDAO
+    private val especieDAO : EspecieDAO
     ) : EspecieService {
 
     override fun updatear(especie: Especie) {

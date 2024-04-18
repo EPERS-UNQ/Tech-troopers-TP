@@ -43,12 +43,9 @@ class VectorServiceTest {
     fun prepare() {
 
         this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
-        this.serviceUbicacion = UbicacionServiceImp(
-            HibernateUbicacionDAO(),
-            HibernateVectorDAO()
-        )
-        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
-        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO())
+        this.serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
+        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
         ubicacion = Ubicacion("Argentina")
@@ -61,7 +58,7 @@ class VectorServiceTest {
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", "Argentina")
+        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
 
     }
 
@@ -108,27 +105,32 @@ class VectorServiceTest {
     @Test
     fun testDeInfectarAUnVector(){
 
-        Assertions.assertFalse(service.recuperar(humano.getId()!!).estaInfectado())
+        val pepita = service.crear(golondrina)
 
-        service.infectar(humano.getId()!!, especie.id!!)
+        Assertions.assertFalse(pepita.estaInfectado())
 
-        val otroHumano = service.recuperar(humano.getId()!!)
+        service.infectar(pepita.getId()!!, especie.id!!)
 
-        Assertions.assertTrue(otroHumano.estaInfectado())
-        Assertions.assertEquals(otroHumano.enfermedadesDelVector().first().id, especie.id)
+        val otraGolondrina = service.recuperar(pepita.getId()!!)
+
+        Assertions.assertTrue(otraGolondrina.estaInfectado())
+        Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().id, especie.id)
 
     }
 
     @Test
     fun testDeEnfermedadesDeUnVector(){
 
-        Assertions.assertTrue(service.enfermedades(humano.getId()!!).isEmpty())
+        val pepita = service.crear(golondrina)
 
-        service.infectar(humano.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.id!!)
 
-        Assertions.assertFalse(service.enfermedades(humano.getId()!!).isEmpty())
-        Assertions.assertEquals(service.recuperar(humano.getId()!!).enfermedadesDelVector().first().id, especie.id)
+        Assertions.assertFalse(service.enfermedades(pepita.getId()!!).isEmpty())
+        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().id, especie.id)
 
+        service.infectar(pepita.getId()!!, especie.id!!)
+
+        Assertions.assertTrue(service.recuperar(pepita.getId()!!).estaInfectado())
     }
 
     @AfterEach
@@ -139,3 +141,5 @@ class VectorServiceTest {
     }
 
 }
+
+

@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.testModelos
+package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import org.junit.jupiter.api.Assertions
@@ -13,7 +13,7 @@ class RandomGeneratorTest {
 
     @Test
     fun getNumberoRandomDevuelveEnnumeroEntre1_10() {
-        val randomNumber = randomGenerator.getNumberoRandom()
+        val randomNumber = randomGenerator.getNumeroRandom()
         Assertions.assertTrue(randomNumber in 1..10)
     }
 

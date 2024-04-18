@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.testModelos
+package ar.edu.unq.eperdemic.testModelo
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.TestInstance

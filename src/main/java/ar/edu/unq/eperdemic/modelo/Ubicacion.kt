@@ -13,7 +13,7 @@ class Ubicacion() {
     @Column(unique = true)
     private var nombre: String? = null
 
-    constructor(nombre: String): this() {
+    constructor(nombre: String) : this() {
         this.nombre = nombre
     }
 
