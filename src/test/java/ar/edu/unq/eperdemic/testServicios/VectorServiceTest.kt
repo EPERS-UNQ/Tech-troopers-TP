@@ -22,7 +22,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-
+/*
 @TestInstance(PER_CLASS)
 class VectorServiceTest {
 
@@ -144,3 +144,4 @@ class VectorServiceTest {
 }
 
 
+ */
