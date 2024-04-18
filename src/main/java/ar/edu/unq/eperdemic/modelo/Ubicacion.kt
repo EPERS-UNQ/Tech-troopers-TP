@@ -13,9 +13,6 @@ class Ubicacion() {
     @Column(unique = true)
     var nombre: String? = null
 
-    @OneToMany(mappedBy = "ubicacion", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var vectores: MutableSet<Vector> = HashSet()
-
     constructor(nombre: String) : this() {
         this.nombre = nombre
     }
