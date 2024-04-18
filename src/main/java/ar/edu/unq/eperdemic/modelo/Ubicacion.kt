@@ -12,7 +12,7 @@ class Ubicacion() {
     @Column(unique = true)
     var nombre: String? = null
 
-    fun getId(): Long?{
+    fun getId(): Long? {
         return this.id!!
     }
 

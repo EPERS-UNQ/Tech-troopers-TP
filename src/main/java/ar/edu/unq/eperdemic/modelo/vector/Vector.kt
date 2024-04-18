@@ -35,6 +35,10 @@ open class Vector() {
         return this.tipo
     }
 
+    fun setId(idNew: Long){
+        this.id = idNew
+    }
+
     fun estaInfectado(): Boolean{
         return this.especies.isNotEmpty()
     }
@@ -53,7 +57,7 @@ open class Vector() {
 
     fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator()
-        val porcentajeDeContagioExitoso = random.getNumberoRandom() + especie.capacidadDeContagioPara(vector.getTipo())
+        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         if (random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
         }

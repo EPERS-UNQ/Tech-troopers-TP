@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
+import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -7,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class PatogenoTest {
+class PatogenoModeloTest {
 
     lateinit var salmonella: Patogeno
 
@@ -69,6 +71,17 @@ class PatogenoTest {
         Assertions.assertEquals(salmonella.cantidadDeEspecies, 1)
         Assertions.assertEquals(enterica.nombre, "Enterica")
 
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoConUnValorNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 70, 10, 115, 30, 66)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", -5, 10, 80, 30, 66)
+        }
     }
 
 }

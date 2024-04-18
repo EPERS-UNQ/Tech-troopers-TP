@@ -13,7 +13,7 @@ class RandomGeneratorTest {
 
     @Test
     fun getNumberoRandomDevuelveEnnumeroEntre1_10() {
-        val randomNumber = randomGenerator.getNumberoRandom()
+        val randomNumber = randomGenerator.getNumeroRandom()
         Assertions.assertTrue(randomNumber in 1..10)
     }
 

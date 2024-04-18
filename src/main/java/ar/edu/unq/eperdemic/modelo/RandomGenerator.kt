@@ -4,7 +4,7 @@ import java.util.Random
 class RandomGenerator {
     private val random = Random()
 
-    fun getNumberoRandom(): Int {
+    fun getNumeroRandom(): Int {
         return (1..10).random()
     }
 
@@ -23,6 +23,7 @@ class RandomGenerator {
         return list[rIndex]
     }
 
+    //Revisar! Ver archivo VectorModeloTest test: unVectorIntentaContagiarAOtroVectorYLoLogra
     fun porcentajeExistoso(porcentaje: Int): Boolean {
         if (1 <= porcentaje && porcentaje <= 100) {
             return (porcentaje - random.nextInt(100)) > 0
