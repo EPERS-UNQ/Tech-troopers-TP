@@ -5,8 +5,16 @@ import javax.persistence.*
 
 @Entity
 class Patogeno() : Serializable {
-    constructor(tipo : String) : this() {
+    constructor(tipo : String, contagioHumanos : Int,
+                contagioAnimales : Int, contagioInsectos : Int,
+                defensa : Int,
+                capacidadDeBiomecanizacion : Int) : this() {
         this.tipo = tipo
+        this.capContagioHumano = contagioHumanos
+        this.capContagioAnimal = contagioAnimales
+        this.capContagioInsecto = contagioInsectos
+        this.defensa = defensa
+        this.capDeBiomecanizacion = capacidadDeBiomecanizacion
     }
 
     @Id

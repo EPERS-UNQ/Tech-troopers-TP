@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -31,7 +32,13 @@ class PatogenoServiceImpl(
     }
 
     override fun recuperar(id: Long): Patogeno {
-        return runTrx { patogenoDAO.recuperar(id) }
+        return runTrx {
+            val patogeno = patogenoDAO.recuperar(id)
+            if (patogeno == null) {
+                throw NoExisteElPatogeno()
+            }
+            patogeno
+        }
     }
 
     override fun recuperarTodos(): List<Patogeno> {
