@@ -47,15 +47,17 @@ class EspecieServiceImplTest {
     @BeforeEach
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro")
+        ubicacion = Ubicacion("Argentina")
+        humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
-        service         = EspecieServiceImpl(HibernateEspecieDAO())
-
-        servicePatogeno = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
-        service = EspecieServiceImpl(HibernateEspecieDAO())
-        service         = EspecieServiceImpl(HibernateEspecieDAO())
-
+        service = EspecieServiceImpl( HibernateEspecieDAO() )
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
+        serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
+        serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl(HibernateDataDAO())
+
+        serviceUbicacion.crear(ubicacion)
+        serviceVector.crear(humano)
 
         servicePatogeno.crear(patogeno)
         especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
@@ -90,27 +92,19 @@ class EspecieServiceImplTest {
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
-        Assertions.assertEquals(especiePersistida.id,  listaEspeciesRecuperadas.get(0).id)
-        Assertions.assertEquals(especiePersistida.nombre, listaEspeciesRecuperadas.get(0).nombre)
-        Assertions.assertEquals(especiePersistida.paisDeOrigen, listaEspeciesRecuperadas.get(0).paisDeOrigen)
-        Assertions.assertEquals(especiePersistida2.id, listaEspeciesRecuperadas.get(1).id)
-        Assertions.assertEquals(especiePersistida2.nombre, listaEspeciesRecuperadas.get(1).nombre)
-        Assertions.assertEquals(especiePersistida2.paisDeOrigen, listaEspeciesRecuperadas.get(1).paisDeOrigen)
+        Assertions.assertEquals(especiePersistida.id,  listaEspeciesRecuperadas[0].id)
+        Assertions.assertEquals(especiePersistida.nombre, listaEspeciesRecuperadas[0].nombre)
+        Assertions.assertEquals(especiePersistida.paisDeOrigen, listaEspeciesRecuperadas[0].paisDeOrigen)
+        Assertions.assertEquals(especiePersistida2.id, listaEspeciesRecuperadas[1].id)
+        Assertions.assertEquals(especiePersistida2.nombre, listaEspeciesRecuperadas[1].nombre)
+        Assertions.assertEquals(especiePersistida2.paisDeOrigen, listaEspeciesRecuperadas[1].paisDeOrigen)
     }
 
     @Test
     fun testVerificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
-        ubicacion  = Ubicacion("Argentina")
-        humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
-
-        serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
-        serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
-        serviceUbicacion.crear(ubicacion)
-        serviceVector.crear(humano)
         serviceVector.crear(golondrina)
 
-        serviceVector.infectar(humano.getId()!!, especiePersistida.id!!)
         serviceVector.infectar(golondrina.getId()!!, especiePersistida.id!!)
 
         Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.id!!))
