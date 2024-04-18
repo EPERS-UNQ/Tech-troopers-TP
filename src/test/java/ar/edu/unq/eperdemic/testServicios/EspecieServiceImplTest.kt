@@ -60,7 +60,7 @@ class EspecieServiceImplTest {
         serviceVector.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.getId()!!)
     }
 
     @Test
@@ -88,7 +88,7 @@ class EspecieServiceImplTest {
     fun testAlRecuperarTodasLasEspeciesLasMismasSonSimiliaresALasYaExistentes() {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", ubicacion.id!!)
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", ubicacion.getId()!!)
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 

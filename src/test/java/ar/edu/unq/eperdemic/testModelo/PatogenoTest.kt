@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic
+package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import org.junit.jupiter.api.Assertions

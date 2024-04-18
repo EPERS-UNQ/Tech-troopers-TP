@@ -58,7 +58,7 @@ class VectorServiceTest {
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
+        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.getId()!!)
 
     }
 

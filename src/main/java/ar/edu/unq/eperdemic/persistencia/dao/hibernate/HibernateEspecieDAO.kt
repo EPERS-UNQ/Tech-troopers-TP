@@ -11,7 +11,7 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
     override fun recuperarTodos(): List<Especie> {
         val session = HibernateTransactionRunner.currentSession
 
-        val hql   = "select e from Especie e"
+        val hql   = "select e from Especie e "
         val query = session.createQuery(hql, Especie::class.java)
 
         return query.resultList

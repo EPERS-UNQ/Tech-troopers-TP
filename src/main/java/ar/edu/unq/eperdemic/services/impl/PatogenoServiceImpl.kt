@@ -52,7 +52,7 @@ class PatogenoServiceImpl(
             val randomize = RandomGenerator()
             val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
             val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
-            val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.nombre!!)
+            val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.getNombre()!!)
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
             if (vectoresEnUbicacion.isEmpty()) {
                 throw NoHayVectorException()

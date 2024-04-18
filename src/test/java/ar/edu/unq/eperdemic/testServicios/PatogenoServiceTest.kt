@@ -129,7 +129,7 @@ class PatogenoServiceTest {
         servicio.crear(covid)
         servicioVector.crear(humano)
 
-        val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", corea.id!!)
+        val especie: Especie = servicio.agregarEspecie(covid.id!!, "Virus", corea.getId()!!)
         val covid = servicio.recuperar(covid.id!!)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
@@ -144,8 +144,8 @@ class PatogenoServiceTest {
         servicioVector.crear(humano)
         servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", china.id!!)
-        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", china.getId()!!)
+        val bongori: Especie = servicio.agregarEspecie(salmonella.id!!, "Bongori", corea.getId()!!)
 
         val especies = servicio.especiesDePatogeno(salmonella.id!!)
 
@@ -171,7 +171,7 @@ class PatogenoServiceTest {
         servicio.crear(salmonella)
         servicioVector.crear(humano)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.getId()!!)
 
         servicioVector.infectar(humano.getId()!!,enterica.id!!)
 
@@ -186,7 +186,7 @@ class PatogenoServiceTest {
         servicioVector.crear(humano)
         servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+        val enterica: Especie = servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.getId()!!)
 
         servicioVector.infectar(humano.getId()!!,enterica.id!!)
         servicioVector.infectar(humano1.getId()!!,enterica.id!!)
@@ -200,7 +200,7 @@ class PatogenoServiceTest {
 
         Assertions.assertThrows(NoHayVectorException::class.java) {
             servicio.crear(salmonella)
-            servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.id!!)
+            servicio.agregarEspecie(salmonella.id!!, "Enterica", corea.getId()!!)
         }
 
     }
