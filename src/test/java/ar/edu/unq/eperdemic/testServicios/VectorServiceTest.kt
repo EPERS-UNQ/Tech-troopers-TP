@@ -52,7 +52,7 @@ class VectorServiceTest {
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 
-        patogeno = Patogeno("Wachiturro")
+        patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
         serviceUbicacion.crear(ubicacion)
         service.crear(humano)
@@ -141,5 +141,4 @@ class VectorServiceTest {
     }
 
 }
-
 

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
@@ -52,14 +53,13 @@ class PatogenoServiceTest {
         this.servicio = PatogenoServiceImpl(patogenoDao, especieDao, ubicacionDao, vectorDao)
         this.servicioUbicacion = UbicacionServiceImp(ubicacionDao, vectorDao)
         this.servicioVector = VectorServiceImp(vectorDao, especieDao)
-        this.covid = Patogeno("Coronavirus")
-        this.salmonella = Patogeno("Salmonella")
+        this.covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
+        this.salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
         this.china = Ubicacion("China")
         this.corea = Ubicacion("Corea")
         this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
         this.humano1 = Vector("Pepe", china, TipoVector.HUMANO)
 
-        //this.servicio.crear(covid)
         this.servicioUbicacion.crear(corea)
         this.servicioUbicacion.crear(china)
 
@@ -79,7 +79,9 @@ class PatogenoServiceTest {
     @Test
     fun testSeTrataDeRecuperarUnPatogenoQueNoExiste() {
 
-        Assertions.assertEquals(servicio.recuperar(15), null)
+        Assertions.assertThrows(NoExisteElPatogeno::class.java) {
+            servicio.recuperar(15)
+        }
 
     }
 

@@ -29,4 +29,5 @@ class RandomGenerator {
         }
         throw IllegalArgumentException("El porcentaje debe estar entre 1 y 100.")
     }
+
 }

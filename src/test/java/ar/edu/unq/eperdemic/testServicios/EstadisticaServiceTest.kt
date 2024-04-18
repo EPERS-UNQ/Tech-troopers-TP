@@ -5,13 +5,11 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
 import ar.edu.unq.eperdemic.services.*
 import ar.edu.unq.eperdemic.services.impl.*
 import org.junit.jupiter.api.AfterEach
@@ -27,7 +25,6 @@ class EstadisticaServiceTest {
     lateinit var dataService: DataService
     lateinit var serviceVector   : VectorService
     lateinit var serviceUbicacion: UbicacionService
-    lateinit var serviceEspecie  : EspecieService
     lateinit var servicePatogeno : PatogenoService
 
     lateinit var especie   : Especie
@@ -38,68 +35,65 @@ class EstadisticaServiceTest {
     lateinit var humano     : Vector
     lateinit var humano2    : Vector
     lateinit var humano3    : Vector
-    lateinit var golondrina: Vector
-    lateinit var insecto:  Vector
-    lateinit var insecto2: Vector
+    lateinit var golondrina : Vector
+    lateinit var insecto    : Vector
+    lateinit var insecto2   : Vector
 
     lateinit var ubicacion: Ubicacion
 
     @BeforeEach
     fun crearModelo() {
 
-        service     = EstadisticaServiceImpl( HibernateEspecieDAO() )
+        service     = EstadisticaServiceImpl( HibernateEstadisticaDAO() )
         dataService = DataServiceImpl( HibernateDataDAO() )
-        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
+        servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
 
-        patogeno  = Patogeno("Wachiturro")
-        servicePatogeno.crear(patogeno)
-        especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", ubicacion.id!!)
-
         ubicacion = Ubicacion("Argentina")
+        serviceUbicacion.crear(ubicacion)
 
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         humano2    = Vector("Juan", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 
-        serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
-        serviceVector.crear(humano2)
-        serviceVector.crear(golondrina)
+
+        patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
+        servicePatogeno.crear(patogeno)
+        especie  = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.id!!)
     }
 
     @Test
     fun testEspecieLider() {
+        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", ubicacion.id!!)
+        serviceVector.crear(humano2)
+        serviceVector.crear(golondrina)
 
-        serviceVector.infectar(humano.getId()!!, especie.id!!)
-        serviceVector.infectar(humano.getId()!!, especie2.id!!)
         serviceVector.infectar(humano2.getId()!!, especie.id!!)
         serviceVector.infectar(golondrina.getId()!!, especie.id!!)
 
         Assertions.assertEquals(especie.id, service.especieLider().id)
         Assertions.assertFalse(especie2.id!! == service.especieLider().id)
-
     }
 
     @Test
     fun testDeLosLideres() {
-
+        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", ubicacion.id!!)
         especie3 = servicePatogeno.agregarEspecie(patogeno.id!!, "Adenovirus", ubicacion.id!!)
         humano3  = Vector("Bautista", ubicacion, TipoVector.HUMANO)
         insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
         insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+        serviceVector.crear(golondrina)
+        serviceVector.crear(humano2)
         serviceVector.crear(humano3)
         serviceVector.crear(insecto)
         serviceVector.crear(insecto2)
 
-        serviceVector.infectar(humano.getId()!!,  especie.id!!)
         serviceVector.infectar(humano2.getId()!!, especie.id!!)
         serviceVector.infectar(insecto.getId()!!, especie.id!!)
         serviceVector.infectar(insecto2.getId()!!, especie.id!!)
 
-        serviceVector.infectar(humano.getId()!!,  especie2.id!!)
         serviceVector.infectar(humano3.getId()!!, especie2.id!!)
         serviceVector.infectar(golondrina.getId()!!, especie2.id!!)
 
@@ -112,7 +106,27 @@ class EstadisticaServiceTest {
         Assertions.assertEquals(especie2.id, service.lideres().first().id)
         Assertions.assertEquals(especie.id , service.lideres()[1].id)
         Assertions.assertEquals(especie3.id , service.lideres()[2].id)
+    }
 
+    @Test
+    fun testReporteDeContagios() {
+        especie2 = servicePatogeno.agregarEspecie(patogeno.id!!, "Virus", ubicacion.id!!)
+        insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
+        insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+        serviceVector.crear(insecto)
+        serviceVector.crear(insecto2)
+        serviceVector.crear(humano2)
+        serviceVector.crear(golondrina)
+
+        serviceVector.infectar(humano2.getId()!!, especie.id!!)
+        serviceVector.infectar(insecto.getId()!!, especie.id!!)
+        serviceVector.infectar(golondrina.getId()!!, especie2.id!!)
+
+        val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacion.nombre!!)
+
+        Assertions.assertEquals(5, reporte.cantidadVectores)
+        Assertions.assertEquals(4, reporte.cantidadInfectados)
+        Assertions.assertEquals("Bacteria", reporte.especiePrevalente)
     }
 
     @AfterEach

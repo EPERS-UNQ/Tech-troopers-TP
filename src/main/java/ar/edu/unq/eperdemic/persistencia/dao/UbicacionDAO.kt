@@ -13,4 +13,5 @@ interface UbicacionDAO {
     fun recuperarTodos(): List<Ubicacion>
 
     fun eliminar(ubicacion: Ubicacion)
+
 }

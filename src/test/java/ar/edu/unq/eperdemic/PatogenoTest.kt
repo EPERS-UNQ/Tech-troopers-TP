@@ -14,7 +14,7 @@ class PatogenoTest {
     @BeforeEach
     fun prepare() {
 
-        salmonella = Patogeno("Salmonella")
+        salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
 
         salmonella.id = 1
         salmonella.cantidadDeEspecies = 0
@@ -34,6 +34,31 @@ class PatogenoTest {
     @Test
     fun seSabeLaCantidadDeEspeciesDeUnPatogeno() {
         Assertions.assertEquals(salmonella.cantidadDeEspecies, 0)
+    }
+
+    @Test
+    fun seSabeLaCapacidadDeContagioAHumanosDeUnPatogeno() {
+        Assertions.assertEquals(salmonella.capContagioHumano, 70)
+    }
+
+    @Test
+    fun seSabeLaCapacidadDeContagioAAnimalesDeUnPatogeno() {
+        Assertions.assertEquals(salmonella.capContagioAnimal, 10)
+    }
+
+    @Test
+    fun seSabeLaCapacidadDeContagioAInsectosDeUnPatogeno() {
+        Assertions.assertEquals(salmonella.capContagioInsecto, 15)
+    }
+
+    @Test
+    fun seSabeLaDefensaDeUnPatogeno() {
+        Assertions.assertEquals(salmonella.defensa, 30)
+    }
+
+    @Test
+    fun seSabeLaCapacidadDeBiomecanizacionDeUnPatogeno() {
+        Assertions.assertEquals(salmonella.capDeBiomecanizacion, 66)
     }
 
     @Test
