@@ -65,7 +65,7 @@ class VectorModeloTest {
     // Eso hay que cabiarlo ya que es correcto que dé mayor a 100 este porcentaje de exito.
     @Test
     fun unVectorIntentaContagiarAOtroVectorYLoLogra(){
-        val patogeno = Patogeno("Bacteria", 20, 25, 100, 0, 55)
+        val patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
         val viruela  = Especie("Viruela", patogeno, "Francia")
         humano.infectar(viruela)
 

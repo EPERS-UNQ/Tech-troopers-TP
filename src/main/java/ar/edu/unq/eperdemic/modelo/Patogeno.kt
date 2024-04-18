@@ -11,8 +11,9 @@ class Patogeno() : Serializable {
                 defensa : Int,
                 capacidadDeBiomecanizacion : Int) : this() {
         this.tipo = tipo
-        if(contagioHumanos > 100 || contagioAnimales > 100 || contagioInsectos > 100 || defensa > 100 || capacidadDeBiomecanizacion > 100 ||
-            contagioHumanos < 0  || contagioAnimales < 0   || contagioInsectos < 0   || defensa < 0   || capacidadDeBiomecanizacion < 0){
+        if( !(esCampoValido(contagioHumanos) && esCampoValido(contagioAnimales)
+            && esCampoValido(contagioInsectos) && esCampoValido(defensa)
+            && esCampoValido(capacidadDeBiomecanizacion)) ) {
             throw LimiteDeCampoErroneo()
         }
         this.capContagioHumano = contagioHumanos
@@ -60,6 +61,10 @@ class Patogeno() : Serializable {
         var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
         cantidadDeEspecies++
         return nuevaEspecie
+    }
+
+    fun esCampoValido(campoAComprobar : Int) : Boolean {
+        return (campoAComprobar > 0) && (campoAComprobar < 101)
     }
 
 }
