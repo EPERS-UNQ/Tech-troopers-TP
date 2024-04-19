@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.services.EspecieService
@@ -13,8 +14,14 @@ class EspecieServiceImpl (
         runTrx { especieDAO.actualizar(especie) }
     }
 
-    override fun recuperar(especieID: Long): Especie {
-        return runTrx { especieDAO.recuperar(especieID) }
+    override fun recuperar(idEspecie: Long): Especie {
+        return runTrx {
+            val especie = especieDAO.recuperar(idEspecie)
+            if (especie == null) {
+                throw NoExisteLaEspecie()
+            }
+            especie
+        }
     }
 
     override fun recuperarTodos(): List<Especie> {

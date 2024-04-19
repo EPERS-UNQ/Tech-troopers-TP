@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
 import javax.persistence.*
-import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 @Entity
 class Ubicacion() {
@@ -11,7 +10,12 @@ class Ubicacion() {
     private var id: Long? = null
 
     @Column(unique = true)
+
     private var nombre: String? = null
+
+    fun getId(): Long? {
+        return this.id!!
+    }
 
     constructor(nombre: String) : this() {
         this.nombre = nombre
@@ -25,7 +29,4 @@ class Ubicacion() {
         this.nombre = nombre
     }
 
-    fun getId(): Long? {
-        return this.id
-    }
 }

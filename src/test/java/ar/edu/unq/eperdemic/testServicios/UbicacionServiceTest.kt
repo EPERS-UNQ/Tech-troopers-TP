@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -26,7 +28,7 @@ import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-/*
+
 @TestInstance(PER_CLASS)
 class UbicacionServiceTest {
 
@@ -45,8 +47,6 @@ class UbicacionServiceTest {
             HibernateUbicacionDAO(),
             HibernateVectorDAO()
     )
-
-    var serviceEspecie: EspecieService = EspecieServiceImpl(HibernateEspecieDAO())
 
     private var dataService: DataService = DataServiceImpl(HibernateDataDAO())
 
@@ -81,14 +81,10 @@ class UbicacionServiceTest {
         vector3 = serviceVector.crear(Vector("perrito", ubi1, TipoVector.ANIMAL))
 
 
-        patogeno1 = servicePatogeno.crear(Patogeno())
-<<<<<<< HEAD
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.getNombre()!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.getNombre()!!)
-=======
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.id!!, "juanito", ubi4.id!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.id!!, "corona2", ubi4.id!!)
->>>>>>> feature/VectorService
+        patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "juanito", ubi2.getId()!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "corona2", ubi2.getId()!!)
+
     }
 
     @Test
@@ -102,9 +98,9 @@ class UbicacionServiceTest {
 
     @Test
     fun noEsPosibleCrearDosUbicacionesConElMismoNombre() {
-        //assertThrows<SQLIntegrityConstraintViolationException> {
-        //    serviceUbicacion.crear(Ubicacion("Argentina"))
-        //}
+        Assertions.assertThrows(ErrorNombreEnUso::class.java) {
+            serviceUbicacion.crear(Ubicacion("Argentina"))
+        }
     }
 
     @Test
@@ -163,8 +159,8 @@ class UbicacionServiceTest {
 
         serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
 
-        serviceVector.infectar(vector1.getId()!!, especie1.id!!)
-        serviceVector.infectar(vector1.getId()!!, especie2.id!!)
+        serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
+        serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
 
 
         // Obtenemos los vectores que esten en la nueva ubicacion
@@ -182,25 +178,24 @@ class UbicacionServiceTest {
         val vector4 = serviceVector.crear(Vector("Miguel", ubi2, TipoVector.HUMANO))
 
         // Restrinjo la prueba a un solo vector infectado
-        serviceVector.infectar(vector4.getId()!!, especie1.id!!)
+        serviceVector.infectar(vector4.getId()!!, especie1.getId()!!)
         serviceUbicacion.expandir(ubi2.getId()!!)
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
 
         Assertions.assertTrue(
             vectoresUbicacion.all {
-                   it.enfermedadesDelVector().any { it.id == especie1.id!! }
+                   it.enfermedadesDelVector().any { it.getId() == especie1.getId()!! }
             }
         )
     }
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiNoHayUnVenctorInfectadoEnLaUbicacionNoHayCambios() {
-        val vector4 = serviceVector.crear(Vector("Miguel", ubi2, TipoVector.HUMANO))
 
         serviceUbicacion.expandir(ubi2.getId()!!)
 
-        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
+        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi4.getId() }
 
         for (v in vectoresUbicacion) {
             Assertions.assertFalse( v.estaInfectado() )
@@ -214,5 +209,3 @@ class UbicacionServiceTest {
     }
 
 }
-
- */

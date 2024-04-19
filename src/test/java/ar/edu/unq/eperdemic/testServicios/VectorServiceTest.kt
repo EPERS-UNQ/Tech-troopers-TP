@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
@@ -58,7 +59,8 @@ class VectorServiceTest {
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especie = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.getId()!!)
+
+        especie = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
 
     }
 
@@ -109,12 +111,12 @@ class VectorServiceTest {
 
         Assertions.assertFalse(pepita.estaInfectado())
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         val otraGolondrina = service.recuperar(pepita.getId()!!)
 
         Assertions.assertTrue(otraGolondrina.estaInfectado())
-        Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().id, especie.id)
+        Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().getId(), especie.getId())
 
     }
 
@@ -123,14 +125,23 @@ class VectorServiceTest {
 
         val pepita = service.crear(golondrina)
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         Assertions.assertFalse(service.enfermedades(pepita.getId()!!).isEmpty())
-        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().id, especie.id)
+        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().getId(), especie.getId())
 
-        service.infectar(pepita.getId()!!, especie.id!!)
+        service.infectar(pepita.getId()!!, especie.getId()!!)
 
         Assertions.assertTrue(service.recuperar(pepita.getId()!!).estaInfectado())
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnVectorQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteElVector::class.java) {
+            service.recuperar(15)
+        }
+
     }
 
     @AfterEach

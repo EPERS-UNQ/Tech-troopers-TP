@@ -2,9 +2,9 @@ package ar.edu.unq.eperdemic.exceptions
 
 import java.lang.RuntimeException
 
-class NoExisteElPatogeno() : RuntimeException() {
+class NoExisteLaEspecie() : RuntimeException() {
 
     override val message: String?
-        get() = "No hay ningun Patogeno con el id registrado"
+        get() = "No hay ninguna Especie con el id registrado"
 
 }

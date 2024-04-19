@@ -24,10 +24,10 @@ class RandomGenerator {
     }
 
     fun porcentajeExistoso(porcentaje: Int): Boolean {
-        if (1 <= porcentaje && porcentaje <= 100) {
+        if (1 <= porcentaje && porcentaje <= 110) { // 110 por la capacidad de contagio mas la sumo del nro random.
             return (porcentaje - random.nextInt(100)) > 0
         }
-        throw IllegalArgumentException("El porcentaje debe estar entre 1 y 100.")
+        throw IllegalArgumentException("El porcentaje debe estar entre 1 y 110.")
     }
 
 }

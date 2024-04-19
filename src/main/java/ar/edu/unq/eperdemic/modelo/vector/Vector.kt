@@ -11,7 +11,7 @@ open class Vector() {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING) // Se persiste como String.
-    lateinit var tipo: TipoVector
+    private lateinit var tipo: TipoVector
 
     var nombre: String? = null
 
@@ -31,6 +31,14 @@ open class Vector() {
         return this.id!!
     }
 
+    fun getTipo(): TipoVector {
+        return this.tipo
+    }
+
+    fun setId(idNew: Long){
+        this.id = idNew
+    }
+
     fun estaInfectado(): Boolean{
         return this.especies.isNotEmpty()
     }
@@ -42,14 +50,16 @@ open class Vector() {
 
     //Nota: Si no puede contagiar no hace nada.
     fun contargiarA(vector: Vector){
-        if (this.tipo.puedeContagiarA(vector.tipo)){
+        if (this.tipo.puedeContagiarA(vector.getTipo())){
             this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }
         }
     }
 
     fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator()
-        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.tipo)
+
+        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
+
         if (random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
         }

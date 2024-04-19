@@ -14,7 +14,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 
-
 class PatogenoServiceImpl(
     private val patogenoDAO: PatogenoDAO,
     private val especieDAO: EspecieDAO,

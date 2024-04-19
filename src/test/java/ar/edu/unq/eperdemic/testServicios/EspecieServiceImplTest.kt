@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -60,27 +61,29 @@ class EspecieServiceImplTest {
         serviceVector.crear(humano)
 
         servicePatogeno.crear(patogeno)
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.id!!, "Bacteria", ubicacion.getId()!!)
+
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+
     }
 
     @Test
     fun testAlRecuperarUnaEspecieSeObtienenObjetosSimilares() {
-        val otraEspecie = service.recuperar(especiePersistida.id!!)
+        val otraEspecie = service.recuperar(especiePersistida.getId()!!)
 
-        Assertions.assertEquals(especiePersistida.id, otraEspecie.id)
+        Assertions.assertEquals(especiePersistida.getId(), otraEspecie.getId())
         Assertions.assertEquals(especiePersistida.nombre, otraEspecie.nombre)
         Assertions.assertEquals(especiePersistida.paisDeOrigen, otraEspecie.paisDeOrigen)
-        Assertions.assertEquals(especiePersistida.patogeno!!.id, otraEspecie.patogeno!!.id)
+        Assertions.assertEquals(especiePersistida.patogeno!!.getId(), otraEspecie.patogeno!!.getId())
     }
 
     @Test
     fun testAlUpdatearUnPatogenoLaInformacionDelMismoCmabia() {
-        var especieRecuperada = service.recuperar(especiePersistida.id!!)
+        var especieRecuperada = service.recuperar(especiePersistida.getId()!!)
         especieRecuperada.paisDeOrigen = "Chile"
 
         service.updatear(especieRecuperada)
 
-        Assertions.assertEquals("Chile", service.recuperar(especieRecuperada.id!!).paisDeOrigen)
+        Assertions.assertEquals("Chile", service.recuperar(especieRecuperada.getId()!!).paisDeOrigen)
     }
 
 
@@ -88,14 +91,15 @@ class EspecieServiceImplTest {
     fun testAlRecuperarTodasLasEspeciesLasMismasSonSimiliaresALasYaExistentes() {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.id!!, "Virus", ubicacion.getId()!!)
+
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId()!!, "Virus", ubicacion.getId()!!)
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
-        Assertions.assertEquals(especiePersistida.id,  listaEspeciesRecuperadas[0].id)
+        Assertions.assertEquals(especiePersistida.getId(),  listaEspeciesRecuperadas[0].getId())
         Assertions.assertEquals(especiePersistida.nombre, listaEspeciesRecuperadas[0].nombre)
         Assertions.assertEquals(especiePersistida.paisDeOrigen, listaEspeciesRecuperadas[0].paisDeOrigen)
-        Assertions.assertEquals(especiePersistida2.id, listaEspeciesRecuperadas[1].id)
+        Assertions.assertEquals(especiePersistida2.getId(), listaEspeciesRecuperadas[1].getId())
         Assertions.assertEquals(especiePersistida2.nombre, listaEspeciesRecuperadas[1].nombre)
         Assertions.assertEquals(especiePersistida2.paisDeOrigen, listaEspeciesRecuperadas[1].paisDeOrigen)
     }
@@ -105,9 +109,18 @@ class EspecieServiceImplTest {
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         serviceVector.crear(golondrina)
 
-        serviceVector.infectar(golondrina.getId()!!, especiePersistida.id!!)
+        serviceVector.infectar(golondrina.getId()!!, especiePersistida.getId()!!)
 
-        Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.id!!))
+        Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.getId()!!))
+
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnaEspecieQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaEspecie::class.java) {
+            service.recuperar(15)
+        }
 
     }
 

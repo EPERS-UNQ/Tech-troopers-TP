@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
+import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -21,7 +23,12 @@ class UbicacionServiceImp(
 ) : UbicacionService {
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx { daoUbicacion.crear(ubicacion) }
+        return runTrx {
+            val existeNombre = daoUbicacion.recuperarTodos().stream().anyMatch { u -> u.getNombre() == ubicacion.getNombre() }
+            if (existeNombre) {
+                throw ErrorNombreEnUso()
+            }
+            daoUbicacion.crear(ubicacion) }
     }
 
     override fun updatear(ubicacion: Ubicacion) {
