@@ -1,9 +1,11 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -64,10 +66,13 @@ class PatogenoServiceImpl(
         }
     }
 
-    override fun especiesDePatogeno(patogenoId: Long): List<Especie> {
+    override fun especiesDePatogeno(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina:Int): List<Especie> {
         return runTrx {
+            if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
+                throw ErrorValorDePaginacionIvalido()
+            }
             val patogeno: Patogeno = patogenoDAO.recuperar(patogenoId)
-            val especies = especieDAO.especiesDelPatogeno(patogeno)
+            val especies = especieDAO.especiesDelPatogeno(patogeno, direccion, pagina, cantidadPorPagina)
             especies
         }
     }

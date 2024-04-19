@@ -1,10 +1,13 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
+import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
@@ -146,20 +149,58 @@ class PatogenoServiceTest {
 
         val enterica: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Enterica", china.getId()!!)
         val bongori: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Bongori", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Varicela", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Quetzal", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Ahuehuete", corea.getId()!!)
 
-        val especies = servicio.especiesDePatogeno(salmonella.getId()!!)
+        val especiesPagina0 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
+        Assertions.assertTrue(
+            especiesPagina0.elementAt(0).nombre.equals("Enterica")
+        )
+        Assertions.assertTrue(
+            especiesPagina0.elementAt(1).nombre.equals("Bongori")
+        )
 
-        Assertions.assertEquals(especies.size, 2)
+        val especiesPagina1 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 1, 2)
+        Assertions.assertTrue(
+            especiesPagina1.elementAt(0).nombre.equals("Varicela")
+        )
+        Assertions.assertTrue(
+            especiesPagina1.elementAt(1).nombre.equals("Quetzal")
+        )
+
+        val especiesPagina5 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 5, 2)
+        Assertions.assertTrue(especiesPagina5.isEmpty())
+
+        val especies = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
+
+        Assertions.assertEquals(2, especies.size)
         Assertions.assertEquals(especies[0].nombre, enterica.nombre)
         Assertions.assertEquals(especies[1].nombre, bongori.nombre)
 
     }
 
     @Test
+    fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLasEspeciesDeUnPatogeno(){
+        servicio.crear(salmonella)
+        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+            servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, -2, 2)
+        }
+    }
+
+    @Test
+    fun comprobacionDeErrorAlPedirUnaCantidadDeElementosPorPaginaNegativaCuandoSeBuscanLasEspeciesDeUnPatogeno(){
+        servicio.crear(salmonella)
+        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+            servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 1, -5)
+        }
+    }
+
+    @Test
     fun seTrataDeRecuperarTodasLasEspeciesDelPatogenoEsteNoTiene() {
 
         servicio.crear(covid)
-        val especies = servicio.especiesDePatogeno(covid.getId()!!)
+        val especies = servicio.especiesDePatogeno(covid.getId()!!, Direccion.DESCENDENTE, 1, 2)
 
         Assertions.assertEquals(especies.size, 0)
 
