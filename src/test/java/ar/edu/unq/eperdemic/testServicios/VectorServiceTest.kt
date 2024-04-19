@@ -146,8 +146,6 @@ class VectorServiceTest {
 
     @AfterEach
     fun cleanup() {
-        // Destroy cierra la session factory y fuerza a que, la proxima vez, una nueva tenga que ser creada.
-        // Elimina los registros (la base de datos no).
         dataService.cleanAll()
     }
 

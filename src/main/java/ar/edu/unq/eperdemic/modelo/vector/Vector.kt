@@ -10,13 +10,13 @@ open class Vector() {
     private var id: Long? = null
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING) // Se persiste como String.
+    @Enumerated(EnumType.STRING)
     private lateinit var tipo: TipoVector
 
     var nombre: String? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var especies: MutableSet<Especie> = HashSet() // Set para que las especies no sean repetidas.
+    var especies: MutableSet<Especie> = HashSet()
 
     @ManyToOne
     var ubicacion: Ubicacion? = null
@@ -48,7 +48,6 @@ open class Vector() {
         especie.agregarVector(this)
     }
 
-    //Nota: Si no puede contagiar no hace nada.
     fun contargiarA(vector: Vector){
         if (this.tipo.puedeContagiarA(vector.getTipo())){
             this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }

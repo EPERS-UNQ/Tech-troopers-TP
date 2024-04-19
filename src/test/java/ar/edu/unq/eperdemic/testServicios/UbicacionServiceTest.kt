@@ -113,15 +113,12 @@ class UbicacionServiceTest {
         ubi1.setNombre("Estados Unidos")
         serviceUbicacion.updatear(ubi1)
 
-        // Volvemos a obtener la entidad de la base de datos
         val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId()!!)
 
-        // El nombre del objeto ya no es el mismo con el que inicializo
         Assertions.assertFalse(
                 ubi1Actualizada.getNombre() == "Argentina"
         )
 
-        // El nombre cambio a Estados Unidos
         Assertions.assertEquals(ubi1Actualizada.getNombre(), "Estados Unidos")
     }
 
@@ -130,14 +127,10 @@ class UbicacionServiceTest {
 
         val todasLasUbicaiones = serviceUbicacion.recuperarTodos()
 
-        // Creamos unalista con todos los nombres de ubicaciones que creamos
-        //      en la base de datos
         val nombres = setOf("Argentina", "Paraguay", "Chiles")
 
-        // Comprobamos que el tamaño de la lista sea el correcto
         Assertions.assertEquals(todasLasUbicaiones.size, 3)
 
-        // Comprobamos que los nombres de las ubcaciones sean los de la lista
         for (u in todasLasUbicaiones) {
             nombres.any { it == u.getNombre() }
         }
@@ -150,7 +143,6 @@ class UbicacionServiceTest {
         val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
         val ubicacionNueva = vectorTemporal.ubicacion!!
 
-        // Comprobamos que la ubicacion del vector fue actualizada
         Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
     }
 
@@ -162,8 +154,6 @@ class UbicacionServiceTest {
         serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
         serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
 
-
-        // Obtenemos los vectores que esten en la nueva ubicacion
         val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
 
         Assertions.assertTrue(
@@ -175,10 +165,9 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
-        val vector4 = serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
-        val vector5 = serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
+        serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
+        serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
 
-        // Restrinjo la prueba a un solo vector infectado
         serviceVector.infectar(vector3.getId()!!, especie1.getId()!!)
         serviceUbicacion.expandir(ubi1.getId()!!)
 

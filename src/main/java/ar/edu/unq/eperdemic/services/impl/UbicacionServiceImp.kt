@@ -1,18 +1,10 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
-import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 

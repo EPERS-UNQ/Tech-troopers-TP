@@ -30,7 +30,7 @@ class VectorModeloTest {
 
     @Test
     fun seSabeElIdDeUnVector(){
-        humano.setId(1) // Se settea ya que no se persiste.
+        humano.setId(1)
         Assertions.assertEquals(humano.getId(), 1)
     }
 
