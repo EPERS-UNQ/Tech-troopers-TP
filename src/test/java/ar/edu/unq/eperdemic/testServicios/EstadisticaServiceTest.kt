@@ -1,12 +1,10 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
@@ -105,9 +103,36 @@ class EstadisticaServiceTest {
         // especie  -> Infectó dos humanos y dos insecto.
         // especie3 -> Infectó un humano.
 
-        Assertions.assertEquals(especie2.getId(), service.lideres().first().getId())
-        Assertions.assertEquals(especie.getId() , service.lideres()[1].getId())
-        Assertions.assertEquals(especie3.getId() , service.lideres()[2].getId())
+        val especiesPagina0Descendente = service.lideres(Direccion.DESCENDENTE, 0, 3)
+        Assertions.assertTrue(
+            especiesPagina0Descendente.elementAt(0).nombre.equals("Virus")
+        )
+        Assertions.assertTrue(
+            especiesPagina0Descendente.elementAt(1).nombre.equals("Bacteria")
+        )
+        Assertions.assertTrue(
+            especiesPagina0Descendente.elementAt(2).nombre.equals("Adenovirus")
+        )
+
+        val especiesPagina0Ascendente = service.lideres(Direccion.ASCENDENTE, 0, 3)
+        Assertions.assertTrue(
+            especiesPagina0Ascendente.elementAt(0).nombre.equals("Adenovirus")
+        )
+        Assertions.assertTrue(
+            especiesPagina0Ascendente.elementAt(1).nombre.equals("Bacteria")
+        )
+        Assertions.assertTrue(
+            especiesPagina0Ascendente.elementAt(2).nombre.equals("Virus")
+        )
+
+        val especiesPagina5 = service.lideres(Direccion.ASCENDENTE, 5, 3)
+        Assertions.assertTrue(especiesPagina5.isEmpty())
+
+        val especiesLideres = service.lideres(Direccion.DESCENDENTE, 0, 3)
+
+        Assertions.assertEquals(especie2.getId(), especiesLideres.first().getId())
+        Assertions.assertEquals(especie.getId() , especiesLideres[1].getId())
+        Assertions.assertEquals(especie3.getId() , especiesLideres[2].getId())
     }
 
     @Test
@@ -130,6 +155,20 @@ class EstadisticaServiceTest {
         Assertions.assertEquals(5, reporte.cantidadVectores)
         Assertions.assertEquals(4, reporte.cantidadInfectados)
         Assertions.assertEquals("Bacteria", reporte.especiePrevalente)
+    }
+
+    @Test
+    fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLosLideres(){
+        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+            service.lideres(Direccion.ASCENDENTE, -2, 2)
+        }
+    }
+
+    @Test
+    fun comprobacionDeErrorAlPedirUnaCantidadDePaginasNegativaCuandoSeBuscanLosLideres(){
+        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+            service.lideres(Direccion.ASCENDENTE, 1, -5)
+        }
     }
 
     @AfterEach

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 
+import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -26,8 +27,9 @@ class HibernateEstadisticaDAO : EstadisticaDAO{
         return query.singleResult
     }
 
-    override fun todosLosLideres(): List<Especie> {
+    override fun todosLosLideres(direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
         val session = HibernateTransactionRunner.currentSession
+        val ordenamiento = if (direccion == Direccion.ASCENDENTE) "asc" else "desc"
 
         val hql = """
                    select e
@@ -35,10 +37,12 @@ class HibernateEstadisticaDAO : EstadisticaDAO{
                    join e.vectores v
                    where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
                    group by e
-                   order by count(v) desc
+                   order by count(v) $ordenamiento
                   """
 
         val query = session.createQuery(hql, Especie::class.java)
+        query.firstResult = pagina * cantidadPorPagina
+        query.maxResults  = cantidadPorPagina
 
         return query.resultList
     }

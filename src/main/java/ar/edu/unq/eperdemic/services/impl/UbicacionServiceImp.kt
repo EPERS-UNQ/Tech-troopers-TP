@@ -74,7 +74,7 @@ class UbicacionServiceImp(
             val todosLosVectoresInf = todosLosVectores.filter { it.estaInfectado() }
 
             if (todosLosVectoresInf.isNotEmpty()) {
-                val random: RandomGenerator = RandomGenerator()
+                val random = RandomGenerator()
                 val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
 
                 for (v in todosLosVectores) {

@@ -175,13 +175,14 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
-        val vector4 = serviceVector.crear(Vector("Miguel", ubi2, TipoVector.HUMANO))
+        val vector4 = serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
+        val vector5 = serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
 
         // Restrinjo la prueba a un solo vector infectado
-        serviceVector.infectar(vector4.getId()!!, especie1.getId()!!)
-        serviceUbicacion.expandir(ubi2.getId()!!)
+        serviceVector.infectar(vector3.getId()!!, especie1.getId()!!)
+        serviceUbicacion.expandir(ubi1.getId()!!)
 
-        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
+        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
 
         Assertions.assertTrue(
             vectoresUbicacion.all {

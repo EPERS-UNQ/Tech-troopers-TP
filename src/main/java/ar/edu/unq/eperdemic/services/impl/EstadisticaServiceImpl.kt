@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
+import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
+import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.persistencia.dao.EstadisticaDAO
@@ -14,8 +16,13 @@ class EstadisticaServiceImpl (
         return runTrx { estadisticaDAO.lider() }
     }
 
-    override fun lideres(): List<Especie> {
-        return runTrx { estadisticaDAO.todosLosLideres() }
+    override fun lideres(direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
+        return runTrx {
+            if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
+                throw ErrorValorDePaginacionIvalido()
+            }
+            estadisticaDAO.todosLosLideres(direccion, pagina, cantidadPorPagina)
+        }
     }
 
     override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
