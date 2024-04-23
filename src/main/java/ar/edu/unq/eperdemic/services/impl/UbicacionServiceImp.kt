@@ -15,12 +15,7 @@ class UbicacionServiceImp(
 ) : UbicacionService {
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx {
-            val existeNombre = daoUbicacion.recuperarTodos().stream().anyMatch { u -> u.getNombre() == ubicacion.getNombre() }
-            if (existeNombre) {
-                throw ErrorNombreEnUso()
-            }
-            daoUbicacion.crear(ubicacion) }
+        return runTrx { daoUbicacion.crear(ubicacion) }
     }
 
     override fun updatear(ubicacion: Ubicacion) {
@@ -63,7 +58,7 @@ class UbicacionServiceImp(
     override fun expandir( ubicacionId: Long) {
         runTrx {
             val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
-            val todosLosVectoresInf = todosLosVectores.filter { it.estaInfectado() }
+            val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
             if (todosLosVectoresInf.isNotEmpty()) {
                 val random = RandomGenerator()

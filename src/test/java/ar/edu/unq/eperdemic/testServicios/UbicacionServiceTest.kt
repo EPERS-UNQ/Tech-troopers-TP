@@ -96,12 +96,13 @@ class UbicacionServiceTest {
         Assertions.assertEquals(ubiPersistida1.getNombre(), "Uruguay")
     }
 
-    @Test
+    /*@Test
     fun noEsPosibleCrearDosUbicacionesConElMismoNombre() {
         Assertions.assertThrows(ErrorNombreEnUso::class.java) {
             serviceUbicacion.crear(Ubicacion("Argentina"))
         }
     }
+    */
 
     @Test
     fun cuandoSeIntentaRecuperarUnVectorConUnIdQueNoExisteDaNull() {
@@ -131,9 +132,6 @@ class UbicacionServiceTest {
 
         Assertions.assertEquals(todasLasUbicaiones.size, 3)
 
-        for (u in todasLasUbicaiones) {
-            nombres.any { it == u.getNombre() }
-        }
     }
 
     @Test

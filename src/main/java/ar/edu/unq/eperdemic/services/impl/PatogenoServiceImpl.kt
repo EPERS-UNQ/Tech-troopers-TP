@@ -82,14 +82,9 @@ class PatogenoServiceImpl(
 
             val especie = especieDAO.recuperar(especieId)
             val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val vectores = vectorDAO.recuperarTodos()
-            val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
-            for (v in vectores) {
-                if (v.estaInfectadoCon(especie)) {
-                    ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
-                }
-            }
-            ubicacionesDeVectoresConEspecie.size > cantUbicaciones/ 2
+            val ubicacionesDeVectores = vectorDAO.recuperarUbicacionesDeVectoresConEspecie(especie)
+
+            ubicacionesDeVectores.size > cantUbicaciones / 2
         }
     }
 

@@ -10,7 +10,6 @@ class Ubicacion() {
     private var id: Long? = null
 
     @Column(unique = true)
-
     private var nombre: String? = null
 
     fun getId(): Long? {

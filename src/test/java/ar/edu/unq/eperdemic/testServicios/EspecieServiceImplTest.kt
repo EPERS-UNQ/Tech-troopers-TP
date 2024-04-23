@@ -51,7 +51,7 @@ class EspecieServiceImplTest {
         ubicacion = Ubicacion("Argentina")
         humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
-        service = EspecieServiceImpl( HibernateEspecieDAO() )
+        service = EspecieServiceImpl( HibernateEspecieDAO(), HibernateVectorDAO() )
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )

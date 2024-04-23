@@ -48,7 +48,7 @@ class HibernateEstadisticaDAO : EstadisticaDAO{
     }
 
     override fun reporteContagios(nombreDeUbicacion: String): ReporteDeContagios {
-        return ReporteDeContagios(recuperarTodosLosVectoresPorNombreDeUbicacion(nombreDeUbicacion).size,
+        return ReporteDeContagios(cantidadDeVectoresEn(nombreDeUbicacion),
                                   cantidadDeInfectadosEnUbicacion(nombreDeUbicacion),
                                   especiePrevalente(nombreDeUbicacion).nombre!!)
     }
@@ -64,6 +64,19 @@ class HibernateEstadisticaDAO : EstadisticaDAO{
         query.setParameter("nombreDeUbicacion", nombreDeUbicacion)
 
         return query.resultList
+    }
+
+    fun cantidadDeVectoresEn(nombreDeUbicacion: String) : Int {
+        val session = HibernateTransactionRunner.currentSession
+        val hql = """ 
+                      select v
+                      from Vector v
+                      where v.ubicacion.nombre = :nombreDeUbicacion
+                  """
+        val query = session.createQuery(hql, Vector::class.java)
+        query.setParameter("nombreDeUbicacion", nombreDeUbicacion)
+
+        return query.resultList.size
     }
 
     fun cantidadDeInfectadosEnUbicacion(nombreDeUbicacion: String) : Int {

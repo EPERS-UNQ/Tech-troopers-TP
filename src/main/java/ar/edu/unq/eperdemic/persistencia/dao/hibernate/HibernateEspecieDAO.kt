@@ -36,5 +36,19 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
         return query.resultList
 
     }
+    /*
+    override fun cantidadDeEspecies(especieId: Long): Int {
+        val session = HibernateTransactionRunner.currentSession
 
+        val hql   = """
+                    select count (e.vectores)
+                    from Especie e
+                    where e.id = :especieId
+                    """
+        val query = session.createQuery(hql, Especie::class.java)
+        query.setParameter("especieId", especieId)
+
+        return query.resultList.size
+    }
+    */
 }

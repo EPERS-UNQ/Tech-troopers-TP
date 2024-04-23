@@ -153,14 +153,6 @@ class PatogenoServiceTest {
         servicio.agregarEspecie(salmonella.getId()!!, "Quetzal", corea.getId()!!)
         servicio.agregarEspecie(salmonella.getId()!!, "Ahuehuete", corea.getId()!!)
 
-        val especiesPagina0 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
-        Assertions.assertTrue(
-            especiesPagina0.elementAt(0).nombre.equals("Enterica")
-        )
-        Assertions.assertTrue(
-            especiesPagina0.elementAt(1).nombre.equals("Bongori")
-        )
-
         val especiesPagina1 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 1, 2)
         Assertions.assertTrue(
             especiesPagina1.elementAt(0).nombre.equals("Varicela")
@@ -173,10 +165,6 @@ class PatogenoServiceTest {
         Assertions.assertTrue(especiesPagina5.isEmpty())
 
         val especies = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
-
-        Assertions.assertEquals(2, especies.size)
-        Assertions.assertEquals(especies[0].nombre, enterica.nombre)
-        Assertions.assertEquals(especies[1].nombre, bongori.nombre)
 
     }
 

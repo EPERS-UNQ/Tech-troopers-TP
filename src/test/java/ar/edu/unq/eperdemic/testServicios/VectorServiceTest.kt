@@ -45,7 +45,7 @@ class VectorServiceTest {
 
         this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
         this.serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
-        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
         this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
