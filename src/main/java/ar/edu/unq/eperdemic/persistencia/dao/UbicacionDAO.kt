@@ -1,8 +1,10 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
+import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import org.springframework.data.repository.CrudRepository
 
-interface UbicacionDAO {
+interface UbicacionDAO : CrudRepository<Patogeno, Long> {
 
     fun crear(ubicacion: Ubicacion): Ubicacion
 
