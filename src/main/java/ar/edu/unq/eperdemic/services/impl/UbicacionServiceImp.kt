@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
+import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.modelo.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -36,8 +36,7 @@ class UbicacionServiceImp(
             val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
 
             if (nuevaUbicacion == null || vector == null) {
-                throw IllegalArgumentException("La ubicación o el vector no existen," +
-                        " por lo que no se puede mover el vector")
+                throw ErrorDeMovimiento()
             }
 
             vector.ubicacion = nuevaUbicacion

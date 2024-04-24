@@ -34,18 +34,20 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-    override fun recuperarUbicacionesDeVectoresConEspecie(unaEspecie : Especie) : List<Ubicacion> {
+    override fun cantidadDeUbicacionesDeVectoresConEspecie(unaEspecie : Especie) : Int {
 
         val session = HibernateTransactionRunner.currentSession
         val hql = """ 
-                      select v.ubicacion
+                      select count(distinct v.ubicacion)
                       from Vector v
                       where :unaEspecie member of v.especies
                   """
-        val query = session.createQuery(hql, Ubicacion::class.java)
+        val query = session.createQuery(hql, java.lang.Long::class.java)
         query.setParameter("unaEspecie", unaEspecie)
 
-        return query.resultList.toList()
+        val count = query.singleResult ?: 0L
+
+        return count.toInt()
 
     }
 
@@ -54,9 +56,7 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         val hql = """ 
                       from Vector v
                       where v.ubicacion.id = :unaUbicacionId 
-                      and exists (select '*'
-                                  from Especie e 
-                                  where e member of v.especies)
+                      and size(v.especies) > 0
                   """
         val query = session.createQuery(hql, Vector::class.java)
         query.setParameter("unaUbicacionId", ubicacionId)
@@ -64,19 +64,19 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-    // opcion en caso de que las especies no deban conocer a los vectores.
-
-    override fun cantidadDeVectoresConEspecie(especie: Especie): Int {
+    override fun cantidadDeVectoresConEspecie(especieId: Long): Int {
         val session = HibernateTransactionRunner.currentSession
         val hql = """
+                      select count(v)
                       from Vector v
-                      where :especie member of v.especies
-                      
+                      where :unaEspecieId in (select e.id from v.especies e)
                   """
-        val query = session.createQuery(hql, Vector::class.java)
-        query.setParameter("especie", especie)
+        val query = session.createQuery(hql, java.lang.Long::class.java)
+        query.setParameter("unaEspecieId", especieId)
 
-        return query.resultList.size
+        val count = query.singleResult ?: 0L
+
+        return count.toInt()
     }
 
 }

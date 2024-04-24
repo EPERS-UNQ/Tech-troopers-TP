@@ -81,10 +81,10 @@ class PatogenoServiceImpl(
         return runTrx {
 
             val especie = especieDAO.recuperar(especieId)
-            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val ubicacionesDeVectores = vectorDAO.recuperarUbicacionesDeVectoresConEspecie(especie)
+            val cantUbicaciones = ubicacionDAO.cantidadDeUbicaciones()
+            val cantidadDeUbicacionesDeVectores = vectorDAO.cantidadDeUbicacionesDeVectoresConEspecie(especie)
 
-            ubicacionesDeVectores.size > cantUbicaciones / 2
+            cantidadDeUbicacionesDeVectores > cantUbicaciones / 2
         }
     }
 

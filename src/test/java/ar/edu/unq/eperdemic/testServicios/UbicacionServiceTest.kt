@@ -1,7 +1,5 @@
 package ar.edu.unq.eperdemic.testServicios
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
-import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -96,14 +94,6 @@ class UbicacionServiceTest {
         Assertions.assertEquals(ubiPersistida1.getNombre(), "Uruguay")
     }
 
-    /*@Test
-    fun noEsPosibleCrearDosUbicacionesConElMismoNombre() {
-        Assertions.assertThrows(ErrorNombreEnUso::class.java) {
-            serviceUbicacion.crear(Ubicacion("Argentina"))
-        }
-    }
-    */
-
     @Test
     fun cuandoSeIntentaRecuperarUnVectorConUnIdQueNoExisteDaNull() {
         Assertions.assertEquals(serviceUbicacion.recuperar(50), null)
@@ -127,8 +117,6 @@ class UbicacionServiceTest {
     fun alObtenerTodasLasUbicacionesLaListaTieneTresElementos() {
 
         val todasLasUbicaiones = serviceUbicacion.recuperarTodos()
-
-        val nombres = setOf("Argentina", "Paraguay", "Chiles")
 
         Assertions.assertEquals(todasLasUbicaiones.size, 3)
 

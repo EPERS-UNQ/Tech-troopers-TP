@@ -1,10 +1,10 @@
 package ar.edu.unq.eperdemic.exceptions
 
-import javax.persistence.PersistenceException
+import java.lang.RuntimeException
 
-class ErrorNombreEnUso() : PersistenceException() {
+class ErrorDeMovimiento() : RuntimeException() {
 
     override val message: String?
-        get() = "El nombre ya esta en uso"
+        get() = "La ubicacion o el vector no existe."
 
 }

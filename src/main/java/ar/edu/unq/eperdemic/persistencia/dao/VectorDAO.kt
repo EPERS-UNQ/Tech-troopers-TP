@@ -13,8 +13,8 @@ interface VectorDAO {
     fun recuperarTodos() : List<Vector>
     fun enfermedades(vector: Vector): List<Especie>
     fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>
-    fun recuperarUbicacionesDeVectoresConEspecie(unaEspecie : Especie) : List<Ubicacion>
+    fun cantidadDeUbicacionesDeVectoresConEspecie(unaEspecie : Especie) : Int
     fun recuperarTodosDeUbicacionInfectados(ubicacionId: Long): List<Vector>
-    fun cantidadDeVectoresConEspecie(especie: Especie): Int
+    fun cantidadDeVectoresConEspecie(especieId: Long): Int
 
 }
