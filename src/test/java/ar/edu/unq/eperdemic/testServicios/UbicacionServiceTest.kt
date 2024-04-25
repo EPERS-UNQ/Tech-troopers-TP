@@ -1,6 +1,6 @@
-/*
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -179,6 +179,20 @@ class UbicacionServiceTest {
         }
     }
 
+    @Test
+    fun cuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
+        Assertions.assertThrows(ErrorDeMovimiento::class.java) {
+            serviceUbicacion.mover(vector1.getId()!!, 50)
+        }
+    }
+
+    @Test
+    fun cuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
+        Assertions.assertThrows(ErrorDeMovimiento::class.java) {
+            serviceUbicacion.mover(35, ubi1.getId()!!)
+        }
+    }
+
 
     @AfterEach
     fun finalizar() {
@@ -186,6 +200,3 @@ class UbicacionServiceTest {
     }
 
 }
-
-
- */

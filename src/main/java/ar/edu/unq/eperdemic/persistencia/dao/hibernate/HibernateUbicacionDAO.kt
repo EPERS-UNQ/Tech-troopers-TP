@@ -31,4 +31,17 @@ open class HibernateUbicacionDAO : HibernateDAO<Ubicacion>(Ubicacion::class.java
         return count.toInt()
     }
 
+    override fun recuperarPorNombre(ubicacionId: Long?): String {
+        val session = HibernateTransactionRunner.currentSession
+        val hql = """
+                  select u.nombre
+                  from Ubicacion u
+                  where u.id = :unaUbicacionId
+        """
+        val query = session.createQuery(hql, String::class.java)
+        query.setParameter("unaUbicacionId", ubicacionId)
+
+        return query.singleResult
+    }
+
 }

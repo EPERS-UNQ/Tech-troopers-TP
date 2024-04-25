@@ -1,4 +1,3 @@
-/*
 package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -6,6 +5,8 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -63,6 +64,10 @@ class VectorModeloTest {
 
     @Test
     fun unVectorIntentaContagiarAOtroVectorYLoLogra(){
+
+        val random   = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.getNumeroRandom(1)
         val patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
         val viruela  = Especie("Viruela", patogeno, "Francia")
         humano.infectar(viruela)
@@ -94,5 +99,3 @@ class VectorModeloTest {
     }
 
 }
-
- */

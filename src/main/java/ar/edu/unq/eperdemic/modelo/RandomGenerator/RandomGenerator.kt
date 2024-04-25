@@ -19,8 +19,8 @@ class RandomGenerator private constructor() {
         this.strategy = newStrategy
     }
 
-    fun getNumeroRandom(num: Int = 0): Int {
-        return strategy.getNumeroRandom(num)
+    fun getNumeroRandom(): Int {
+        return strategy.getNumeroRandom()
     }
 
     fun <T> getElementoRandomEnLista(list: List<T>, num: Int = 0): T {

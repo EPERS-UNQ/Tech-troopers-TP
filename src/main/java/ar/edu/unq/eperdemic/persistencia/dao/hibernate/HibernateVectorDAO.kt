@@ -34,16 +34,16 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-    override fun cantidadDeUbicacionesDeVectoresConEspecie(unaEspecie : Especie) : Int {
+    override fun cantidadDeUbicacionesDeVectoresConEspecieId(unaEspecieId : Long) : Int {
 
         val session = HibernateTransactionRunner.currentSession
         val hql = """ 
                       select count(distinct v.ubicacion)
                       from Vector v
-                      where :unaEspecie member of v.especies
+                      where :unaEspecieId in (select e.id from v.especies e)
                   """
         val query = session.createQuery(hql, java.lang.Long::class.java)
-        query.setParameter("unaEspecie", unaEspecie)
+        query.setParameter("unaEspecieId", unaEspecieId)
 
         val count = query.singleResult ?: 0L
 

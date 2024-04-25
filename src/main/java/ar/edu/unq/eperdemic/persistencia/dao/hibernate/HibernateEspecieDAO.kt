@@ -18,17 +18,17 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
         return query.resultList
     }
 
-    override fun especiesDelPatogeno(patogenoBuscado: Patogeno, direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
+    override fun especiesDelPatogenoId(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
 
         val session = HibernateTransactionRunner.currentSession
 
         val hql = (" select e "
                  + " from Especie e "
-                 + " where e.patogeno = :patogenoBuscado"
+                 + " where e.patogeno.id = :unPatogenoId"
                  + " order by :direccion")
 
         val query = session.createQuery(hql, Especie::class.java)
-        query.setParameter("patogenoBuscado", patogenoBuscado)
+        query.setParameter("unPatogenoId", patogenoId)
         query.setParameter("direccion", direccion)
         query.firstResult = pagina * cantidadPorPagina
         query.maxResults  = cantidadPorPagina

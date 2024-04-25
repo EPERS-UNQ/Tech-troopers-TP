@@ -49,19 +49,18 @@ class PatogenoServiceImpl(
 
         return runTrx {
 
-            val randomize = RandomGenerator.getInstance()
             val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
-            val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
-            val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.getNombre()!!)
+            val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarPorNombre(ubicacionId))
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
             if (vectoresEnUbicacion.isEmpty()) {
                 throw NoHayVectorException()
             }
-            val vectorAInfectar = randomize.getElementoRandomEnLista(vectoresEnUbicacion)
+            val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
             vectorAInfectar.infectar(especie)
             patogenoDAO.actualizar(patogeno)
             especieDAO.crear(especie)
             especie
+
         }
     }
 
@@ -70,21 +69,13 @@ class PatogenoServiceImpl(
             if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
                 throw ErrorValorDePaginacionIvalido()
             }
-            val patogeno: Patogeno = patogenoDAO.recuperar(patogenoId)
-            val especies = especieDAO.especiesDelPatogeno(patogeno, direccion, pagina, cantidadPorPagina)
+            val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion, pagina, cantidadPorPagina)
             especies
         }
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-        return runTrx {
-
-            val especie = especieDAO.recuperar(especieId)
-            val cantUbicaciones = ubicacionDAO.cantidadDeUbicaciones()
-            val cantidadDeUbicacionesDeVectores = vectorDAO.cantidadDeUbicacionesDeVectoresConEspecie(especie)
-
-            cantidadDeUbicacionesDeVectores > cantUbicaciones / 2
-        }
+        return runTrx { vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.cantidadDeUbicaciones() / 2 }
     }
 
 }

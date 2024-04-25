@@ -13,5 +13,6 @@ interface UbicacionDAO {
     fun recuperarTodos(): List<Ubicacion>
 
     fun cantidadDeUbicaciones(): Int
+    fun recuperarPorNombre(ubicacionId: Long?): String
 
 }

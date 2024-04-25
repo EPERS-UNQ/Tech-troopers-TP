@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.modelo.RandomGenerator
 
 class AleatorioStrategy : RandomStrategy {
-    override fun getNumeroRandom(num: Int): Int {
+    override fun getNumeroRandom(): Int {
         return (1..10).random()
     }
 
