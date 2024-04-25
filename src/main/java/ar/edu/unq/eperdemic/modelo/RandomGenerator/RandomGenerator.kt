@@ -3,6 +3,8 @@ package ar.edu.unq.eperdemic.modelo.RandomGenerator
 class RandomGenerator private constructor() {
 
     private var strategy: RandomStrategy = AleatorioStrategy()
+    private var numeroGlobal = 1
+    private var booleanGlobal = true
 
     companion object {
         private var instance: RandomGenerator? = null
@@ -19,27 +21,24 @@ class RandomGenerator private constructor() {
         this.strategy = newStrategy
     }
 
+    fun setNumeroGlobal(newNumero: Int) {
+        this.numeroGlobal = newNumero
+    }
+
+    fun setBooleanoGlobal(bool: Boolean) {
+        this.booleanGlobal = bool
+    }
+
     fun getNumeroRandom(): Int {
-        return strategy.getNumeroRandom()
+        return strategy.getNumeroRandom(numeroGlobal)
     }
 
-    fun <T> getElementoRandomEnLista(list: List<T>, num: Int = 0): T {
-        return strategy.getElementoRandomEnLista(list, num)
+    fun <T> getElementoRandomEnLista(list: List<T>): T {
+        return strategy.getElementoRandomEnLista(list, numeroGlobal)
     }
 
-    fun porcentajeExistoso(porcentaje: Int, bool: Boolean = true): Boolean {
-        return strategy.porcentajeExistoso(porcentaje, bool)
+    fun porcentajeExistoso(porcentaje: Int) : Boolean {
+        return strategy.porcentajeExistoso(porcentaje, booleanGlobal)
     }
 
 }
-
-// Ejemplo de uso:
-/*
-    val randomGen = RandomGenerator.getInstance()
-    println(randomGen.getNumeroRandom())
-    println(randomGen.getNumeroEspecifico(5))
-    println(randomGen.getElementoRandomEnLista(listOf(1, 2, 3, 4, 5)))
-    println(randomGen.porcentajeExistoso(80))
-*/
-
-

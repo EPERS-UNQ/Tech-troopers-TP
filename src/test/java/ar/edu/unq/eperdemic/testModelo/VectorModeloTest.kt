@@ -67,7 +67,12 @@ class VectorModeloTest {
 
         val random   = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.getNumeroRandom(1)
+
+        // Si bien esto se puede cambiar aca
+        random.setNumeroGlobal(10)
+        // La definicion de si se contagia una especie la define esta variable
+        random.setBooleanoGlobal(true)
+
         val patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
         val viruela  = Especie("Viruela", patogeno, "Francia")
         humano.infectar(viruela)

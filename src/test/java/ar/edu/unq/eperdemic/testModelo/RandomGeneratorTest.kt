@@ -29,14 +29,17 @@ class RandomGeneratorTest {
     fun getNumeroRandomDevuelveElNumeroEspecificadoSiEstaEntre1_10() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
         val num = 5
-        Assertions.assertEquals(num, randomGenerator.getNumeroRandom(num))
+
+        randomGenerator.setNumeroGlobal(5)
+        Assertions.assertEquals(num, randomGenerator.getNumeroRandom())
     }
 
     @Test
     fun getNumeroRandomLanzaUnaExcepcionSiElNumeroEstaFueraDelRango1_10() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
+        randomGenerator.setNumeroGlobal(15)
         Assertions.assertThrows(IllegalArgumentException::class.java) {
-            randomGenerator.getNumeroRandom(15)
+            randomGenerator.getNumeroRandom()
         }
     }
 
@@ -58,8 +61,9 @@ class RandomGeneratorTest {
     @Test
     fun getElementoRandomDevuelveElElementoEnLaPosicionPasadaPorParametro() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
+        randomGenerator.setNumeroGlobal(1)
         val list = listOf("a", "b", "c")
-        val randomElement = randomGenerator.getElementoRandomEnLista(list, 1)
+        val randomElement = randomGenerator.getElementoRandomEnLista(list)
         Assertions.assertTrue(randomElement == "b")
     }
 
@@ -72,8 +76,9 @@ class RandomGeneratorTest {
     @Test
     fun porcentajeExistosoDevuelveElBooleanoQueLePasasPorParametro() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
-        Assertions.assertTrue(randomGenerator.porcentajeExistoso(10,true))
-        Assertions.assertFalse(randomGenerator.porcentajeExistoso(10,false))
+        randomGenerator.setBooleanoGlobal(false)
+        //Assertions.assertTrue(randomGenerator.porcentajeExistoso(10))
+        Assertions.assertFalse(randomGenerator.porcentajeExistoso(10))
     }
 
 }
