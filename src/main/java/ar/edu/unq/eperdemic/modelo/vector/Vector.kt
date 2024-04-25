@@ -56,7 +56,7 @@ open class Vector() {
         }
     }
 
-    fun intentarInfectar(vector: Vector, especie: Especie){
+    private fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator.getInstance()
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())

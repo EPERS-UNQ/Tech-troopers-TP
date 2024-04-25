@@ -32,13 +32,12 @@ class VectorModeloTest {
         animal = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         insecto = Vector("Raul", ubicacion, TipoVector.INSECTO)
 
-        patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
-        viruela  = Especie("Viruela", patogeno, "Francia")
-
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(10)
+        random.setBooleanoGlobal(true)
 
+        patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
+        viruela  = Especie("Viruela", patogeno, "Francia")
     }
 
     @Test
@@ -194,13 +193,12 @@ class VectorModeloTest {
     @Test
     fun unVectorIntentaContagiarAOtroVectorYNoLoLogra(){
 
-        random.setStrategy(AleatorioStrategy())
         random.setBooleanoGlobal(false)
         humano.infectar(viruela)
 
         humano.contargiarA(insecto)
 
-        Assertions.assertFalse(insecto.estaInfectadoCon(viruela))
+        Assertions.assertFalse(insecto.estaInfectadoCon(viruela)) // ESTE
 
     }
 
