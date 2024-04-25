@@ -77,7 +77,6 @@ class RandomGeneratorTest {
     fun porcentajeExistosoDevuelveElBooleanoQueLePasasPorParametro() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
         randomGenerator.setBooleanoGlobal(false)
-        //Assertions.assertTrue(randomGenerator.porcentajeExistoso(10))
         Assertions.assertFalse(randomGenerator.porcentajeExistoso(10))
     }
 

@@ -3,7 +3,7 @@ package ar.edu.unq.eperdemic.modelo.RandomGenerator
 class RandomGenerator private constructor() {
 
     private var strategy: RandomStrategy = AleatorioStrategy()
-    private var numeroGlobal = 1
+    private var numeroGlobal  = 1
     private var booleanGlobal = true
 
     companion object {

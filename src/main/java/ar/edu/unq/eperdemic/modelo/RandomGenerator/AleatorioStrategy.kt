@@ -20,5 +20,4 @@ class AleatorioStrategy : RandomStrategy {
         throw IllegalArgumentException("El porcentaje debe estar entre 1 y 110.")
     }
 
-
 }
