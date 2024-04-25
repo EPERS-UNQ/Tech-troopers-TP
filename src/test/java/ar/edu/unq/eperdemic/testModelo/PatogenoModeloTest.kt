@@ -1,8 +1,9 @@
 package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
-import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.TestInstance
 class PatogenoModeloTest {
 
     lateinit var salmonella: Patogeno
+    lateinit var random: RandomGenerator
     @BeforeEach
     fun prepare() {
 
@@ -19,6 +21,9 @@ class PatogenoModeloTest {
 
         salmonella.setId(1)
         salmonella.cantidadDeEspecies = 0
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 

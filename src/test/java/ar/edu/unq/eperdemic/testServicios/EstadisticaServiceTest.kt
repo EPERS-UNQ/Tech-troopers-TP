@@ -5,6 +5,8 @@ import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
@@ -37,6 +39,8 @@ class EstadisticaServiceTest {
 
     lateinit var ubicacion: Ubicacion
 
+    lateinit var random : RandomGenerator
+
     @BeforeEach
     fun crearModelo() {
 
@@ -59,6 +63,10 @@ class EstadisticaServiceTest {
         servicePatogeno.crear(patogeno)
 
         especie  = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 

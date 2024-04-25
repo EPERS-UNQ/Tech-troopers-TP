@@ -9,6 +9,8 @@ import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
@@ -42,6 +44,7 @@ class PatogenoServiceTest {
     lateinit var servicio: PatogenoService
     lateinit var servicioUbicacion: UbicacionService
     lateinit var servicioVector: VectorService
+    lateinit var random : RandomGenerator
 
     private val patogenoDao: PatogenoDAO = HibernatePatogenoDAO()
     private val especieDao: EspecieDAO = HibernateEspecieDAO()
@@ -64,6 +67,10 @@ class PatogenoServiceTest {
 
         this.servicioUbicacion.crear(corea)
         this.servicioUbicacion.crear(china)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 

@@ -10,6 +10,8 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
@@ -40,6 +42,8 @@ class VectorServiceTest {
     lateinit var golondrina: Vector
     lateinit var ubicacion: Ubicacion
 
+    lateinit var random : RandomGenerator
+
     @BeforeEach
     fun prepare() {
 
@@ -61,6 +65,10 @@ class VectorServiceTest {
         servicePatogeno.crear(patogeno)
 
         especie = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 

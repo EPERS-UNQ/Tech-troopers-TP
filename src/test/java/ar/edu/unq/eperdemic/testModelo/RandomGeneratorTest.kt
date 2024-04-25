@@ -17,6 +17,7 @@ class RandomGeneratorTest {
     @BeforeEach
     fun crearModelo() {
         randomGenerator.setStrategy(AleatorioStrategy())
+        randomGenerator.setNumeroGlobal(0)
     }
 
     @Test

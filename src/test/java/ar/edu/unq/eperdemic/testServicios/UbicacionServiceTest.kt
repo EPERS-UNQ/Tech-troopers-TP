@@ -12,6 +12,8 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
@@ -61,12 +63,12 @@ class UbicacionServiceTest {
     lateinit var vector2: Vector
     lateinit var vector3: Vector
 
-
     lateinit var patogeno1: Patogeno
 
     lateinit var especie1: Especie
     lateinit var especie2: Especie
 
+    lateinit var random: RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
@@ -83,6 +85,10 @@ class UbicacionServiceTest {
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
         especie1 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "juanito", ubi2.getId()!!)
         especie2 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "corona2", ubi2.getId()!!)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 
@@ -125,6 +131,7 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
+        random.setNumeroGlobal(1)
         serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
 
         val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
@@ -135,7 +142,7 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
-
+        random.setNumeroGlobal(1)
         serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
 
         serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
@@ -152,25 +159,28 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
+        random.setNumeroGlobal(1)
         serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
         serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
+        val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))
 
         serviceVector.infectar(vector3.getId()!!, especie1.getId()!!)
+        serviceVector.infectar(vector4.getId()!!, especie2.getId()!!)
         serviceUbicacion.expandir(ubi1.getId()!!)
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
 
         Assertions.assertTrue(
             vectoresUbicacion.all {
-                   it.enfermedadesDelVector().any { it.getId() == especie1.getId()!! }
+                   it.enfermedadesDelVector().any { it.getId() == especie2.getId()!! }
             }
         )
     }
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiNoHayUnVenctorInfectadoEnLaUbicacionNoHayCambios() {
-
-        serviceUbicacion.expandir(ubi2.getId()!!)
+        random.setNumeroGlobal(1)
+        serviceUbicacion.expandir(ubi1.getId()!!)
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi4.getId() }
 

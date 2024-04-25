@@ -34,6 +34,7 @@ class VectorModeloTest {
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(1)
         random.setBooleanoGlobal(true)
 
         patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
