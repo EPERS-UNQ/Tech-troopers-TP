@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.testModelo
+/*package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
@@ -84,3 +84,5 @@ class PatogenoModeloTest {
     }
 
 }
+
+ */

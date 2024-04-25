@@ -2,6 +2,8 @@ package ar.edu.unq.eperdemic.modelo.vector
 
 import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+
 @Entity
 open class Vector() {
 
@@ -55,7 +57,7 @@ open class Vector() {
     }
 
     fun intentarInfectar(vector: Vector, especie: Especie){
-        val random = RandomGenerator()
+        val random = RandomGenerator.getInstance()
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
 

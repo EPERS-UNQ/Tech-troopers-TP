@@ -6,8 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Direccion
-import ar.edu.unq.eperdemic.modelo.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
@@ -50,7 +49,7 @@ class PatogenoServiceImpl(
 
         return runTrx {
 
-            val randomize = RandomGenerator()
+            val randomize = RandomGenerator.getInstance()
             val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
             val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
             val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.getNombre()!!)

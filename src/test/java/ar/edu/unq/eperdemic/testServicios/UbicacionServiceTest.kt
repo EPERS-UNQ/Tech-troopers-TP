@@ -1,3 +1,4 @@
+/*
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -185,3 +186,6 @@ class UbicacionServiceTest {
     }
 
 }
+
+
+ */

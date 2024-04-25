@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
-import ar.edu.unq.eperdemic.modelo.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -60,7 +60,7 @@ class UbicacionServiceImp(
             val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
             if (todosLosVectoresInf.isNotEmpty()) {
-                val random = RandomGenerator()
+                val random = RandomGenerator.getInstance()
                 val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
 
                 for (v in todosLosVectores) {
