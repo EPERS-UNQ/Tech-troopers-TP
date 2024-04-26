@@ -10,9 +10,12 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -22,7 +25,7 @@ import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
 import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-/*
+
 @TestInstance(PER_CLASS)
 class VectorServiceTest {
 
@@ -39,12 +42,14 @@ class VectorServiceTest {
     lateinit var golondrina: Vector
     lateinit var ubicacion: Ubicacion
 
+    lateinit var random : RandomGenerator
+
     @BeforeEach
     fun prepare() {
 
         this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
         this.serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
-        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO())
+        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
         this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -60,6 +65,10 @@ class VectorServiceTest {
         servicePatogeno.crear(patogeno)
 
         especie = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 
@@ -149,5 +158,3 @@ class VectorServiceTest {
     }
 
 }
-
- */

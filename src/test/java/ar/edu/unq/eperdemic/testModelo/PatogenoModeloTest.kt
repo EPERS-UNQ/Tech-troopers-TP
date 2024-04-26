@@ -1,8 +1,9 @@
 package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
-import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.TestInstance
 class PatogenoModeloTest {
 
     lateinit var salmonella: Patogeno
+    lateinit var random: RandomGenerator
     @BeforeEach
     fun prepare() {
 
@@ -19,47 +21,50 @@ class PatogenoModeloTest {
 
         salmonella.setId(1)
         salmonella.cantidadDeEspecies = 0
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 
     @Test
     fun seSabeElIdDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.getId(), 1)
+        Assertions.assertEquals(1, salmonella.getId())
     }
 
     @Test
     fun seSabeElTipoDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.toString(), "Salmonella")
+        Assertions.assertEquals("Salmonella", salmonella.toString())
     }
 
     @Test
     fun seSabeLaCantidadDeEspeciesDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.cantidadDeEspecies, 0)
+        Assertions.assertEquals(0, salmonella.cantidadDeEspecies)
     }
 
     @Test
     fun seSabeLaCapacidadDeContagioAHumanosDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.capContagioHumano, 70)
+        Assertions.assertEquals(70, salmonella.capContagioHumano)
     }
 
     @Test
     fun seSabeLaCapacidadDeContagioAAnimalesDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.capContagioAnimal, 10)
+        Assertions.assertEquals(10, salmonella.capContagioAnimal)
     }
 
     @Test
     fun seSabeLaCapacidadDeContagioAInsectosDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.capContagioInsecto, 15)
+        Assertions.assertEquals(15, salmonella.capContagioInsecto)
     }
 
     @Test
     fun seSabeLaDefensaDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.defensa, 30)
+        Assertions.assertEquals(30, salmonella.defensa)
     }
 
     @Test
     fun seSabeLaCapacidadDeBiomecanizacionDeUnPatogeno() {
-        Assertions.assertEquals(salmonella.capDeBiomecanizacion, 66)
+        Assertions.assertEquals(66, salmonella.capDeBiomecanizacion)
     }
 
     @Test
@@ -67,8 +72,8 @@ class PatogenoModeloTest {
 
         val enterica = salmonella.crearEspecie("Enterica", "Arg")
 
-        Assertions.assertEquals(salmonella.cantidadDeEspecies, 1)
-        Assertions.assertEquals(enterica.nombre, "Enterica")
+        Assertions.assertEquals(1, salmonella.cantidadDeEspecies)
+        Assertions.assertEquals("Enterica", enterica.nombre)
 
     }
 

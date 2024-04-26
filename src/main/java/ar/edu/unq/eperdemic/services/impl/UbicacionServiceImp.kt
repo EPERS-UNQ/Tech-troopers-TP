@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombreEnUso
-import ar.edu.unq.eperdemic.modelo.RandomGenerator
+import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -15,12 +15,7 @@ class UbicacionServiceImp(
 ) : UbicacionService {
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx {
-            val existeNombre = daoUbicacion.recuperarTodos().stream().anyMatch { u -> u.getNombre() == ubicacion.getNombre() }
-            if (existeNombre) {
-                throw ErrorNombreEnUso()
-            }
-            daoUbicacion.crear(ubicacion) }
+        return runTrx { daoUbicacion.crear(ubicacion) }
     }
 
     override fun updatear(ubicacion: Ubicacion) {
@@ -41,8 +36,7 @@ class UbicacionServiceImp(
             val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
 
             if (nuevaUbicacion == null || vector == null) {
-                throw IllegalArgumentException("La ubicación o el vector no existen," +
-                        " por lo que no se puede mover el vector")
+                throw ErrorDeMovimiento()
             }
 
             vector.ubicacion = nuevaUbicacion
@@ -63,10 +57,10 @@ class UbicacionServiceImp(
     override fun expandir( ubicacionId: Long) {
         runTrx {
             val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
-            val todosLosVectoresInf = todosLosVectores.filter { it.estaInfectado() }
+            val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
             if (todosLosVectoresInf.isNotEmpty()) {
-                val random = RandomGenerator()
+                val random = RandomGenerator.getInstance()
                 val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
 
                 for (v in todosLosVectores) {
