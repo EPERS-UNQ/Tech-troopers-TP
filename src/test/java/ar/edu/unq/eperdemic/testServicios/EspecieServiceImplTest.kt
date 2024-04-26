@@ -60,6 +60,11 @@ class EspecieServiceImplTest {
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl(HibernateDataDAO())
 
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
+        random.setBooleanoGlobal(true)
+
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
 
@@ -67,10 +72,6 @@ class EspecieServiceImplTest {
 
         especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
 
-        random = RandomGenerator.getInstance()
-        random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
-        random.setBooleanoGlobal(true)
     }
 
     @Test

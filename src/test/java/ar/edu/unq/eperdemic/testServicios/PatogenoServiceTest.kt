@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
@@ -33,6 +34,15 @@ class EspecieModeloTest {
     @Test
     fun seSabeElPatogenoDeLaEspecie() {
         Assertions.assertEquals(patogeno, especie.patogeno)
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearUnaEspecieSinNombre() {
+
+        Assertions.assertThrows(ErrorNombre::class.java){
+            Especie(null, patogeno, "Argentina")
+        }
+
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
@@ -21,7 +22,10 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+    constructor( nombre: String?, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+        if (nombre == null){
+            throw ErrorNombre()
+        }
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen

@@ -50,6 +50,10 @@ class EstadisticaServiceTest {
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
 
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
+
         ubicacion = Ubicacion("Argentina")
         serviceUbicacion.crear(ubicacion)
 
@@ -63,10 +67,6 @@ class EstadisticaServiceTest {
         servicePatogeno.crear(patogeno)
 
         especie  = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
-
-        random = RandomGenerator.getInstance()
-        random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
 
     }
 
