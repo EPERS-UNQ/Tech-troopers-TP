@@ -24,17 +24,12 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class PatogenoServiceImpl(
-
-    private val especieDAO: EspecieDAO,
-    private val ubicacionDAO: UbicacionDAO,
-    private val vectorDAO: VectorDAO
-    /*@Autowired private lateinit var especieDAO: EspecieDAO,
-    @Autowired private lateinit var ubicacionDAO: UbicacionDAO,
-    @Autowired private lateinit var vectorDAO: VectorDAO*/
-    ) : PatogenoService {
+class PatogenoServiceImpl() : PatogenoService {
 
     @Autowired private lateinit var patogenoDAO: PatogenoDAO
+    @Autowired private lateinit var especieDAO: EspecieDAO
+    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
         return try {
@@ -45,7 +40,7 @@ class PatogenoServiceImpl(
     }
 
     override fun updatear(patogeno: Patogeno) {
-        runTrx { patogenoDAO.actualizar(patogeno) }
+        runTrx { patogenoDAO.save(patogeno) }
     }
 
     override fun recuperar(id: Long): Patogeno? {
@@ -53,7 +48,7 @@ class PatogenoServiceImpl(
     }
 
     override fun recuperarTodos(): List<Patogeno> {
-        return patogenoDAO.findAll().toList()
+        return patogenoDAO.recuperarATodos()
     }
 
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
@@ -61,7 +56,7 @@ class PatogenoServiceImpl(
         return runTrx {
 
             val randomize = RandomGenerator()
-            val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
+            val patogeno: Patogeno = patogenoDAO.findByIdOrNull(idDePatogeno)!!
             val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
             val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.getNombre()!!)
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
@@ -70,8 +65,8 @@ class PatogenoServiceImpl(
             }
             val vectorAInfectar = randomize.getElementoRandomEnLista(vectoresEnUbicacion)
             vectorAInfectar.infectar(especie)
-            patogenoDAO.actualizar(patogeno)
-            especieDAO.crear(especie)
+            //patogenoDAO.actualizar(patogeno)
+            //especieDAO.save(especie)
             especie
         }
     }
@@ -81,26 +76,15 @@ class PatogenoServiceImpl(
             if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
                 throw ErrorValorDePaginacionIvalido()
             }
-            val patogeno: Patogeno = patogenoDAO.recuperar(patogenoId)
+            val patogeno: Patogeno = patogenoDAO.findByIdOrNull(patogenoId)!!
             val especies = especieDAO.especiesDelPatogeno(patogeno, direccion, pagina, cantidadPorPagina)
             especies
         }
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-        return runTrx {
-
-            val especie = especieDAO.recuperar(especieId)
-            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val vectores = vectorDAO.recuperarTodos()
-            val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
-            for (v in vectores) {
-                if (v.estaInfectadoCon(especie)) {
-                    ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
-                }
-            }
-            ubicacionesDeVectoresConEspecie.size > cantUbicaciones/ 2
-        }
+        TODO()
+    //return runTrx { vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.cantidadDeUbicaciones() / 2 }
     }
 
 }

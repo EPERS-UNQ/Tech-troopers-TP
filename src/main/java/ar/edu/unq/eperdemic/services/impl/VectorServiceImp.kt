@@ -7,7 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-
+/*
 class VectorServiceImp (
     private val vectorDAO: VectorDAO,
     private val especieDAO: EspecieDAO
@@ -48,3 +48,5 @@ class VectorServiceImp (
         return runTrx { vectorDAO.enfermedades(vectorDAO.recuperar(vectorId)) }
     }
 }
+
+ */

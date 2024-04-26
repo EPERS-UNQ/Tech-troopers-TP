@@ -7,7 +7,7 @@ import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import ar.edu.unq.eperdemic.persistencia.dao.EstadisticaDAO
 import ar.edu.unq.eperdemic.services.EstadisticaService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-
+/*
 class EstadisticaServiceImpl (
     private val estadisticaDAO : EstadisticaDAO
    ) : EstadisticaService {
@@ -30,3 +30,5 @@ class EstadisticaServiceImpl (
     }
 
 }
+
+ */

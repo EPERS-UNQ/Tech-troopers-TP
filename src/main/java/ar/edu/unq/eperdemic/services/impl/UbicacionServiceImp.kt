@@ -7,7 +7,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-
+/*
 
 class UbicacionServiceImp(
     private val daoUbicacion: UbicacionDAO,
@@ -78,7 +78,11 @@ class UbicacionServiceImp(
         }
     }
 
+
+
 }
+
+ */
 
 
 
