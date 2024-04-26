@@ -21,34 +21,20 @@ open class HibernateEspecieDAO : HibernateDAO<Especie>(Especie::class.java),
     override fun especiesDelPatogenoId(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
 
         val session = HibernateTransactionRunner.currentSession
+        val ordenamiento = if (direccion == Direccion.ASCENDENTE) "asc" else "desc"
 
         val hql = (" select e "
                  + " from Especie e "
                  + " where e.patogeno.id = :unPatogenoId"
-                 + " order by :direccion")
+                 + " order by e.nombre $ordenamiento")
 
         val query = session.createQuery(hql, Especie::class.java)
         query.setParameter("unPatogenoId", patogenoId)
-        query.setParameter("direccion", direccion)
         query.firstResult = pagina * cantidadPorPagina
         query.maxResults  = cantidadPorPagina
 
         return query.resultList
 
     }
-    /*
-    override fun cantidadDeEspecies(especieId: Long): Int {
-        val session = HibernateTransactionRunner.currentSession
 
-        val hql   = """
-                    select count (e.vectores)
-                    from Especie e
-                    where e.id = :especieId
-                    """
-        val query = session.createQuery(hql, Especie::class.java)
-        query.setParameter("especieId", especieId)
-
-        return query.resultList.size
-    }
-    */
 }
