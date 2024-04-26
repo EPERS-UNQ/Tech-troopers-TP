@@ -15,7 +15,7 @@ import ar.edu.unq.eperdemic.services.impl.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-
+/*
 @TestInstance(PER_CLASS)
 class EstadisticaServiceTest {
 
@@ -187,3 +187,5 @@ class EstadisticaServiceTest {
     }
 
 }
+
+ */

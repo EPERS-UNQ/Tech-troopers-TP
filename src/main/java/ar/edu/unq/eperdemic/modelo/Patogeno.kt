@@ -24,7 +24,7 @@ class Patogeno() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id : Long? = null
+    var id : Long? = null
 
     var cantidadDeEspecies: Int = 0
     var tipo : String? = null
@@ -48,13 +48,15 @@ class Patogeno() {
         return tipo!!
     }
 
+    /*
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
     fun setId(idNew : Long?) {
         this.id = idNew
     }
+    */
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
         var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
