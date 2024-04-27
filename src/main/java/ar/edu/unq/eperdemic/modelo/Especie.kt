@@ -23,7 +23,7 @@ class Especie() {
     var patogeno: Patogeno? = null
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
-        if (nombre.isBlank()){
+        if (nombre.isBlank()){ // TESTEAR
             throw ErrorNombre("El nombre de la especie no puede ser vacio.")
         }
         this.nombre = nombre
@@ -46,4 +46,5 @@ class Especie() {
             TipoVector.INSECTO -> patogeno!!.capContagioInsecto
         }
     }
+
 }
