@@ -2,9 +2,6 @@ package ar.edu.unq.eperdemic.exceptions
 
 import java.lang.RuntimeException
 
-class ErrorNombre() : RuntimeException(){
-
-    override val message: String?
-        get() = "El nombre no puede ser nulo."
+class ErrorNombre(override val message: String) : RuntimeException(){
 
 }

@@ -22,9 +22,9 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    constructor( nombre: String?, patogeno: Patogeno, paisDeOrigen: String ) : this() {
-        if (nombre == null){
-            throw ErrorNombre()
+    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+        if (nombre.isBlank()){
+            throw ErrorNombre("El nombre de la especie no puede ser vacio.")
         }
         this.nombre = nombre
         this.patogeno = patogeno

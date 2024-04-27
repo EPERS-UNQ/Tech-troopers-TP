@@ -40,7 +40,7 @@ class EspecieModeloTest {
     fun testCuandoSeIntentaCrearUnaEspecieSinNombre() {
 
         Assertions.assertThrows(ErrorNombre::class.java){
-            Especie(null, patogeno, "Argentina")
+            Especie("", patogeno, "Argentina")
         }
 
     }
