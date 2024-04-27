@@ -13,7 +13,15 @@ class VectorServiceImp (
     private val especieDAO: EspecieDAO
 ) : VectorService {
     override fun crear(vector: Vector): Vector {
-        return runTrx { vectorDAO.crear(vector) }
+        return runTrx {
+         try {
+            vectorDAO.crear(vector)
+         } catch(e: SqlConstraintViolationException) {
+                if (e.message == "") {
+
+                }
+            } 
+        }
     }
 
     override fun updatear(vector: Vector) {

@@ -167,9 +167,11 @@ class EstadisticaServiceTest {
 
     @Test
     fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLosLideres(){
-        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+        val e = Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             service.lideres(Direccion.ASCENDENTE, -2, 2)
         }
+
+        assertEquals("tatattata", e.message)
     }
 
     @Test

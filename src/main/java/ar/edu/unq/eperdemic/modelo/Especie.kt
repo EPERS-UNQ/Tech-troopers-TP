@@ -22,10 +22,8 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    constructor( nombre: String?, patogeno: Patogeno, paisDeOrigen: String ) : this() {
-        if (nombre == null){
-            throw ErrorNombre()
-        }
+    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+        
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
@@ -44,6 +42,12 @@ class Especie() {
             TipoVector.HUMANO -> patogeno!!.capContagioHumano
             TipoVector.ANIMAL -> patogeno!!.capContagioAnimal
             TipoVector.INSECTO -> patogeno!!.capContagioInsecto
+        }
+    }
+
+    init {
+        if (si el this.nombre es blanco) {
+            throw ErrorNombre()
         }
     }
 }
