@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
@@ -33,6 +34,28 @@ class EspecieModeloTest {
     @Test
     fun seSabeElPatogenoDeLaEspecie() {
         Assertions.assertEquals(patogeno, especie.patogeno)
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearUnaEspecieSinNombre() {
+
+        val mensajeError = Assertions.assertThrows(ErrorNombre::class.java){
+            Especie("", patogeno, "Argentina")
+        }
+
+        Assertions.assertEquals("El nombre de la especie no puede ser vacio.", mensajeError.message)
+
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearUnaEspecieSinElNombreDeUnaUbicacion() {
+
+        val mensajeError = Assertions.assertThrows(ErrorNombre::class.java){
+            Especie("Mollusca", patogeno, "")
+        }
+
+        Assertions.assertEquals("El nombre del pais no puede ser vacio.", mensajeError.message)
+
     }
 
     @Test

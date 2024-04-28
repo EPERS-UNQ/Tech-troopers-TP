@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
@@ -10,6 +11,7 @@ class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
+    @Column(unique = true)
     var nombre: String? = null
 
     @Column(nullable = false)
@@ -22,6 +24,12 @@ class Especie() {
     var patogeno: Patogeno? = null
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+        if (nombre.isBlank()){
+            throw ErrorNombre("El nombre de la especie no puede ser vacio.")
+        }
+        if (paisDeOrigen.isBlank()){
+            throw ErrorNombre("El nombre del pais no puede ser vacio.")
+        }
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
@@ -42,4 +50,5 @@ class Especie() {
             TipoVector.INSECTO -> patogeno!!.capContagioInsecto
         }
     }
+
 }

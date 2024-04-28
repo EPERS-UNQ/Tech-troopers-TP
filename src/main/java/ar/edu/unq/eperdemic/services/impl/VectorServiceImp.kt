@@ -13,7 +13,9 @@ class VectorServiceImp (
     private val especieDAO: EspecieDAO
 ) : VectorService {
     override fun crear(vector: Vector): Vector {
-        return runTrx { vectorDAO.crear(vector) }
+        return runTrx {
+            vectorDAO.crear(vector)
+        }
     }
 
     override fun updatear(vector: Vector) {
@@ -45,7 +47,7 @@ class VectorServiceImp (
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return runTrx { vectorDAO.enfermedades(vectorDAO.recuperar(vectorId)) }
+        return runTrx { (vectorDAO.recuperar(vectorId)).enfermedadesDelVector() }
     }
 }
 

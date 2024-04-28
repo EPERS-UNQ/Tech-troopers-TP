@@ -9,7 +9,6 @@ interface VectorDAO {
     fun actualizar(vector: Vector)
     fun recuperar(id: Long?): Vector
     fun recuperarTodos() : List<Vector>
-    fun enfermedades(vector: Vector): List<Especie>
     fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>
     fun cantidadDeUbicacionesDeVectoresConEspecieId(unaEspecieId : Long) : Int
     fun recuperarTodosDeUbicacionInfectados(ubicacionId: Long): List<Vector>

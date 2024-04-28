@@ -8,9 +8,6 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
@@ -28,10 +25,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @TestInstance(PER_CLASS)
 class PatogenoServiceTest {
 
-    @Autowired
-    lateinit var servicio: PatogenoService
+    @Autowired lateinit var servicioPatogeno: PatogenoService
+    //lateinit var servicioUbicacion: UbicacionService
+    //lateinit var servicioVector: VectorService
+    lateinit var random : RandomGenerator
 
-    lateinit var dataService: DataService
     lateinit var covid: Patogeno
     lateinit var salmonella: Patogeno
     lateinit var china: Ubicacion
@@ -39,31 +37,20 @@ class PatogenoServiceTest {
     lateinit var humano: Vector
     lateinit var humano1: Vector
 
-    lateinit var servicioUbicacion: UbicacionService
-    lateinit var servicioVector: VectorService
-    lateinit var random : RandomGenerator
-
-    //private val especieDao: EspecieDAO = HibernateEspecieDAO()
-    //private val vectorDao: VectorDAO = HibernateVectorDAO()
-    //private val ubicacionDao: UbicacionDAO = HibernateUbicacionDAO()
-
     @BeforeEach
     fun crearModelo() {
 
-        dataService = DataServiceImpl(HibernateDataDAO())
-        this.servicio = PatogenoServiceImpl()
-        //this.servicio = PatogenoServiceImpl(patogenoDao, especieDao, ubicacionDao, vectorDao)
         //this.servicioUbicacion = UbicacionServiceImp(ubicacionDao, vectorDao)
         //this.servicioVector = VectorServiceImp(vectorDao, especieDao)
-        this.covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
-        this.salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
-        this.china = Ubicacion("China")
-        this.corea = Ubicacion("Corea")
-        this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
-        this.humano1 = Vector("Pepe", china, TipoVector.HUMANO)
+        covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
+        salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
+        //this.china = Ubicacion("China")
+        //this.corea = Ubicacion("Corea")
+        //this.humano = Vector("Pedro", corea, TipoVector.HUMANO)
+        //this.humano1 = Vector("Pepe", china, TipoVector.HUMANO)
 
-        this.servicioUbicacion.crear(corea)
-        this.servicioUbicacion.crear(china)
+        //this.servicioUbicacion.crear(corea)
+        //this.servicioUbicacion.crear(china)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -74,15 +61,14 @@ class PatogenoServiceTest {
     @Test
     fun testCrearYRecuperarPatogeno() {
 
-        servicio.crear(covid)
-        val covid = servicio.recuperar(covid.id!!)!!
+        servicioPatogeno.crear(covid)
+        val patogenoRecuperado = servicioPatogeno.recuperar(covid.getId())!!
 
-        Assertions.assertEquals(covid.toString(), "Coronavirus")
-        Assertions.assertEquals(covid.id, 1)
+        Assertions.assertEquals("Coronavirus", patogenoRecuperado.toString())
+        Assertions.assertEquals(1, patogenoRecuperado.getId())
 
     }
     /*
-
     @Test
     fun testSeTrataDeRecuperarUnPatogenoQueNoExiste() {
 
@@ -97,7 +83,7 @@ class PatogenoServiceTest {
 
         servicio.crear(covid)
 
-        val covid = servicio.recuperar(covid.getId()!!)!!
+        val covid = servicio.recuperar(covid.getId()!!)
         covid.crearEspecie("Especie 1", "Arg")
 
         servicio.updatear(covid)
@@ -137,7 +123,7 @@ class PatogenoServiceTest {
         servicioVector.crear(humano)
 
         val especie: Especie = servicio.agregarEspecie(covid.getId()!!, "Virus", corea.getId()!!)
-        val covid = servicio.recuperar(covid.getId()!!)!!
+        val covid = servicio.recuperar(covid.getId()!!)
 
         Assertions.assertEquals(covid.cantidadDeEspecies, 1)
         Assertions.assertEquals(especie.patogeno.toString(), covid.toString())
@@ -262,10 +248,19 @@ class PatogenoServiceTest {
 
     }
 
+    @Test
+    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
+
+        servicio.crear(covid)
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicio.crear(covid)
+        }
+    }
+
     @AfterEach
     fun borrarRegistros() {
         dataService.cleanAll()
     }
-
-     */
+    */
 }

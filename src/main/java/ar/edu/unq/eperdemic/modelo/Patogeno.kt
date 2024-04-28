@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import javax.persistence.*
 
@@ -14,6 +15,9 @@ class Patogeno() {
             && esCampoValido(contagioInsectos) && esCampoValido(defensa)
             && esCampoValido(capacidadDeBiomecanizacion)) ) {
             throw LimiteDeCampoErroneo()
+        }
+        if(tipo.isBlank()){
+            throw ErrorNombre("El nombre del tipo del patogeno no puede ser vacio.")
         }
         this.capContagioHumano = contagioHumanos
         this.capContagioAnimal = contagioAnimales
@@ -48,15 +52,13 @@ class Patogeno() {
         return tipo!!
     }
 
-    /*
-    fun getId(): Long? {
-        return this.id
+    fun getId(): Long {
+        return this.id!!
     }
 
-    fun setId(idNew : Long?) {
+    fun setId(idNew : Long) {
         this.id = idNew
     }
-    */
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
         var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
@@ -66,6 +68,10 @@ class Patogeno() {
 
     private fun esCampoValido(campoAComprobar : Int) : Boolean {
         return (campoAComprobar > 0) && (campoAComprobar < 101)
+    }
+
+    init{
+    
     }
 
 }

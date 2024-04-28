@@ -34,8 +34,7 @@ class PatogenoServiceImpl() : PatogenoService {
     }
 
     override fun updatear(patogeno: Patogeno) {
-        //runTrx { patogenoDAO.actualizar(patogeno) }
-        TODO()
+        patogenoDAO.save(patogeno)
     }
 
     override fun recuperar(id: Long): Patogeno {
@@ -43,8 +42,7 @@ class PatogenoServiceImpl() : PatogenoService {
     }
 
     override fun recuperarTodos(): List<Patogeno> {
-        //return runTrx { patogenoDAO.recuperarATodos() }
-        TODO()
+        return patogenoDAO.findAll().toList()
     }
 
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {

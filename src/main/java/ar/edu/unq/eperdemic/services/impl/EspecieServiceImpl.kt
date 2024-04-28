@@ -6,7 +6,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-
+/*
 class EspecieServiceImpl (
     private val especieDAO : EspecieDAO,
     private val vectorDAO : VectorDAO
@@ -35,6 +35,5 @@ class EspecieServiceImpl (
             vectorDAO.cantidadDeVectoresConEspecie(especieId)
         }
     }
-
-
 }
+*/
