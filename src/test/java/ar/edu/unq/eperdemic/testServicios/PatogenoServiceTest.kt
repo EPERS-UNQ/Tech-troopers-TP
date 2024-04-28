@@ -30,6 +30,7 @@ import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import javax.persistence.PersistenceException
 
 @TestInstance(PER_CLASS)
 class PatogenoServiceTest {
@@ -262,6 +263,16 @@ class PatogenoServiceTest {
             servicio.agregarEspecie(salmonella.getId()!!, "Enterica", corea.getId()!!)
         }
 
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
+
+        servicio.crear(covid)
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicio.crear(covid)
+        }
     }
 
     @AfterEach

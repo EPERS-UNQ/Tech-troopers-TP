@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
@@ -78,14 +79,67 @@ class PatogenoModeloTest {
     }
 
     @Test
-    fun errorAlIntentarInicializarUnPatogenoConUnValorNoPermitido(){
+    fun errorAlIntentarInicializarUnPatogenoConUnValorDeContagioDeHumanoNoPermitido(){
         Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
-            Patogeno("Bacteria", 70, 10, 115, 30, 66)
+            Patogeno("Bacteria", 115, 10, 10, 30, 66)
         }
 
         Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
             Patogeno("Bacteria", -5, 10, 80, 30, 66)
         }
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoConUnValorDeContagioDeAnimalesNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 15, 150, 10, 30, 66)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 5, -10, 80, 30, 66)
+        }
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoConUnValorDeContagioDeInsectosNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 15, 10, 250, 30, 66)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 5, 40, -8, 30, 66)
+        }
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoConUnValorDeDefensaNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 15, 12, 10, 450, 66)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 5, 10, 80, -30, 66)
+        }
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoConUnValorDeBiomecanizacionNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 15, 10, 10, 30, 466)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            Patogeno("Bacteria", 5, 30, 80, 30, -10)
+        }
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnPatogenoSinNombre(){
+        val mensajeError = Assertions.assertThrows(ErrorNombre::class.java) {
+            Patogeno("", 70, 10, 15, 30, 66)
+        }
+
+        Assertions.assertEquals("El nombre del tipo del patogeno no puede ser vacio.", mensajeError.message)
     }
 
 }

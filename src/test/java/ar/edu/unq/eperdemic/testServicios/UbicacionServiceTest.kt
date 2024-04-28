@@ -27,6 +27,7 @@ import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import javax.persistence.PersistenceException
 
 @TestInstance(PER_CLASS)
 class UbicacionServiceTest {
@@ -201,6 +202,15 @@ class UbicacionServiceTest {
         }
     }
 
+    @Test
+    fun testCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
+
+        val ubicacion = Ubicacion("Argentina")
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            serviceUbicacion.crear(ubicacion)
+        }
+    }
 
     @AfterEach
     fun finalizar() {

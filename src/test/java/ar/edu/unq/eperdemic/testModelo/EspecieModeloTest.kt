@@ -39,9 +39,22 @@ class EspecieModeloTest {
     @Test
     fun testCuandoSeIntentaCrearUnaEspecieSinNombre() {
 
-        Assertions.assertThrows(ErrorNombre::class.java){
+        val mensajeError = Assertions.assertThrows(ErrorNombre::class.java){
             Especie("", patogeno, "Argentina")
         }
+
+        Assertions.assertEquals("El nombre de la especie no puede ser vacio.", mensajeError.message)
+
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearUnaEspecieSinElNombreDeUnaUbicacion() {
+
+        val mensajeError = Assertions.assertThrows(ErrorNombre::class.java){
+            Especie("Mollusca", patogeno, "")
+        }
+
+        Assertions.assertEquals("El nombre del pais no puede ser vacio.", mensajeError.message)
 
     }
 

@@ -11,6 +11,7 @@ class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
+    @Column(unique = true)
     var nombre: String? = null
 
     @Column(nullable = false)
@@ -23,8 +24,11 @@ class Especie() {
     var patogeno: Patogeno? = null
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
-        if (nombre.isBlank()){ // TESTEAR
+        if (nombre.isBlank()){
             throw ErrorNombre("El nombre de la especie no puede ser vacio.")
+        }
+        if (paisDeOrigen.isBlank()){
+            throw ErrorNombre("El nombre del pais no puede ser vacio.")
         }
         this.nombre = nombre
         this.patogeno = patogeno

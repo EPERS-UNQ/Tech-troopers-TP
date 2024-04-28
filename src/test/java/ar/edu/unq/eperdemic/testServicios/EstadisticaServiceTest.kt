@@ -167,11 +167,11 @@ class EstadisticaServiceTest {
 
     @Test
     fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLosLideres(){
-        val e = Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+        val mensajeError = Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             service.lideres(Direccion.ASCENDENTE, -2, 2)
         }
 
-        Assertions.assertEquals("El número de página es menor a 0 o la cantida de elementos por pagina es menor a 0.", e.message)
+        Assertions.assertEquals("El número de página es menor a 0 o la cantida de elementos por pagina es menor a 0.", mensajeError.message)
     }
 
     @Test
@@ -179,6 +179,12 @@ class EstadisticaServiceTest {
         Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             service.lideres(Direccion.ASCENDENTE, 1, -5)
         }
+    }
+
+    @Test
+    fun cuandoSeIntentaRecuperarUnaEspecieLiderDeUnaUbicacionEnDondeNoHayEspecieLider(){
+        // Se devuelve la única especie que tiene el patogeno sin importar si es especie lider o no.
+        Assertions.assertEquals(especie.getId(), service.especieLider().getId())
     }
 
     @AfterEach

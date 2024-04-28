@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
@@ -201,6 +202,16 @@ class VectorModeloTest {
 
         Assertions.assertFalse(insecto.estaInfectadoCon(viruela)) // REVISAR.
 
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnVectorSinNombre(){
+
+        val errorMensaje = Assertions.assertThrows(ErrorNombre::class.java){
+            Vector("", ubicacion, TipoVector.HUMANO)
+        }
+
+        Assertions.assertEquals("El nombre del vector no puede estar vacio.", errorMensaje.message)
     }
 
     @Test
