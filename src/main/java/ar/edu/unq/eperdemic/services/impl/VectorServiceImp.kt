@@ -47,6 +47,6 @@ class VectorServiceImp (
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return runTrx { vectorDAO.enfermedades(vectorDAO.recuperar(vectorId)) }
+        return runTrx { (vectorDAO.recuperar(vectorId)).enfermedadesDelVector() }
     }
 }

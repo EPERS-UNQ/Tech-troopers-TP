@@ -18,10 +18,6 @@ open class HibernateVectorDAO : HibernateDAO<Vector>(Vector::class.java),
         return query.resultList
     }
 
-    override fun enfermedades(vector: Vector): List<Especie> {
-        return vector.enfermedadesDelVector()
-    }
-
     override fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector> {
         val session = HibernateTransactionRunner.currentSession
         val hql = """ 
