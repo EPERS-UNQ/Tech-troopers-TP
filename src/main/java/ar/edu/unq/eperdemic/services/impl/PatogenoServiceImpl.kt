@@ -6,8 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.Direccion
-import ar.edu.unq.eperdemic.modelo.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
@@ -50,19 +49,18 @@ class PatogenoServiceImpl(
 
         return runTrx {
 
-            val randomize = RandomGenerator()
             val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
-            val paisDeOrigen = ubicacionDAO.recuperar(ubicacionId)
-            val especie = patogeno.crearEspecie(nombreEspecie, paisDeOrigen.getNombre()!!)
+            val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarPorNombre(ubicacionId))
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
             if (vectoresEnUbicacion.isEmpty()) {
                 throw NoHayVectorException()
             }
-            val vectorAInfectar = randomize.getElementoRandomEnLista(vectoresEnUbicacion)
+            val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
             vectorAInfectar.infectar(especie)
             patogenoDAO.actualizar(patogeno)
             especieDAO.crear(especie)
             especie
+
         }
     }
 
@@ -71,26 +69,13 @@ class PatogenoServiceImpl(
             if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
                 throw ErrorValorDePaginacionIvalido()
             }
-            val patogeno: Patogeno = patogenoDAO.recuperar(patogenoId)
-            val especies = especieDAO.especiesDelPatogeno(patogeno, direccion, pagina, cantidadPorPagina)
+            val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion, pagina, cantidadPorPagina)
             especies
         }
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-        return runTrx {
-
-            val especie = especieDAO.recuperar(especieId)
-            val cantUbicaciones = ubicacionDAO.recuperarTodos().size
-            val vectores = vectorDAO.recuperarTodos()
-            val ubicacionesDeVectoresConEspecie = HashSet<Ubicacion>()
-            for (v in vectores) {
-                if (v.estaInfectadoCon(especie)) {
-                    ubicacionesDeVectoresConEspecie.add(v.ubicacion!!)
-                }
-            }
-            ubicacionesDeVectoresConEspecie.size > cantUbicaciones/ 2
-        }
+        return runTrx { vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.cantidadDeUbicaciones() / 2 }
     }
 
 }

@@ -3,7 +3,6 @@ package ar.edu.unq.eperdemic.persistencia.dao.hibernate
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
-import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EstadisticaDAO
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner
 
@@ -48,38 +47,43 @@ class HibernateEstadisticaDAO : EstadisticaDAO{
     }
 
     override fun reporteContagios(nombreDeUbicacion: String): ReporteDeContagios {
-        return ReporteDeContagios(recuperarTodosLosVectoresPorNombreDeUbicacion(nombreDeUbicacion).size,
+        return ReporteDeContagios(cantidadDeVectoresEn(nombreDeUbicacion),
                                   cantidadDeInfectadosEnUbicacion(nombreDeUbicacion),
                                   especiePrevalente(nombreDeUbicacion).nombre!!)
     }
 
-    fun recuperarTodosLosVectoresPorNombreDeUbicacion(nombreDeUbicacion: String) : List<Vector> {
+    private fun cantidadDeVectoresEn(nombreDeUbicacion: String) : Int {
         val session = HibernateTransactionRunner.currentSession
         val hql = """ 
-                      select v
+                      select count(v)
                       from Vector v
                       where v.ubicacion.nombre = :nombreDeUbicacion
                   """
-        val query = session.createQuery(hql, Vector::class.java)
+        val query = session.createQuery(hql, java.lang.Long::class.java)
         query.setParameter("nombreDeUbicacion", nombreDeUbicacion)
 
-        return query.resultList
+        val count = query.singleResult ?: 0L
+
+        return count.toInt()
     }
 
-    fun cantidadDeInfectadosEnUbicacion(nombreDeUbicacion: String) : Int {
-        val vectoresUbicados = recuperarTodosLosVectoresPorNombreDeUbicacion(nombreDeUbicacion)
-        var cantidadInfectados = 0;
+    private fun cantidadDeInfectadosEnUbicacion(nombreDeUbicacion: String) : Int {
+        val session = HibernateTransactionRunner.currentSession
+        val hql = """ 
+                      select count(v)
+                      from Vector v
+                      where v.ubicacion.nombre = :nombreDeUbicacion 
+                            and size(v.especies) > 0
+                  """
+        val query = session.createQuery(hql, java.lang.Long::class.java)
+        query.setParameter("nombreDeUbicacion", nombreDeUbicacion)
 
-        vectoresUbicados.forEach { vector ->
-            if (vector.estaInfectado()) {
-                cantidadInfectados++
-            }
-        }
+        val count = query.singleResult ?: 0L
 
-        return cantidadInfectados
+        return count.toInt()
     }
 
-    fun especiePrevalente(nombreDeUbicacion: String) : Especie {
+    private fun especiePrevalente(nombreDeUbicacion: String) : Especie {
         val session = HibernateTransactionRunner.currentSession
 
         val hql   = """

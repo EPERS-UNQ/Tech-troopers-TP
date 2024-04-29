@@ -5,6 +5,8 @@ import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.*
@@ -37,6 +39,8 @@ class EstadisticaServiceTest {
 
     lateinit var ubicacion: Ubicacion
 
+    lateinit var random : RandomGenerator
+
     @BeforeEach
     fun crearModelo() {
 
@@ -45,6 +49,10 @@ class EstadisticaServiceTest {
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
         ubicacion = Ubicacion("Argentina")
         serviceUbicacion.crear(ubicacion)
@@ -159,9 +167,11 @@ class EstadisticaServiceTest {
 
     @Test
     fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLosLideres(){
-        Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
+        val mensajeError = Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             service.lideres(Direccion.ASCENDENTE, -2, 2)
         }
+
+        Assertions.assertEquals("El número de página es menor a 0 o la cantida de elementos por pagina es menor a 0.", mensajeError.message)
     }
 
     @Test
@@ -169,6 +179,12 @@ class EstadisticaServiceTest {
         Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             service.lideres(Direccion.ASCENDENTE, 1, -5)
         }
+    }
+
+    @Test
+    fun cuandoSeIntentaRecuperarUnaEspecieLiderDeUnaUbicacionEnDondeNoHayEspecieLider(){
+        // Se devuelve la única especie que tiene el patogeno sin importar si es especie lider o no.
+        Assertions.assertEquals(especie.getId(), service.especieLider().getId())
     }
 
     @AfterEach

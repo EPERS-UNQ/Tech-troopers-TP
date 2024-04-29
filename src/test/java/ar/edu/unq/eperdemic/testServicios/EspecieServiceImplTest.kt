@@ -5,6 +5,8 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import javax.persistence.PersistenceException
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
@@ -44,6 +47,7 @@ class EspecieServiceImplTest {
     lateinit var golondrina : Vector
     lateinit var ubicacion : Ubicacion
 
+    lateinit var random : RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
@@ -51,11 +55,16 @@ class EspecieServiceImplTest {
         ubicacion = Ubicacion("Argentina")
         humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
-        service = EspecieServiceImpl( HibernateEspecieDAO() )
+        service = EspecieServiceImpl( HibernateEspecieDAO(), HibernateVectorDAO() )
         servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl(HibernateDataDAO())
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
+        random.setBooleanoGlobal(true)
 
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
@@ -122,6 +131,14 @@ class EspecieServiceImplTest {
             service.recuperar(15)
         }
 
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+        }
     }
 
     @AfterEach

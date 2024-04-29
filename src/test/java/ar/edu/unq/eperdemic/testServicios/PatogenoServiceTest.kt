@@ -2,7 +2,6 @@ package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
-import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
@@ -10,6 +9,8 @@ import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
@@ -29,6 +30,7 @@ import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import javax.persistence.PersistenceException
 
 @TestInstance(PER_CLASS)
 class PatogenoServiceTest {
@@ -43,6 +45,7 @@ class PatogenoServiceTest {
     lateinit var servicio: PatogenoService
     lateinit var servicioUbicacion: UbicacionService
     lateinit var servicioVector: VectorService
+    lateinit var random : RandomGenerator
 
     private val patogenoDao: PatogenoDAO = HibernatePatogenoDAO()
     private val especieDao: EspecieDAO = HibernateEspecieDAO()
@@ -65,6 +68,10 @@ class PatogenoServiceTest {
 
         this.servicioUbicacion.crear(corea)
         this.servicioUbicacion.crear(china)
+
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
 
     }
 
@@ -141,29 +148,21 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun seRecuperanTodasLasEspeciesDelPatogeno() {
+    fun seRecuperanTodasLasEspeciesDelPatogenoDeManeraAscendente() {
 
         servicio.crear(salmonella)
         servicioVector.crear(humano)
         servicioVector.crear(humano1)
 
-        val enterica: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Enterica", china.getId()!!)
-        val bongori: Especie = servicio.agregarEspecie(salmonella.getId()!!, "Bongori", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Enterica", china.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Bongori", corea.getId()!!)
         servicio.agregarEspecie(salmonella.getId()!!, "Varicela", corea.getId()!!)
         servicio.agregarEspecie(salmonella.getId()!!, "Quetzal", corea.getId()!!)
         servicio.agregarEspecie(salmonella.getId()!!, "Ahuehuete", corea.getId()!!)
 
-        val especiesPagina0 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
-        Assertions.assertTrue(
-            especiesPagina0.elementAt(0).nombre.equals("Enterica")
-        )
-        Assertions.assertTrue(
-            especiesPagina0.elementAt(1).nombre.equals("Bongori")
-        )
-
         val especiesPagina1 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 1, 2)
         Assertions.assertTrue(
-            especiesPagina1.elementAt(0).nombre.equals("Varicela")
+            especiesPagina1.elementAt(0).nombre.equals("Enterica")
         )
         Assertions.assertTrue(
             especiesPagina1.elementAt(1).nombre.equals("Quetzal")
@@ -172,11 +171,31 @@ class PatogenoServiceTest {
         val especiesPagina5 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 5, 2)
         Assertions.assertTrue(especiesPagina5.isEmpty())
 
-        val especies = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.ASCENDENTE, 0, 2)
+    }
 
-        Assertions.assertEquals(2, especies.size)
-        Assertions.assertEquals(especies[0].nombre, enterica.nombre)
-        Assertions.assertEquals(especies[1].nombre, bongori.nombre)
+    @Test
+    fun seRecuperanTodasLasEspeciesDelPatogenoDeManeraDescendente() {
+
+        servicio.crear(salmonella)
+        servicioVector.crear(humano)
+        servicioVector.crear(humano1)
+
+        servicio.agregarEspecie(salmonella.getId()!!, "Enterica", china.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Bongori", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Varicela", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Quetzal", corea.getId()!!)
+        servicio.agregarEspecie(salmonella.getId()!!, "Ahuehuete", corea.getId()!!)
+
+        val especiesPagina1 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.DESCENDENTE, 1, 2)
+        Assertions.assertTrue(
+            especiesPagina1.elementAt(0).nombre.equals("Enterica")
+        )
+        Assertions.assertTrue(
+            especiesPagina1.elementAt(1).nombre.equals("Bongori")
+        )
+
+        val especiesPagina5 = servicio.especiesDePatogeno(salmonella.getId()!!, Direccion.DESCENDENTE, 5, 2)
+        Assertions.assertTrue(especiesPagina5.isEmpty())
 
     }
 
@@ -244,6 +263,16 @@ class PatogenoServiceTest {
             servicio.agregarEspecie(salmonella.getId()!!, "Enterica", corea.getId()!!)
         }
 
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
+
+        servicio.crear(covid)
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicio.crear(covid)
+        }
     }
 
     @AfterEach

@@ -1,7 +1,10 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+
 @Entity
 open class Vector() {
 
@@ -22,6 +25,9 @@ open class Vector() {
     var ubicacion: Ubicacion? = null
 
     constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
+        if(nombre.isBlank()){
+            throw ErrorNombre("El nombre del vector no puede estar vacio.")
+        }
         this.nombre = nombre
         this.ubicacion = ubicacion
         this.tipo = tipoVector
@@ -54,8 +60,8 @@ open class Vector() {
         }
     }
 
-    fun intentarInfectar(vector: Vector, especie: Especie){
-        val random = RandomGenerator()
+    private fun intentarInfectar(vector: Vector, especie: Especie){
+        val random = RandomGenerator.getInstance()
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
 

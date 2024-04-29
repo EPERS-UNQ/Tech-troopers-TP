@@ -8,5 +8,5 @@ interface PatogenoDAO {
     fun recuperar(id: Long?): Patogeno
     fun actualizar(patogeno: Patogeno)
     fun recuperarATodos() : List<Patogeno>
-    fun eliminar(patogeno: Patogeno)
+
 }

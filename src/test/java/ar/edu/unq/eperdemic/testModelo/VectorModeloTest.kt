@@ -1,10 +1,14 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.AleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -14,9 +18,12 @@ import org.junit.jupiter.api.Test
 class VectorModeloTest {
 
     lateinit var ubicacion : Ubicacion
-    lateinit var humano : Vector
-    lateinit var animal : Vector
+    lateinit var humano  : Vector
+    lateinit var animal  : Vector
     lateinit var insecto : Vector
+    lateinit var random  : RandomGenerator
+    lateinit var patogeno : Patogeno
+    lateinit var viruela  : Especie
 
     @BeforeEach
     fun prerate(){
@@ -26,6 +33,13 @@ class VectorModeloTest {
         animal = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         insecto = Vector("Raul", ubicacion, TipoVector.INSECTO)
 
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
+
+        patogeno = Patogeno("Bacteria", 100, 100, 100, 1, 55)
+        viruela  = Especie("Viruela", patogeno, "Francia")
     }
 
     @Test
@@ -61,9 +75,10 @@ class VectorModeloTest {
     }
 
     @Test
-    fun unVectorIntentaContagiarAOtroVectorYLoLogra(){
-        val patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
-        val viruela  = Especie("Viruela", patogeno, "Francia")
+    fun unHumanoIntentaContagiarAUnInsectoYLoLogra(){
+
+        random.setStrategy(AleatorioStrategy())
+
         humano.infectar(viruela)
 
         humano.contargiarA(insecto)
@@ -73,15 +88,130 @@ class VectorModeloTest {
     }
 
     @Test
-    fun unVectorIntentaContagiarAOtroVectorYNoLoLogra(){
-        val patogeno = Patogeno("Bacteria", 20, 25, 100, 1, 55)
-        val viruela  = Especie("Viruela", patogeno, "Francia")
+    fun unHumanoIntentaContagiarAOtroHumanoYLoLogra(){
+
+        val humano2 = Vector("Guido", ubicacion, TipoVector.HUMANO)
+
+        random.setStrategy(AleatorioStrategy())
+
+        humano.infectar(viruela)
+
+        humano.contargiarA(humano2)
+
+        Assertions.assertTrue(humano2.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unHumanoIntentaContagiarAUnAnimalYNoLoLogra(){
+
         humano.infectar(viruela)
 
         humano.contargiarA(animal)
 
         Assertions.assertFalse(animal.estaInfectadoCon(viruela))
 
+    }
+
+    @Test
+    fun unAnimalIntentaContagiarAUnHumanoYLoLogra(){
+
+        random.setStrategy(AleatorioStrategy())
+
+        animal.infectar(viruela)
+
+        animal.contargiarA(humano)
+
+        Assertions.assertTrue(humano.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unAnimalIntentaContagiarAUnInsectoYLoLogra(){
+
+        random.setStrategy(AleatorioStrategy())
+
+        animal.infectar(viruela)
+
+        animal.contargiarA(insecto)
+
+        Assertions.assertTrue(insecto.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unAnimalIntentaContagiarAOtroAnimalYNoLoLogra(){
+
+        var animal2 = Vector("Flocky", ubicacion, TipoVector.ANIMAL)
+
+        animal.infectar(viruela)
+
+        animal.contargiarA(animal2)
+
+        Assertions.assertFalse(animal2.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unInsectoIntentaContagiarAUnHumanoYLoLogra(){
+
+        random.setStrategy(AleatorioStrategy())
+
+        insecto.infectar(viruela)
+
+        insecto.contargiarA(humano)
+
+        Assertions.assertTrue(humano.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unInsectoIntentaContagiarAUnAnimalYLoLogra(){
+
+        random.setStrategy(AleatorioStrategy())
+
+        insecto.infectar(viruela)
+
+        insecto.contargiarA(animal)
+
+        Assertions.assertTrue(animal.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unInsectoIntentaContagiarAOtroInsectoYNoLoLogra(){
+
+        var insecto2 = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+
+        insecto.infectar(viruela)
+
+        insecto.contargiarA(insecto2)
+
+        Assertions.assertFalse(insecto2.estaInfectadoCon(viruela))
+
+    }
+
+    @Test
+    fun unVectorIntentaContagiarAOtroVectorYNoLoLogra(){
+
+        random.setBooleanoGlobal(false)
+
+        humano.infectar(viruela)
+
+        humano.contargiarA(insecto)
+
+        Assertions.assertFalse(insecto.estaInfectadoCon(viruela)) // REVISAR.
+
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnVectorSinNombre(){
+
+        val errorMensaje = Assertions.assertThrows(ErrorNombre::class.java){
+            Vector("", ubicacion, TipoVector.HUMANO)
+        }
+
+        Assertions.assertEquals("El nombre del vector no puede estar vacio.", errorMensaje.message)
     }
 
     @Test
