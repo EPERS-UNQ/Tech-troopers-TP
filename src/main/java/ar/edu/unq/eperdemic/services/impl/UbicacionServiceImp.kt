@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -27,7 +28,11 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        return daoUbicacion.recuperar(id)
+        val ubicacion = daoUbicacion.recuperar(id)
+        if (ubicacion == null) {
+            throw NoExisteLaUbicacion()
+        }
+        return ubicacion
     }
 
 

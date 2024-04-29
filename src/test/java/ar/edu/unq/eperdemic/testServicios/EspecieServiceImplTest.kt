@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import javax.persistence.PersistenceException
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
@@ -59,6 +60,11 @@ class EspecieServiceImplTest {
         serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl(HibernateDataDAO())
 
+        random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setNumeroGlobal(0)
+        random.setBooleanoGlobal(true)
+
         serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
 
@@ -66,10 +72,6 @@ class EspecieServiceImplTest {
 
         especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
 
-        random = RandomGenerator.getInstance()
-        random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
-        random.setBooleanoGlobal(true)
     }
 
     @Test
@@ -128,6 +130,14 @@ class EspecieServiceImplTest {
             service.recuperar(15)
         }
 
+    }
+
+    @Test
+    fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+        }
     }
 
     @AfterEach

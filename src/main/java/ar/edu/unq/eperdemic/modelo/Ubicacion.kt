@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 
 @Entity
@@ -17,6 +18,9 @@ class Ubicacion() {
     }
 
     constructor(nombre: String) : this() {
+        if(nombre.isBlank()){
+            throw ErrorNombre("El nombre no puede ser vacio.")
+        }
         this.nombre = nombre
     }
 
