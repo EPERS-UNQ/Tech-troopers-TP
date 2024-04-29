@@ -7,69 +7,72 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional
+class UbicacionServiceImp() : UbicacionService {
 
-class UbicacionServiceImp(
-    private val daoUbicacion: UbicacionDAO,
-    private val daoVector: VectorDAO
-) : UbicacionService {
+    @Autowired private lateinit var daoUbicacion: UbicacionDAO
+    @Autowired private lateinit var daoVector: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx { daoUbicacion.crear(ubicacion) }
+        return daoUbicacion.save(ubicacion)
     }
 
     override fun updatear(ubicacion: Ubicacion) {
-        runTrx { daoUbicacion.actualizar(ubicacion) }
+        daoUbicacion.save(ubicacion)
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        return runTrx { daoUbicacion.recuperar(id) }
+        return daoUbicacion.recuperar(id)
     }
 
+
     override fun recuperarTodos(): Collection<Ubicacion> {
-        return runTrx { daoUbicacion.recuperarTodos() }
+        return daoUbicacion.recuperarTodos()
     }
 
     override fun mover(vectorId: Long, ubicacionId: Long) {
-        runTrx {
-            val vector = daoVector.recuperar(vectorId)
-            val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
 
-            if (nuevaUbicacion == null || vector == null) {
-                throw ErrorDeMovimiento()
+        val vector = daoVector.recuperar(vectorId)
+        val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
+
+        if (nuevaUbicacion == null || vector == null) {
+            throw ErrorDeMovimiento()
+        }
+
+        vector.ubicacion = nuevaUbicacion
+        daoVector.save(vector)
+
+        val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
+
+        if (vector.estaInfectado()) {
+            todosLosVectores.map {
+                vector.contargiarA(it)
+                daoVector.save(it)
             }
-
-            vector.ubicacion = nuevaUbicacion
-            daoVector.actualizar(vector)
-
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
-
-            if(vector.estaInfectado()) {
-                todosLosVectores.map {
-                    vector.contargiarA(it)
-                    daoVector.actualizar(it)
-                }
-            }
-
         }
     }
 
     override fun expandir( ubicacionId: Long) {
-        runTrx {
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
-            val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
-            if (todosLosVectoresInf.isNotEmpty()) {
-                val random = RandomGenerator.getInstance()
-                val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
+        val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
+        val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
-                for (v in todosLosVectores) {
-                    vectorInf.contargiarA(v)
-                    daoVector.actualizar(v)
-                }
+        if (todosLosVectoresInf.isNotEmpty()) {
+            val random = RandomGenerator.getInstance()
+            val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
 
+            for (v in todosLosVectores) {
+                vectorInf.contargiarA(v)
+                daoVector.save(v)
             }
+
         }
+
     }
 
 }

@@ -4,20 +4,26 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-class VectorServiceImp (
-    private val vectorDAO: VectorDAO,
-    private val especieDAO: EspecieDAO
-) : VectorService {
+@Service
+@Transactional
+class VectorServiceImp () : VectorService {
+    @Autowired private lateinit var especieDAO: EspecieDAO
+    @Autowired private lateinit var vectorDAO: VectorDAO
+
     override fun crear(vector: Vector): Vector {
-        return runTrx { vectorDAO.crear(vector) }
+        return vectorDAO.save(vector)
     }
 
     override fun updatear(vector: Vector) {
-        return runTrx { vectorDAO.actualizar(vector) }
+        vectorDAO.save(vector)
     }
 
     override fun recuperar(idVector: Long): Vector {
@@ -31,7 +37,7 @@ class VectorServiceImp (
     }
 
     override fun recuperarTodos(): List<Vector> {
-        return runTrx { vectorDAO.recuperarTodos() }
+        return vectorDAO.recuperarTodos()
     }
 
     override fun infectar(vectorId: Long, especieId: Long) {
@@ -39,12 +45,12 @@ class VectorServiceImp (
             val especie = especieDAO.recuperar(especieId)
             val vector  = vectorDAO.recuperar(vectorId)
             vector.infectar(especie)
-            vectorDAO.actualizar(vector)
-            especieDAO.actualizar(especie)
+            vectorDAO.save(vector)
+            especieDAO.save(especie)
         }
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return runTrx { vectorDAO.enfermedades(vectorDAO.recuperar(vectorId)) }
+        return vectorDAO.recuperar(vectorId).enfermedadesDelVector()
     }
 }

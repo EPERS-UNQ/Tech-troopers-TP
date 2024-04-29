@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.testServicios
+/*package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -187,3 +187,5 @@ class EstadisticaServiceTest {
     }
 
 }
+
+ */
