@@ -30,6 +30,7 @@ import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.springframework.util.Assert
 import javax.persistence.PersistenceException
 
 @TestInstance(PER_CLASS)
@@ -104,8 +105,12 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun cuandoSeIntentaRecuperarUnVectorConUnIdQueNoExisteDaNull() {
-        Assertions.assertEquals(serviceUbicacion.recuperar(50), null)
+    fun errorCuandoSeIntentaRecuperarUnVectorConUnIdQueNoExiste() {
+        val errorMensaje = Assertions.assertThrows(NoExisteLaUbicacion::class.java){
+            serviceUbicacion.recuperar(50)
+        }
+
+        Assertions.assertEquals("No hay ninguna ubicacion con el id registrado.", errorMensaje.message)
     }
 
     @Test
