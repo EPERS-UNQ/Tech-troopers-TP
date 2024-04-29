@@ -1,6 +1,9 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -210,6 +213,15 @@ class UbicacionServiceTest {
         Assertions.assertThrows(PersistenceException::class.java){
             serviceUbicacion.crear(ubicacion)
         }
+    }
+
+    @Test
+    fun testSeTrataDeRecuperarUnaUbicacionQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
+            serviceUbicacion.recuperar(15)
+        }
+
     }
 
     @AfterEach
