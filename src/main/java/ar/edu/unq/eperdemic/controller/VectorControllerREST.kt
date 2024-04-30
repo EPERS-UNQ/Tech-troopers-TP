@@ -1,0 +1,30 @@
+package ar.edu.unq.eperdemic.controller
+
+import ar.edu.unq.eperdemic.controller.dto.VectorDTO
+import ar.edu.unq.eperdemic.services.VectorService
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@CrossOrigin
+@RequestMapping("/vector")
+class VectorControllerREST( private val vectorService: VectorService ) {
+
+    @PostMapping("/")
+    fun crearVector( @RequestBody vectorDTO: VectorDTO ) = vectorService.crear(vectorDTO.aModelo())
+
+    @PutMapping("/actualizarVector")
+    fun actualizarVector( @RequestBody vectorDTO: VectorDTO ) = vectorService.updatear(vectorDTO.aModelo())
+
+    @GetMapping("/{vectorId}")
+    fun vectorUbicacion( @PathVariable vectorId: Long ) = VectorDTO.desdeModelo(vectorService.recuperar(vectorId))
+
+    @GetMapping("/todosLasVectores")
+    fun recuperarTodasLasVectores() = vectorService.recuperarTodos().map { vector -> VectorDTO.desdeModelo(vector) }
+
+    @PutMapping("/infectar/{vectorId}/{especieId}")
+    fun infectarVector( @RequestBody vectorId: Long, especieId: Long) = vectorService.infectar(vectorId, especieId)
+
+    @PutMapping("/enfermedades/{vectorId}")
+    fun enfermedades( @PathVariable vectorId: Long ) = vectorService.enfermedades(vectorId)
+
+}
