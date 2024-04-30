@@ -1,58 +1,42 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
-import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
-import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
-import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
-import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.vector.Vector
-
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateUbicacionDAO
-
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
+
+import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.services.PatogenoService
 
+import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
+
+
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
-import org.springframework.util.Assert
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
+
 import javax.persistence.PersistenceException
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
 @TestInstance(PER_CLASS)
 class UbicacionServiceTest {
 
-    var serviceUbicacion: UbicacionService = UbicacionServiceImp(
-        HibernateUbicacionDAO(),
-        HibernateVectorDAO()
-    )
-    var serviceVector: VectorService = VectorServiceImp(
-            HibernateVectorDAO(),
-            HibernateEspecieDAO()
-    )
-
-    var servicePatogeno: PatogenoService = PatogenoServiceImpl(
-            HibernatePatogenoDAO(),
-            HibernateEspecieDAO(),
-            HibernateUbicacionDAO(),
-            HibernateVectorDAO()
-    )
-
-    private var dataService: DataService = DataServiceImpl(HibernateDataDAO())
+    @Autowired lateinit var serviceUbicacion: UbicacionService
+    @Autowired lateinit var serviceVector: VectorService
+    @Autowired lateinit var servicePatogeno: PatogenoService
+    @Autowired lateinit private var dataService: DataService
 
 
     lateinit var ubi1: Ubicacion
@@ -235,3 +219,4 @@ class UbicacionServiceTest {
     }
 
 }
+

@@ -14,68 +14,75 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-class PatogenoServiceImpl(
-    private val patogenoDAO: PatogenoDAO,
-    private val especieDAO: EspecieDAO,
-    private val ubicacionDAO: UbicacionDAO,
-    private val vectorDAO: VectorDAO
-    ) : PatogenoService {
+@Service
+@Transactional
+class PatogenoServiceImpl : PatogenoService {
+    @Autowired private lateinit var patogenoDAO: PatogenoDAO
+    @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var especieDAO: EspecieDAO
+    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
 
 
     override fun crear(patogeno: Patogeno): Patogeno {
-        return runTrx { patogenoDAO.crear(patogeno) }
+        return patogenoDAO.save(patogeno)
     }
 
     override fun updatear(patogeno: Patogeno) {
-        runTrx { patogenoDAO.actualizar(patogeno) }
+        patogenoDAO.save(patogeno)
     }
 
     override fun recuperar(id: Long): Patogeno {
-        return runTrx {
-            val patogeno = patogenoDAO.recuperar(id)
-            if (patogeno == null) {
-                throw NoExisteElPatogeno()
-            }
-            patogeno
+        val patogeno = patogenoDAO.findById(id).orElse(null)
+        if (patogeno == null) {
+            throw NoExisteElPatogeno()
         }
+
+        return patogeno
     }
 
     override fun recuperarTodos(): List<Patogeno> {
-        return runTrx { patogenoDAO.recuperarATodos() }
+        return patogenoDAO.recuperarTodos().toList()
     }
 
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
 
-        return runTrx {
-
-            val patogeno: Patogeno = patogenoDAO.recuperar(idDePatogeno)
-            val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarPorNombre(ubicacionId))
-            val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
-            if (vectoresEnUbicacion.isEmpty()) {
-                throw NoHayVectorException()
-            }
-            val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
-            vectorAInfectar.infectar(especie)
-            patogenoDAO.actualizar(patogeno)
-            especieDAO.crear(especie)
-            especie
-
+        val patogeno: Patogeno = patogenoDAO.findById(idDePatogeno).orElse(null)
+        val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarPorNombre(ubicacionId))
+        val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
+        if (vectoresEnUbicacion.isEmpty()) {
+            throw NoHayVectorException()
         }
-    }
+        val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
+        vectorAInfectar.infectar(especie)
 
+        patogenoDAO.save(patogeno)
+        especieDAO.save(especie)
+
+        return especie
+    }
+    /*
     override fun especiesDePatogeno(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina:Int): List<Especie> {
-        return runTrx {
-            if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
-                throw ErrorValorDePaginacionIvalido()
-            }
-            val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion, pagina, cantidadPorPagina)
-            especies
+
+        if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
+            throw ErrorValorDePaginacionIvalido()
         }
+
+        val pageable: Pageable = PageRequest.of(pagina, cantidadPorPagina)
+
+        val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion.getExp(), pageable)
+
+        return especies
     }
+
+     */
 
     override fun esPandemia(especieId: Long): Boolean {
-        return runTrx { vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.cantidadDeUbicaciones() / 2 }
+        return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.count() / 2
     }
-
 }

@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+
 interface UbicacionService {
     fun crear(ubicacion : Ubicacion) : Ubicacion
 
