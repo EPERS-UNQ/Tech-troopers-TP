@@ -23,7 +23,7 @@ class EspecieServiceImpl () : EspecieService {
 
     override fun recuperar(idEspecie: Long): Especie {
 
-        val especie = especieDAO.recuperar(idEspecie)
+        val especie = especieDAO.findById(idEspecie).orElse(null)
         if (especie == null) {
             throw NoExisteLaEspecie()
         }

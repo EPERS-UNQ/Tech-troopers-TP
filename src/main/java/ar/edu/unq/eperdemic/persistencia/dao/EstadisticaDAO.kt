@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.persistencia.dao
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 
 interface EstadisticaDAO {
@@ -28,13 +29,9 @@ interface EstadisticaDAO {
                 where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
                 group by e
                 order by count(v) ?1
-                limit ?3
-                offset (?2 * ?3) 
             """
     )
-    fun todosLosLideres(direccion: Direccion, pagina: Int, cantidadPorPagina: Int) : List<Especie>
-
-    fun reporteContagios( nombreDeLaUbicacion: String ) : ReporteDeContagios
+    fun todosLosLideres(direccion: String, pageable: Pageable) : List<Especie>
 
     @Query(
             """ 

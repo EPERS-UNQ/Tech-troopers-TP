@@ -28,7 +28,7 @@ class VectorServiceImp () : VectorService {
 
     override fun recuperar(idVector: Long): Vector {
         return runTrx {
-            val vector = vectorDAO.recuperar(idVector)
+            val vector = vectorDAO.findById(idVector).orElse(null)
             if (vector == null) {
                 throw NoExisteElVector()
             }
@@ -42,8 +42,8 @@ class VectorServiceImp () : VectorService {
 
     override fun infectar(vectorId: Long, especieId: Long) {
         runTrx {
-            val especie = especieDAO.recuperar(especieId)
-            val vector  = vectorDAO.recuperar(vectorId)
+            val especie = especieDAO.findById(especieId).orElse(null)
+            val vector  = vectorDAO.findById(vectorId).orElse(null)
             vector.infectar(especie)
             vectorDAO.save(vector)
             especieDAO.save(especie)
@@ -51,6 +51,7 @@ class VectorServiceImp () : VectorService {
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return vectorDAO.recuperar(vectorId).enfermedadesDelVector()
+        var vector = vectorDAO.findById(vectorId).orElse(null)
+        return vector.enfermedadesDelVector()
     }
 }

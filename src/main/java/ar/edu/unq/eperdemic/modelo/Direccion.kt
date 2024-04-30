@@ -1,6 +1,11 @@
 package ar.edu.unq.eperdemic.modelo
 
-enum class Direccion(direccion: String) {
+enum class Direccion(private var direccion: String) {
+
     ASCENDENTE("ASC"),
-    DESCENDENTE("DESC")
+    DESCENDENTE("DESC");
+
+    fun getExp() : String {
+        return this.direccion
+    }
 }

@@ -6,10 +6,6 @@ import org.springframework.data.repository.CrudRepository
 
 interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
 
-    fun recuperar(id: Long): Ubicacion {
-        return this.findById(id).orElse(null)
-    }
-
     @Query("select u.nombre from Ubicacion u where u.id = ?1")
     fun recuperarPorNombre(ubicacionId: Long?): String
 

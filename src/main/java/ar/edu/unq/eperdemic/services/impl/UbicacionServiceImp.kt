@@ -28,7 +28,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        val ubicacion = daoUbicacion.recuperar(id)
+        val ubicacion = daoUbicacion.findById(id).orElse(null)
         if (ubicacion == null) {
             throw NoExisteLaUbicacion()
         }
@@ -42,8 +42,8 @@ class UbicacionServiceImp() : UbicacionService {
 
     override fun mover(vectorId: Long, ubicacionId: Long) {
 
-        val vector = daoVector.recuperar(vectorId)
-        val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
+        val vector = daoVector.findById(vectorId).orElse(null)
+        val nuevaUbicacion = daoUbicacion.findById(ubicacionId).orElse(null)
 
         if (nuevaUbicacion == null || vector == null) {
             throw ErrorDeMovimiento()

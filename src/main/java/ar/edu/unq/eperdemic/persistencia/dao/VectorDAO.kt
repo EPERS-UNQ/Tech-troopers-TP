@@ -6,10 +6,6 @@ import org.springframework.data.repository.CrudRepository
 
 interface VectorDAO : CrudRepository<Vector, Long> {
 
-    fun recuperar(id: Long): Vector {
-        return this.findById(id).orElse(null)
-    }
-
     @Query("select v from Vector u order by u.nombre ASC ")
     fun recuperarTodos() : List<Vector>
 
