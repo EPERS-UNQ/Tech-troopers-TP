@@ -28,6 +28,9 @@ class EspecieDTO ( val id:           Long?,
         especie.nombre  = this.nombre
         especie.patogeno = this.patogeno.aModelo()
         especie.paisDeOrigen = this.paisDeOrigen
+        especie.vectores = this.vectores
+             .map { vectorDTO -> VectorDTO.aModelo(vectorDTO) }
+            .toCollection(HashSet())
         return especie
     }
 
