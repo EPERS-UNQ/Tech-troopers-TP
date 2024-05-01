@@ -70,8 +70,4 @@ class Patogeno() {
         return (campoAComprobar > 0) && (campoAComprobar < 101)
     }
 
-    init{
-    
-    }
-
 }

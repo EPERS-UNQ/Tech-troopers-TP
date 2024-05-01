@@ -2,13 +2,18 @@ package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Direccion
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 
-interface EspecieDAO {
+interface EspecieDAO : CrudRepository<Especie, Long> {
 
-    fun crear(entity: Especie) : Especie
-    fun actualizar(entity: Especie)
-    fun recuperar(id: Long?) : Especie
-    fun recuperarTodos() : List<Especie>
-    fun especiesDelPatogenoId(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie>
-
+    /*
+    @Query(
+        " select e " +
+        " from Especie e " +
+        " where e.patogeno.id = ?1" +
+        " order by e.nombre "
+    )
+    fun findEspeciesByPatogenoEqualsOrderByNombre(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie>
+     */
 }

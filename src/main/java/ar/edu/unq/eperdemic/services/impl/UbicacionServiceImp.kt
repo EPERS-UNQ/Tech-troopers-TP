@@ -6,30 +6,42 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
-/*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
-class UbicacionServiceImp(
-    private val daoUbicacion: UbicacionDAO,
-    private val daoVector: VectorDAO
-) : UbicacionService {
+@Service
+@Transactional
+class UbicacionServiceImp() : UbicacionService {
+
+    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return runTrx { daoUbicacion.crear(ubicacion) }
+        return ubicacionDAO.save(ubicacion)
     }
 
     override fun updatear(ubicacion: Ubicacion) {
-        runTrx { daoUbicacion.actualizar(ubicacion) }
+        ubicacionDAO.save(ubicacion)
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        return runTrx { daoUbicacion.recuperar(id) }
+        return ubicacionDAO.findByIdOrNull(id)!!
     }
 
     override fun recuperarTodos(): Collection<Ubicacion> {
-        return runTrx { daoUbicacion.recuperarTodos() }
+        return ubicacionDAO.findAll().toList()
     }
 
+    override fun mover(vectorId: Long, ubicacionId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun expandir(ubicacionId: Long) {
+        TODO("Not yet implemented")
+    }
+    /*
     override fun mover(vectorId: Long, ubicacionId: Long) {
         runTrx {
             val vector = daoVector.recuperar(vectorId)
@@ -71,12 +83,9 @@ class UbicacionServiceImp(
             }
         }
     }
-
-
-
+     */
 }
 
- */
 
 
 

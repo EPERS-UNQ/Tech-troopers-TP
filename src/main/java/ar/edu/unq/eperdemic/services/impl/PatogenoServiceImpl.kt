@@ -24,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional
 class PatogenoServiceImpl() : PatogenoService {
 
     @Autowired private lateinit var patogenoDAO: PatogenoDAO
-    /*@Autowired private lateinit var especieDAO: EspecieDAO
+    @Autowired private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
-    @Autowired private lateinit var vectorDAO: VectorDAO*/
+    @Autowired private lateinit var vectorDAO: VectorDAO
 
 
     override fun crear(patogeno: Patogeno): Patogeno {
@@ -73,11 +73,12 @@ class PatogenoServiceImpl() : PatogenoService {
             val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion, pagina, cantidadPorPagina)
             especies
         }*/
+        //return especieDAO.findEspeciesByPatogenoEqualsOrderByNombre(patogenoId, direccion, pagina, cantidadPorPagina)
         TODO()
     }
 
     override fun esPandemia(especieId: Long): Boolean {
-        //return runTrx { vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.cantidadDeUbicaciones() / 2 }
+        //return vectorDAO.countDistinctByUbicacionEqualsAndEspeciesIn(especieId) > ubicacionDAO.countByNombre() / 2
         TODO()
     }
 

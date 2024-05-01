@@ -1,17 +1,38 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 
-interface VectorDAO {
+interface VectorDAO : CrudRepository<Vector, Long> {
 
-    fun crear(vector: Vector): Vector
-    fun actualizar(vector: Vector)
-    fun recuperar(id: Long?): Vector
-    fun recuperarTodos() : List<Vector>
-    fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>
-    fun cantidadDeUbicacionesDeVectoresConEspecieId(unaEspecieId : Long) : Int
-    fun recuperarTodosDeUbicacionInfectados(ubicacionId: Long): List<Vector>
-    fun cantidadDeVectoresConEspecie(especieId: Long): Int
+    /*
+    @Query("""
+        from Vector v
+        where v.ubicacion.id = ?1
+    """)
+    fun findAllByUbicacionIs(ubicacionId: Long): List<Vector>
+
+    @Query("""
+        select count(distinct v.ubicacion)
+        from Vector v
+        where ?1 in (select e.id from v.especies e)
+    """)
+    fun countDistinctByUbicacionEqualsAndEspeciesIn(unaEspecieId : Long) : Int
+
+    @Query("""
+        from Vector v
+        where v.ubicacion.id = ?1
+        and size(v.especies) > 0
+    """)
+    fun findAllByUbicacionIsAndEspeciesIsNotEmpty(ubicacionId: Long): List<Vector>
+
+    @Query("""
+        select count (v)
+        from Vector v
+        where ?1 in (select e.id from v.especies e)
+    """)
+    fun countVectorsByEspeciesIn(especieId: Long): Int
+    */
 
 }
