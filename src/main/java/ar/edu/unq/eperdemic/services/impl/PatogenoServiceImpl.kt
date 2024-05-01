@@ -66,7 +66,7 @@ class PatogenoServiceImpl : PatogenoService {
 
         return especie
     }
-    /*
+
     override fun especiesDePatogeno(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina:Int): List<Especie> {
 
         if (pagina == null || pagina < 0 || cantidadPorPagina < 0) {
@@ -80,7 +80,6 @@ class PatogenoServiceImpl : PatogenoService {
         return especies
     }
 
-     */
 
     override fun esPandemia(especieId: Long): Boolean {
         return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.count() / 2
