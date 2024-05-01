@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository
 
 interface PatogenoDAO : CrudRepository<Patogeno, Long> {
 
-    @Query("select p from Patogeno p order by p.nombre ASC ")
+    @Query("select p from Patogeno p order by p.tipo ASC")
     fun recuperarTodos() : List<Patogeno>
 }

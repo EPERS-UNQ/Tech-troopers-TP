@@ -14,7 +14,7 @@ class Ubicacion() {
     private var nombre: String? = null
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
     constructor(nombre: String) : this() {

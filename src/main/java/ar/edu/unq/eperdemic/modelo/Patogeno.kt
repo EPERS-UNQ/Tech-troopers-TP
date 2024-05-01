@@ -6,17 +6,20 @@ import javax.persistence.*
 
 @Entity
 class Patogeno() {
-    constructor(tipo : String, contagioHumanos : Int,
-                contagioAnimales : Int, contagioInsectos : Int,
-                defensa : Int,
-                capacidadDeBiomecanizacion : Int) : this() {
+    constructor(
+        tipo: String, contagioHumanos: Int,
+        contagioAnimales: Int, contagioInsectos: Int,
+        defensa: Int,
+        capacidadDeBiomecanizacion: Int,
+    ) : this() {
         this.tipo = tipo
-        if( !(esCampoValido(contagioHumanos) && esCampoValido(contagioAnimales)
-            && esCampoValido(contagioInsectos) && esCampoValido(defensa)
-            && esCampoValido(capacidadDeBiomecanizacion)) ) {
+        if (!(esCampoValido(contagioHumanos) && esCampoValido(contagioAnimales)
+                    && esCampoValido(contagioInsectos) && esCampoValido(defensa)
+                    && esCampoValido(capacidadDeBiomecanizacion))
+        ) {
             throw LimiteDeCampoErroneo()
         }
-        if(tipo.isBlank()){
+        if (tipo.isBlank()) {
             throw ErrorNombre("El nombre del tipo del patogeno no puede ser vacio.")
         }
         this.capContagioHumano = contagioHumanos
@@ -28,39 +31,39 @@ class Patogeno() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id : Long? = null
+    private var id: Long? = null
 
     var cantidadDeEspecies: Int = 0
-    var tipo : String? = null
+    var tipo: String? = null
 
     @Column(columnDefinition = "INT CHECK (capContagioHumano <= 100)")
-    var capContagioHumano : Int = 0
+    var capContagioHumano: Int = 0
 
     @Column(columnDefinition = "INT CHECK (capContagioAnimal <= 100)")
-    var capContagioAnimal : Int = 0
+    var capContagioAnimal: Int = 0
 
     @Column(columnDefinition = "INT CHECK (capContagioInsecto <= 100)")
-    var capContagioInsecto : Int = 0
+    var capContagioInsecto: Int = 0
 
     @Column(columnDefinition = "INT CHECK (defensa <= 100)")
-    var defensa : Int = 0
+    var defensa: Int = 0
 
     @Column(columnDefinition = "INT CHECK (capDeBiomecanizacion <= 100)")
-    var capDeBiomecanizacion : Int = 0
+    var capDeBiomecanizacion: Int = 0
 
     override fun toString(): String {
         return tipo!!
     }
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
-    fun setId(idNew : Long?) {
+    fun setId(idNew: Long?) {
         this.id = idNew
     }
 
-    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String) : Especie {
+    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String): Especie {
         var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
         cantidadDeEspecies++
         return nuevaEspecie

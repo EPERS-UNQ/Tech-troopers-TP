@@ -5,8 +5,9 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 
-interface EstadisticaDAO {
+interface EstadisticaDAO : CrudRepository<Especie, Long> {
 
     @Query(
             """
@@ -16,7 +17,6 @@ interface EstadisticaDAO {
               where v.tipo = 'HUMANO'
               group by e
               order by count(v) desc
-              limit 1
             """
     )
     fun lider() : Especie
@@ -28,7 +28,7 @@ interface EstadisticaDAO {
                 join e.vectores v
                 where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
                 group by e
-                order by count(v) ?1
+                order by count(v)
             """
     )
     fun todosLosLideres(direccion: String, pageable: Pageable) : List<Especie>
@@ -46,7 +46,7 @@ interface EstadisticaDAO {
             """ 
                 select COALESCE(count(v), 0)
                 from Vector v
-                where v.ubicacion.nombre = :nombreDeUbicacion 
+                where v.ubicacion.nombre = ?1
                     and size(v.especies) > 0
             """
     )
@@ -57,10 +57,9 @@ interface EstadisticaDAO {
                 select e
                 from Especie e
                 join e.vectores v
-                where v.ubicacion.nombre = :nombreDeUbicacion
+                where v.ubicacion.nombre = ?1
                 group by e
                 order by count(v) desc
-                limit 1
             """
     )
     fun especiePrevalente(nombreDeUbicacion: String) : Especie

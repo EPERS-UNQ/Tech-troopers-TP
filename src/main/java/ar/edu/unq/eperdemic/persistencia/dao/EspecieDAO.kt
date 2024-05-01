@@ -7,17 +7,17 @@ import org.springframework.data.repository.CrudRepository
 
 interface EspecieDAO : CrudRepository<Especie, Long> {
 
-    @Query("select e from Especie e ")
+    @Query("select e from Especie e")
     fun recuperarTodos(): List<Especie>
 
-    /*@Query(
+    @Query(
             """
                 select e 
                 from Especie e 
                 where e.patogeno.id = ?1 
                 order by e.nombre 
-            """ + "?2"
+            """
     )
     fun especiesDelPatogenoId(patogenoId: Long, direccion: String, pageable: Pageable): List<Especie>
-     */
+
 }

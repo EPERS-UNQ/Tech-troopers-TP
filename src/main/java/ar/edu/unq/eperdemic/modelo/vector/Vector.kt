@@ -34,7 +34,7 @@ open class Vector() {
     }
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
     fun getTipo(): TipoVector {

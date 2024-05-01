@@ -36,7 +36,7 @@ class Especie() {
     }
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
     fun agregarVector(vector: Vector) {

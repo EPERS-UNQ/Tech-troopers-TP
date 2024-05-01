@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 
@@ -36,7 +37,6 @@ class UbicacionServiceTest {
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
-    @Autowired lateinit private var dataService: DataService
 
 
     lateinit var ubi1: Ubicacion
@@ -215,7 +215,7 @@ class UbicacionServiceTest {
 
     @AfterEach
     fun finalizar() {
-        dataService.cleanAll()
+
     }
 
 }
