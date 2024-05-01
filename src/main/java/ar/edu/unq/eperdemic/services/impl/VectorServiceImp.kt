@@ -37,21 +37,19 @@ class VectorServiceImp () : VectorService {
     }
 
     override fun recuperarTodos(): List<Vector> {
-        return vectorDAO.recuperarTodos()
+        return vectorDAO.findAll().toList()
     }
 
     override fun infectar(vectorId: Long, especieId: Long) {
-        runTrx {
-            val especie = especieDAO.findById(especieId).orElse(null)
-            val vector  = vectorDAO.findById(vectorId).orElse(null)
-            vector.infectar(especie)
-            vectorDAO.save(vector)
-            especieDAO.save(especie)
-        }
+        val especie = especieDAO.findById(especieId).orElse(null)
+        val vector  = vectorDAO.findById(vectorId).orElse(null) //Tirar error si no encuentra?
+        vector.infectar(especie)
+        vectorDAO.save(vector)
+        especieDAO.save(especie)
+
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        var vector = vectorDAO.findById(vectorId).orElse(null)
-        return vector.enfermedadesDelVector()
+        return vectorDAO.findById(vectorId).get().enfermedadesDelVector()
     }
 }

@@ -36,8 +36,8 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
 
-    override fun recuperarTodos(): Collection<Ubicacion> {
-        return daoUbicacion.recuperarTodos()
+    override fun recuperarTodos(): List<Ubicacion> {
+        return daoUbicacion.findAll().toList()
     }
 
     override fun mover(vectorId: Long, ubicacionId: Long) {

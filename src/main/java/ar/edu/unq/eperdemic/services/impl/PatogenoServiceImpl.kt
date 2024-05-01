@@ -47,7 +47,7 @@ class PatogenoServiceImpl : PatogenoService {
     }
 
     override fun recuperarTodos(): List<Patogeno> {
-        return patogenoDAO.recuperarTodos().toList()
+        return patogenoDAO.findAll().toList()
     }
 
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
