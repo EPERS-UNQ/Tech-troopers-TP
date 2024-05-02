@@ -35,4 +35,35 @@ interface VectorDAO : CrudRepository<Vector, Long> {
     fun countVectorsByEspeciesIn(especieId: Long): Int
     */
 
+    @Query("from Vector v where v.ubicacion.id = ?1")
+    fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>
+
+    @Query(
+            """ 
+                select count(distinct v.ubicacion)
+                from Vector v
+                where ?1 in (select e.id from v.especies e)
+            """
+    )
+    fun cantidadDeUbicacionesDeVectoresConEspecieId(unaEspecieId : Long) : Int
+
+    @Query(
+            """ 
+                select v
+                from Vector v
+                where v.ubicacion.id = ?1 
+                and size(v.especies) > 0
+            """
+    )
+    fun recuperarTodosDeUbicacionInfectados(ubicacionId: Long): List<Vector>
+
+    @Query(
+            """
+                select count(*)
+                from Vector v
+                where ?1 in (select e.id from v.especies e)
+            """
+    )
+    fun cantidadDeVectoresConEspecie(especieId: Long): Int
+
 }

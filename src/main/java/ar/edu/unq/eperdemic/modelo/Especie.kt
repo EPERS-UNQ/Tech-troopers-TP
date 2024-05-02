@@ -36,7 +36,7 @@ class Especie() {
     }
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
     }
 
     fun agregarVector(vector: Vector) {
@@ -45,10 +45,14 @@ class Especie() {
 
     fun capacidadDeContagioPara(tipoDeVector: TipoVector): Int{
         return when (tipoDeVector) {
-            TipoVector.HUMANO -> patogeno!!.capContagioHumano
-            TipoVector.ANIMAL -> patogeno!!.capContagioAnimal
-            TipoVector.INSECTO -> patogeno!!.capContagioInsecto
+            TipoVector.HUMANO -> patogeno!!.cap_contagio_humano
+            TipoVector.ANIMAL -> patogeno!!.cap_contagio_animal
+            TipoVector.INSECTO -> patogeno!!.cap_contagio_insecto
         }
+    }
+
+    fun nombrePatogeno(): String {
+        return this.patogeno.toString()
     }
 
 }

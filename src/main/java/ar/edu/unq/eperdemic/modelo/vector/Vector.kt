@@ -10,7 +10,7 @@ open class Vector() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long? = null
+    var id: Long? = null
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

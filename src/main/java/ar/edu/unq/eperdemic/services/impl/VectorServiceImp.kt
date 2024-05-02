@@ -7,7 +7,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
-import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -29,9 +28,11 @@ class VectorServiceImp () : VectorService {
     }
 
     override fun recuperar(idVector: Long): Vector {
+
         val vector = vectorDAO.findByIdOrNull(idVector)!!
         if (vector == null) {
             throw NoExisteElVector()
+
         }
         return vector
     }
@@ -41,21 +42,15 @@ class VectorServiceImp () : VectorService {
     }
 
     override fun infectar(vectorId: Long, especieId: Long) {
-        TODO("Not yet implemented")
+        val especie = especieDAO.findById(especieId).orElse(null)
+        val vector  = vectorDAO.findById(vectorId).orElse(null) //Tirar error si no encuentra?
+        vector.infectar(especie)
+        vectorDAO.save(vector)
+        especieDAO.save(especie)
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
         return (vectorDAO.findByIdOrNull(vectorId)!!).enfermedadesDelVector()
     }
-    /*
-    override fun infectar(vectorId: Long, especieId: Long) {
-        runTrx {
-            val especie = especieDAO.recuperar(especieId)
-            val vector  = vectorDAO.recuperar(vectorId)
-            vector.infectar(especie)
-            vectorDAO.actualizar(vector)
-            especieDAO.actualizar(especie)
-        }
-    }
-    */
+
 }

@@ -13,7 +13,7 @@ class HibernateSessionFactoryProvider private constructor() {
         val env = System.getenv()
         val user = "root"
         val password = "root"
-        val dataBase = "epers_tp2"
+        val dataBase = "epers_tp3"
         val host = "localhost"
 
         val url = env.getOrDefault("SQL_URL", "jdbc:mysql://$host:3306/$dataBase?createDatabaseIfNotExist=true&serverTimezone=UTC")

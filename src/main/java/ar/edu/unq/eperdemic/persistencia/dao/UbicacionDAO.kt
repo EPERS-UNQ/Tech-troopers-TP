@@ -6,13 +6,13 @@ import org.springframework.data.repository.CrudRepository
 
 interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
 
-    /*
+
     @Query("""
         select count(u)
         from Ubicacion u
     """)
     fun countByNombre(): Int
-
+    /*
     @Query("""
         select u.nombre
         from Ubicacion u
@@ -21,5 +21,7 @@ interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
     """)
     fun findAllByIdIs(ubicacionId: Long?): String
     */
+    @Query("select u.nombre from Ubicacion u where u.id = ?1")
+    fun recuperarPorNombre(ubicacionId: Long?): String
 
 }

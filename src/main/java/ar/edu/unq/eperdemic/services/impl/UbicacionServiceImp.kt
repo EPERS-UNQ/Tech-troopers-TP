@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
@@ -35,55 +36,44 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun mover(vectorId: Long, ubicacionId: Long) {
-        TODO("Not yet implemented")
-    }
 
-    override fun expandir(ubicacionId: Long) {
-        TODO("Not yet implemented")
-    }
-    /*
-    override fun mover(vectorId: Long, ubicacionId: Long) {
-        runTrx {
-            val vector = daoVector.recuperar(vectorId)
-            val nuevaUbicacion = daoUbicacion.recuperar(ubicacionId)
+        val vector = vectorDAO.findById(vectorId).orElse(null)
+        val nuevaUbicacion = ubicacionDAO.findById(ubicacionId).orElse(null)
 
-            if (nuevaUbicacion == null || vector == null) {
-                throw ErrorDeMovimiento()
+        if (nuevaUbicacion == null || vector == null) {
+            throw ErrorDeMovimiento()
+        }
+
+        vector.ubicacion = nuevaUbicacion
+        vectorDAO.save(vector)
+
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
+
+        if (vector.estaInfectado()) {
+            todosLosVectores.map {
+                vector.contargiarA(it)
+                vectorDAO.save(it)
             }
-
-            vector.ubicacion = nuevaUbicacion
-            daoVector.actualizar(vector)
-
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
-
-            if(vector.estaInfectado()) {
-                todosLosVectores.map {
-                    vector.contargiarA(it)
-                    daoVector.actualizar(it)
-                }
-            }
-
         }
     }
 
     override fun expandir( ubicacionId: Long) {
-        runTrx {
-            val todosLosVectores = daoVector.recuperarTodosDeUbicacion(ubicacionId)
-            val todosLosVectoresInf = daoVector.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
-            if (todosLosVectoresInf.isNotEmpty()) {
-                val random = RandomGenerator.getInstance()
-                val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
+        val todosLosVectoresInf = vectorDAO.recuperarTodosDeUbicacionInfectados(ubicacionId)
 
-                for (v in todosLosVectores) {
-                    vectorInf.contargiarA(v)
-                    daoVector.actualizar(v)
-                }
+        if (todosLosVectoresInf.isNotEmpty()) {
+            val random = RandomGenerator.getInstance()
+            val vectorInf = random.getElementoRandomEnLista(todosLosVectoresInf)
 
+            for (v in todosLosVectores) {
+                vectorInf.contargiarA(v)
+                vectorDAO.save(v)
             }
+
         }
+
     }
-     */
 }
 
 
