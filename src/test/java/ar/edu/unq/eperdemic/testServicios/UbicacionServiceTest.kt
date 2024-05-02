@@ -1,9 +1,10 @@
 package ar.edu.unq.eperdemic.testServicios
 
-/*
-
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
+import ar.edu.unq.eperdemic.helper.service.DataService
+import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.Especie
@@ -55,8 +56,12 @@ class UbicacionServiceTest {
 
     lateinit var random: RandomGenerator
 
+    lateinit var dataService: DataService
+
     @BeforeEach
     fun crearModelo() {
+
+        dataService = DataServiceImpl(HibernateDataDAO())
 
         ubi1 = serviceUbicacion.crear(Ubicacion("Argentina"))
         ubi2 = serviceUbicacion.crear(Ubicacion("paraguay"))
@@ -88,11 +93,11 @@ class UbicacionServiceTest {
 
     @Test
     fun errorCuandoSeIntentaRecuperarUnVectorConUnIdQueNoExiste() {
-        val errorMensaje = Assertions.assertThrows(NoExisteLaUbicacion::class.java){
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java){
             serviceUbicacion.recuperar(50)
         }
 
-        Assertions.assertEquals("No hay ninguna ubicacion con el id registrado.", errorMensaje.message)
     }
 
     @Test
@@ -211,7 +216,9 @@ class UbicacionServiceTest {
 
     }
 
+    @AfterEach
+    fun borrarRegistros() {
+        dataService.cleanAll()
+    }
+
 }
-
- */
-

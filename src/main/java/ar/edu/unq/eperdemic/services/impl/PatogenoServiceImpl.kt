@@ -15,6 +15,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -31,7 +32,13 @@ class PatogenoServiceImpl() : PatogenoService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
-        return patogenoDAO.save(patogeno)
+        val newPatogeno : Patogeno
+        try {
+            newPatogeno = patogenoDAO.save(patogeno)
+        } catch (e: DataIntegrityViolationException) {
+            throw ErrorNombre(patogeno.tipo!!)
+        }
+        return newPatogeno
     }
 
     override fun updatear(patogeno: Patogeno) {

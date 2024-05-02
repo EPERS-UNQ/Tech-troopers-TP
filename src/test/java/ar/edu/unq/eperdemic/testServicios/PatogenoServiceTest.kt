@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import javax.persistence.PersistenceException
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -253,15 +254,15 @@ class PatogenoServiceTest {
 
     }
 
-//    @Test
-//    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
-//
-//        servicioPatogeno.crear(covid)
-//
-//        Assertions.assertThrows(RuntimeException::class.java){
-//            servicioPatogeno.crear(covid)
-//        }
-//    }
+    @Test
+    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
+
+        servicioPatogeno.crear(covid)
+
+        Assertions.assertThrows(PersistenceException::class.java){
+            servicioPatogeno.crear(Patogeno("Coronavirus", 1, 1, 1, 1, 1))
+        }
+    }
 
     @AfterEach
     fun borrarRegistros() {

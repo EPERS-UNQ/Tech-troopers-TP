@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
@@ -8,6 +9,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,7 +22,14 @@ class UbicacionServiceImp() : UbicacionService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return ubicacionDAO.save(ubicacion)
+
+        val newUbicacion : Ubicacion
+        try {
+            newUbicacion = ubicacionDAO.save(ubicacion)
+        } catch (e: DataIntegrityViolationException) {
+            throw ErrorNombre(ubicacion.getNombre()!!)
+        }
+        return newUbicacion
     }
 
     override fun updatear(ubicacion: Ubicacion) {
@@ -28,7 +37,12 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun recuperar(id: Long): Ubicacion {
-        return ubicacionDAO.findByIdOrNull(id)!!
+
+        val ubicacion = ubicacionDAO.findByIdOrNull(id)
+        if (ubicacion == null) {
+            throw NoExisteLaUbicacion()
+        }
+        return ubicacion
     }
 
     override fun recuperarTodos(): Collection<Ubicacion> {
