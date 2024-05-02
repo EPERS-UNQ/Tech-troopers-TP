@@ -45,9 +45,9 @@ class Especie() {
 
     fun capacidadDeContagioPara(tipoDeVector: TipoVector): Int{
         return when (tipoDeVector) {
-            TipoVector.HUMANO -> patogeno!!.capContagioHumano
-            TipoVector.ANIMAL -> patogeno!!.capContagioAnimal
-            TipoVector.INSECTO -> patogeno!!.capContagioInsecto
+            TipoVector.HUMANO -> patogeno!!.cap_contagio_humano
+            TipoVector.ANIMAL -> patogeno!!.cap_contagio_animal
+            TipoVector.INSECTO -> patogeno!!.cap_contagio_insecto
         }
     }
 
