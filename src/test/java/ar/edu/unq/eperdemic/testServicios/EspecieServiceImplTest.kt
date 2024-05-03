@@ -1,9 +1,6 @@
-/*package ar.edu.unq.eperdemic.testServicios
+package ar.edu.unq.eperdemic.testServicios
 
-<<<<<<< HEAD
-/*
 
-=======
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -13,9 +10,6 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.VectorService
@@ -29,17 +23,23 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
->>>>>>> develop
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
+
 import javax.persistence.PersistenceException
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EspecieServiceImplTest {
 
     lateinit var dataService         : DataService
-    lateinit var service             : EspecieService
-    lateinit var servicePatogeno     : PatogenoService
-    lateinit var serviceVector       : VectorService
-    lateinit var serviceUbicacion    : UbicacionService
+    @Autowired lateinit var service             : EspecieService
+    @Autowired lateinit var servicePatogeno     : PatogenoService
+    @Autowired lateinit var serviceVector       : VectorService
+    @Autowired lateinit var serviceUbicacion    : UbicacionService
 
     lateinit var especiePersistida   : Especie
     lateinit var especiePersistida2  : Especie
@@ -59,10 +59,6 @@ class EspecieServiceImplTest {
         ubicacion = Ubicacion("Argentina")
         humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
-        service = EspecieServiceImpl( HibernateEspecieDAO(), HibernateVectorDAO() )
-        servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
-        serviceVector    = VectorServiceImp( HibernateVectorDAO(), HibernateEspecieDAO() )
-        serviceUbicacion = UbicacionServiceImp( HibernateUbicacionDAO(), HibernateVectorDAO() )
         dataService = DataServiceImpl(HibernateDataDAO())
 
         random = RandomGenerator.getInstance()
@@ -75,7 +71,7 @@ class EspecieServiceImplTest {
 
         servicePatogeno.crear(patogeno)
 
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
     }
 
@@ -91,7 +87,7 @@ class EspecieServiceImplTest {
 
     @Test
     fun testAlUpdatearUnPatogenoLaInformacionDelMismoCmabia() {
-        var especieRecuperada = service.recuperar(especiePersistida.getId()!!)
+        val especieRecuperada = service.recuperar(especiePersistida.getId()!!)
         especieRecuperada.paisDeOrigen = "Chile"
 
         service.updatear(especieRecuperada)
@@ -105,7 +101,7 @@ class EspecieServiceImplTest {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
 
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId()!!, "Virus", ubicacion.getId()!!)
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId())
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
@@ -122,7 +118,7 @@ class EspecieServiceImplTest {
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         serviceVector.crear(golondrina)
 
-        serviceVector.infectar(golondrina.getId()!!, especiePersistida.getId()!!)
+        serviceVector.infectar(golondrina.getId(), especiePersistida.getId()!!)
 
         Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.getId()!!))
 
@@ -141,7 +137,7 @@ class EspecieServiceImplTest {
     fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
         Assertions.assertThrows(PersistenceException::class.java){
-            servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
         }
     }
 
@@ -153,5 +149,3 @@ class EspecieServiceImplTest {
     }
 
 }
-
- */

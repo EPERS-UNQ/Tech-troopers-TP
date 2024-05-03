@@ -1,11 +1,8 @@
 package ar.edu.unq.eperdemic.testServicios
 
-/*
 import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateVectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -15,24 +12,24 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernateEspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.hibernate.HibernatePatogenoDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 
+@ExtendWith(SpringExtension::class)
+@SpringBootTest
 @TestInstance(PER_CLASS)
 class VectorServiceTest {
 
-    lateinit var service: VectorService
-    lateinit var serviceUbicacion: UbicacionService
-    lateinit var serviceEspecie: EspecieService
-    lateinit var servicePatogeno: PatogenoService
+    @Autowired lateinit var service: VectorService
+    @Autowired lateinit var serviceUbicacion: UbicacionService
+    @Autowired lateinit var servicePatogeno: PatogenoService
     lateinit var dataService: DataService
 
     lateinit var especie   : Especie
@@ -46,11 +43,6 @@ class VectorServiceTest {
 
     @BeforeEach
     fun prepare() {
-
-        this.service = VectorServiceImp(HibernateVectorDAO(), HibernateEspecieDAO())
-        this.serviceUbicacion = UbicacionServiceImp(HibernateUbicacionDAO(), HibernateVectorDAO())
-        this.serviceEspecie = EspecieServiceImpl(HibernateEspecieDAO(), HibernateVectorDAO())
-        this.servicePatogeno  = PatogenoServiceImpl(HibernatePatogenoDAO(), HibernateEspecieDAO(), HibernateUbicacionDAO(), HibernateVectorDAO())
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
         ubicacion = Ubicacion("Argentina")
@@ -64,7 +56,7 @@ class VectorServiceTest {
 
         servicePatogeno.crear(patogeno)
 
-        especie = servicePatogeno.agregarEspecie(patogeno.getId()!!, "Bacteria", ubicacion.getId()!!)
+        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -94,7 +86,7 @@ class VectorServiceTest {
 
     @Test
     fun testDeRecuperarUnVector(){
-        val otroHumano = service.recuperar(humano.getId()!!)
+        val otroHumano = service.recuperar(humano.getId())
 
         Assertions.assertEquals(otroHumano.getId(), humano.getId())
         Assertions.assertEquals(otroHumano.nombre, humano.nombre)
@@ -119,9 +111,9 @@ class VectorServiceTest {
 
         Assertions.assertFalse(pepita.estaInfectado())
 
-        service.infectar(pepita.getId()!!, especie.getId()!!)
+        service.infectar(pepita.getId(), especie.getId()!!)
 
-        val otraGolondrina = service.recuperar(pepita.getId()!!)
+        val otraGolondrina = service.recuperar(pepita.getId())
 
         Assertions.assertTrue(otraGolondrina.estaInfectado())
         Assertions.assertEquals(otraGolondrina.enfermedadesDelVector().first().getId(), especie.getId())
@@ -133,14 +125,14 @@ class VectorServiceTest {
 
         val pepita = service.crear(golondrina)
 
-        service.infectar(pepita.getId()!!, especie.getId()!!)
+        service.infectar(pepita.getId(), especie.getId()!!)
 
-        Assertions.assertFalse(service.enfermedades(pepita.getId()!!).isEmpty())
-        Assertions.assertEquals(service.recuperar(pepita.getId()!!).enfermedadesDelVector().first().getId(), especie.getId())
+        Assertions.assertFalse(service.enfermedades(pepita.getId()).isEmpty())
+        Assertions.assertEquals(service.recuperar(pepita.getId()).enfermedadesDelVector().first().getId(), especie.getId())
 
-        service.infectar(pepita.getId()!!, especie.getId()!!)
+        service.infectar(pepita.getId(), especie.getId()!!)
 
-        Assertions.assertTrue(service.recuperar(pepita.getId()!!).estaInfectado())
+        Assertions.assertTrue(service.recuperar(pepita.getId()).estaInfectado())
     }
 
     @Test
@@ -158,5 +150,3 @@ class VectorServiceTest {
     }
 
 }
-
- */
