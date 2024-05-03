@@ -1,11 +1,17 @@
 package ar.edu.unq.eperdemic.modelo
 
-enum class Direccion(private var direccion: String) {
+import org.springframework.data.domain.Sort
 
-    ASCENDENTE("ASC"),
-    DESCENDENTE("DESC");
+enum class Direccion(private var direccion: Sort.Direction, private var direccionS: String) {
 
-    fun getExp() : String {
+    ASCENDENTE(Sort.Direction.ASC, "asc"),
+    DESCENDENTE(Sort.Direction.DESC, "desc");
+
+    fun getExp() : Sort.Direction {
         return this.direccion
+    }
+
+    fun getString() : String {
+        return this.direccionS
     }
 }

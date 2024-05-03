@@ -27,10 +27,22 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
                 join e.vectores v
                 where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
                 group by e
-                order by count(v)
+                order by count(v) desc
             """
     )
-    fun todosLosLideres(direccion: String, pageable: Pageable) : List<Especie>
+    fun todosLosLideresDesc(pageable: Pageable) : List<Especie>
+
+    @Query(
+        """
+                select e
+                from Especie e
+                join e.vectores v
+                where v.tipo = 'HUMANO' OR v.tipo = 'ANIMAL'
+                group by e
+                order by count(v) asc
+            """
+    )
+    fun todosLosLideresAsc(pageable: Pageable) : List<Especie>
 
     @Query(
             """ 

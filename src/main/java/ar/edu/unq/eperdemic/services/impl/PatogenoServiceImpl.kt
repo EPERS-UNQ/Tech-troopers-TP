@@ -87,7 +87,7 @@ class PatogenoServiceImpl() : PatogenoService {
         }
         val pageable: Pageable = PageRequest.of(pagina, cantidadPorPagina)
 
-        val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion.getExp(), pageable)
+        val especies = especieDAO.especiesDelPatogenoId(patogenoId, direccion.getString(), pageable)
         return especies
 
     }
