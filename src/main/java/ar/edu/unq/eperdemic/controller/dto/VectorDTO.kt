@@ -26,6 +26,7 @@ class VectorDTO ( val id: Long?,
 
     fun aModelo(): Vector {
         val vector = Vector()
+        val ubicacionDTO = UbicacionDTO(this.ubicacion.id, this.ubicacion.nombre)
         // vector.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
         vector.nombre = this.nombre
         vector.ubicacion = UbicacionDTO.aModelo(this.ubicacion)
@@ -40,7 +41,7 @@ class VectorDTO ( val id: Long?,
         val vector = aModelo()
         // vector.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
         vector.nombre = this.nombre
-        vector.ubicacion = UbicacionDTO.aModelo(this.ubicacion)
+        vector.ubicacion = UbicacionDTO.(this.ubicacion)
         // vector.setTipo(this.tipo) //hacer una funcion que pase un string a un TipoDeVector? se debe hacer un setter?
         vector.especies = this.especies?.
              map { especieDTO -> especieDTO.aModelo(vector) }?.
