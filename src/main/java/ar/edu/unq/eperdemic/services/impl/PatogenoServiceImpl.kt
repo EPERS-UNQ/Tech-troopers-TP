@@ -70,8 +70,13 @@ class PatogenoServiceImpl() : PatogenoService {
             val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
             vectorAInfectar.infectar(especie)
             patogenoDAO.save(patogeno)
-            especieDAO.save(especie)
-            return especie
+            val newEspecie : Especie
+            try {
+                newEspecie = especieDAO.save(especie)
+            } catch (e: DataIntegrityViolationException) {
+                throw ErrorNombre(nombreEspecie)
+            }
+            return newEspecie
 
     }
 

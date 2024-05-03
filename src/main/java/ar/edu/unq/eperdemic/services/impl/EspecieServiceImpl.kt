@@ -26,7 +26,7 @@ class EspecieServiceImpl () : EspecieService {
 
     override fun recuperar(idEspecie: Long): Especie {
 
-        val especie = especieDAO.findById(idEspecie).orElse(null)
+        val especie = especieDAO.findByIdOrNull(idEspecie)
         if (especie == null) {
             throw NoExisteLaEspecie()
         }
@@ -39,8 +39,7 @@ class EspecieServiceImpl () : EspecieService {
     }
 
     override fun cantidadDeInfectados(especieId: Long): Int {
-       //return vectorDAO.countVectorsByEspeciesIn(especieId)
-        TODO()
+       return vectorDAO.cantidadDeVectoresConEspecie(especieId)
     }
 
 }

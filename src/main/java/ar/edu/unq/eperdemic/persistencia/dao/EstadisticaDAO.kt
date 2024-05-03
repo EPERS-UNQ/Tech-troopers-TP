@@ -1,25 +1,24 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface EstadisticaDAO : CrudRepository<Especie, Long> {
 
-    @Query(
-            """
-              select e
-              from Especie e
-              join e.vectores v
-              where v.tipo = 'HUMANO'
-              group by e
-              order by count(v) desc
-            """
-    )
-    fun lider() : Especie
+//    @Query(
+//            """
+//              select e
+//              from Especie e
+//              join e.vectores v
+//              where v.tipo = 'HUMANO'
+//              group by e
+//              order by count(v) desc
+//            """
+//    )
+    fun findTopByVectoresTipoOrderByVectoresDesc(tipo: TipoVector): Especie
 
     @Query(
             """
@@ -62,5 +61,5 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
                 order by count(v) desc
             """
     )
-    fun especiePrevalente(nombreDeUbicacion: String) : Especie
+    fun findTopEspeciePrevalente(nombreDeUbicacion: String) : Especie
 }

@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ReporteDeContagios
-import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.EstadisticaDAO
 import ar.edu.unq.eperdemic.services.EstadisticaService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ class EstadisticaServiceImpl ( ) : EstadisticaService {
     @Autowired private lateinit var estadisticaDAO : EstadisticaDAO
 
     override fun especieLider(): Especie {
-        return estadisticaDAO.lider()
+        return estadisticaDAO.findTopByVectoresTipoOrderByVectoresDesc(TipoVector.HUMANO)
     }
 
     override fun lideres(direccion: Direccion, pagina: Int, cantidadPorPagina: Int): List<Especie> {
@@ -37,7 +37,7 @@ class EstadisticaServiceImpl ( ) : EstadisticaService {
         return ReporteDeContagios(
                 estadisticaDAO.cantidadDeVectoresEn(nombreDeLaUbicacion),
                 estadisticaDAO.cantidadDeInfectadosEnUbicacion(nombreDeLaUbicacion),
-                estadisticaDAO.especiePrevalente(nombreDeLaUbicacion).nombre!!
+                estadisticaDAO.findTopEspeciePrevalente(nombreDeLaUbicacion).nombre!!
         )
     }
 

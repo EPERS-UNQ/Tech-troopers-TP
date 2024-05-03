@@ -25,10 +25,9 @@ class EstadisticaServiceTest {
 
     lateinit var dataService: DataService
 
-    @Autowired
-    lateinit var service    : EstadisticaService
-    @Autowired lateinit var serviceVector   : VectorService
-    @Autowired lateinit var serviceUbicacion: UbicacionService
+    @Autowired lateinit var service : EstadisticaService
+    @Autowired lateinit var serviceVector : VectorService
+    @Autowired lateinit var serviceUbicacion : UbicacionService
     @Autowired lateinit var servicePatogeno : PatogenoService
 
     lateinit var especie   : Especie
@@ -115,13 +114,13 @@ class EstadisticaServiceTest {
 
         val especiesPagina0Descendente = service.lideres(Direccion.DESCENDENTE, 0, 3)
         Assertions.assertTrue(
-            especiesPagina0Descendente.elementAt(0).nombre.equals("Virus")
+            especiesPagina0Descendente.elementAt(0).nombre.equals("Adenovirus")
         )
         Assertions.assertTrue(
             especiesPagina0Descendente.elementAt(1).nombre.equals("Bacteria")
         )
         Assertions.assertTrue(
-            especiesPagina0Descendente.elementAt(2).nombre.equals("Adenovirus")
+            especiesPagina0Descendente.elementAt(2).nombre.equals("Virus")
         )
 
         val especiesPagina0Ascendente = service.lideres(Direccion.ASCENDENTE, 0, 3)
@@ -140,9 +139,9 @@ class EstadisticaServiceTest {
 
         val especiesLideres = service.lideres(Direccion.DESCENDENTE, 0, 3)
 
-        Assertions.assertEquals(especie2.getId(), especiesLideres.first().getId())
+        Assertions.assertEquals(especie3.getId(), especiesLideres[0].getId())
         Assertions.assertEquals(especie.getId() , especiesLideres[1].getId())
-        Assertions.assertEquals(especie3.getId() , especiesLideres[2].getId())
+        Assertions.assertEquals(especie2.getId() , especiesLideres[2].getId())
     }
 
     @Test

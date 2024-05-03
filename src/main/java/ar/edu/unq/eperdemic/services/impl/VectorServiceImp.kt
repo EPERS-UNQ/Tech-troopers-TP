@@ -29,7 +29,7 @@ class VectorServiceImp () : VectorService {
 
     override fun recuperar(idVector: Long): Vector {
 
-        val vector = vectorDAO.findByIdOrNull(idVector)!!
+        val vector = vectorDAO.findByIdOrNull(idVector)
         if (vector == null) {
             throw NoExisteElVector()
 
