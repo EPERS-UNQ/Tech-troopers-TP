@@ -66,8 +66,8 @@ class Patogeno() {
         this.id = idNew
     }
 
-    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String, mutaciones: MutableSet<Mutacion>): Especie {
-        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen, mutaciones)
+    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String): Especie {
+        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
         cantidadDeEspecies++
         return nuevaEspecie
     }

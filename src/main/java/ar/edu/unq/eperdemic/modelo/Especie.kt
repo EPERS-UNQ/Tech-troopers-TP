@@ -27,7 +27,7 @@ class Especie() {
     @ManyToMany
     var mutaciones: MutableSet<Mutacion> = HashSet()
 
-    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String , mutaciones: MutableSet<Mutacion>) : this() {
+    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String) : this() {
         if (nombre.isBlank()){
             throw ErrorNombre("El nombre de la especie no puede ser vacio.")
         }
@@ -37,7 +37,6 @@ class Especie() {
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
-        this.mutaciones = mutaciones
     }
 
     fun getId(): Long? {
@@ -66,6 +65,10 @@ class Especie() {
 
     fun capacidadDeBiomecanizacion(): Int {
         return patogeno!!.cap_de_biomecanizacion
+    }
+
+    fun agregarMutacion(mutacion : Mutacion) {
+        mutaciones.add(mutacion)
     }
 
 }
