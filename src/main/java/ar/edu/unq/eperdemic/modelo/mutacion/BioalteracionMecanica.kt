@@ -5,6 +5,10 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 class BioalteracionMecanica(val vector : TipoVector) : Mutacion(){
 
+    override fun atributo(): Any {
+        return vector
+    }
+
     override fun habilitaContagiarA(vector: TipoVector) : Boolean {
         return this.vector == vector
     }

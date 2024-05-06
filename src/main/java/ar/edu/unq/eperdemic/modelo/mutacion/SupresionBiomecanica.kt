@@ -16,6 +16,10 @@ class SupresionBiomecanica(val potencia : Int) : Mutacion(){
 
     }
 
+    override fun atributo(): Any {
+        return potencia
+    }
+
     override fun habilitaContagiarA(vector: TipoVector): Boolean {
         return false
     }

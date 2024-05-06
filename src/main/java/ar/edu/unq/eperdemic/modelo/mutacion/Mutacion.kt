@@ -12,6 +12,8 @@ abstract class Mutacion() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected var id: Long? = null
 
+    abstract fun atributo() : Any
+
     abstract fun habilitaContagiarA(vector: TipoVector) : Boolean
 
     abstract fun potencia() : Int

@@ -70,7 +70,7 @@ open class Vector() {
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
-        val mutacionElegida = random.getElementoRandomEnLista(especie.mutaciones.toList())
+        val mutacionElegida = random.getElementoRandomEnLista(especie.posiblesMutaciones.toList())
 
         if (vector.defiendeContra(especie.defensaDeEspecie()) &&
             random.porcentajeExistoso(porcentajeDeContagioExitoso)) {

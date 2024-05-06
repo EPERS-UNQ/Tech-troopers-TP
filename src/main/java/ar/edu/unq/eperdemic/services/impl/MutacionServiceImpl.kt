@@ -24,7 +24,7 @@ class MutacionServiceImpl() : MutacionService {
         if (especie == null) {
             throw NoExisteLaEspecie()
         }
-        especie.agregarMutacion(mutacion)
+        especie.agregarNuevaMutacionPosible(mutacion)
         especieDAO.save(especie)
         mutacionDAO.save(mutacion)
 

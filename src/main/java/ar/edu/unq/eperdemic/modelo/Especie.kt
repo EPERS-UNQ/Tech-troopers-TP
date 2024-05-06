@@ -25,7 +25,7 @@ class Especie() {
     var patogeno: Patogeno? = null
 
     @ManyToMany
-    var mutaciones: MutableSet<Mutacion> = HashSet()
+    var posiblesMutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String) : this() {
         if (nombre.isBlank()){
@@ -67,8 +67,16 @@ class Especie() {
         return patogeno!!.cap_de_biomecanizacion
     }
 
-    fun agregarMutacion(mutacion : Mutacion) {
-        mutaciones.add(mutacion)
+    fun cantidadDeMutaciones(): Int {
+        return posiblesMutaciones.size
+    }
+
+    fun agregarNuevaMutacionPosible(mutacion : Mutacion) {
+        posiblesMutaciones.add(mutacion)
+    }
+
+    fun tieneLaMutacion(mutacion: Mutacion) : Boolean {
+        return posiblesMutaciones.contains(mutacion)
     }
 
 }
