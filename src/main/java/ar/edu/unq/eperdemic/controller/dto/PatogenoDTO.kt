@@ -10,19 +10,6 @@ class PatogenoDTO ( val id: Long?,
                     val defensa: Int,
                     val capacidadBiomecanizacion: Int) {
 
-    companion object {
-        fun desdeModelo(patogeno: Patogeno) =
-            PatogenoDTO(
-                id                       = patogeno.getId(),
-                tipo                     = patogeno.tipo,
-                contagioHumano           = patogeno.capContagioHumano,
-                contagioAnimal           = patogeno.capContagioAnimal,
-                contagioInsecto          = patogeno.capContagioInsecto,
-                defensa                  = patogeno.defensa,
-                capacidadBiomecanizacion = patogeno.capDeBiomecanizacion
-            )
-    }
-
     fun aModelo(): Patogeno {
         val patogeno = Patogeno()
         patogeno.setId(this.id)

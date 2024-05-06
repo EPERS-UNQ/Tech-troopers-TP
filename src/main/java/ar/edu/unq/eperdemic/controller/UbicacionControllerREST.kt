@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.controller
 
+import ar.edu.unq.eperdemic.controller.dto.dtoCreacion.UbicacionCreacionDTO
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.web.bind.annotation.CrossOrigin
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class UbicacionControllerREST( private val ubicacionService: UbicacionService ) {
 
     @PostMapping("/")
-    fun crearUbicacion( @RequestBody ubicacion: UbicacionDTO ) = ubicacionService.crear(ubicacion.aModelo())
+    fun crearUbicacion( @RequestBody ubicacion: UbicacionCreacionDTO) = ubicacionService.crear(ubicacion.aModelo())
 
     @PutMapping("/actualizarUbicacion")
     fun actualizarUbicacion( @RequestBody ubicacion: UbicacionDTO ) = ubicacionService.updatear(ubicacion.aModelo())

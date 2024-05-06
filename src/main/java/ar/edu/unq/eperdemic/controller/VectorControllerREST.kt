@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.controller
 
+import ar.edu.unq.eperdemic.controller.dto.dtoCreacion.VectorCreacionDTO
 import ar.edu.unq.eperdemic.controller.dto.VectorDTO
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.web.bind.annotation.*
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 class VectorControllerREST( private val vectorService: VectorService ) {
 
     @PostMapping("/")
-    fun crearVector( @RequestBody vectorDTO: VectorDTO ) = vectorService.crear(vectorDTO.aModelo())
+    fun crearVector( @RequestBody vectorDTO: VectorCreacionDTO) = vectorService.crear(vectorDTO.aModelo())
 
     @PutMapping("/actualizarVector")
     fun actualizarVector( @RequestBody vectorDTO: VectorDTO ) = vectorService.updatear(vectorDTO.aModelo())

@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.controller
 
+import ar.edu.unq.eperdemic.controller.dto.dtoCreacion.PatogenoCreacionDTO
 import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.web.bind.annotation.*
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 class PatogenoControllerREST( private val patogenoService: PatogenoService ) {
 
     @PostMapping("/")
-    fun crearPatogeno( @RequestBody patogeno: PatogenoDTO) = patogenoService.crear(patogeno.aModelo())
+    fun crearPatogeno( @RequestBody patogeno: PatogenoCreacionDTO) = patogenoService.crear(patogeno.aModelo())
 
     @PutMapping("/actualizarPatogeno")
     fun actualizarPatogeno( @RequestBody patogenoDTO: PatogenoDTO) = patogenoService.updatear(patogenoDTO.aModelo())
