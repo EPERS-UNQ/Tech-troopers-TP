@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
@@ -23,7 +24,10 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
+    @ManyToMany
+    var mutaciones: MutableSet<Mutacion> = HashSet()
+
+    constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String , mutaciones: MutableSet<Mutacion>) : this() {
         if (nombre.isBlank()){
             throw ErrorNombre("El nombre de la especie no puede ser vacio.")
         }
@@ -33,6 +37,7 @@ class Especie() {
         this.nombre = nombre
         this.patogeno = patogeno
         this.paisDeOrigen = paisDeOrigen
+        this.mutaciones = mutaciones
     }
 
     fun getId(): Long? {
@@ -53,6 +58,14 @@ class Especie() {
 
     fun nombrePatogeno(): String {
         return this.patogeno.toString()
+    }
+
+    fun defensaDeEspecie(): Int {
+        return patogeno!!.defensa
+    }
+
+    fun capacidadDeBiomecanizacion(): Int {
+        return patogeno!!.cap_de_biomecanizacion
     }
 
 }

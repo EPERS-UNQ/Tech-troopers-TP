@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import javax.persistence.*
 
 @Entity
@@ -65,8 +66,8 @@ class Patogeno() {
         this.id = idNew
     }
 
-    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String): Especie {
-        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
+    fun crearEspecie(nombreEspecie: String, paisDeOrigen: String, mutaciones: MutableSet<Mutacion>): Especie {
+        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen, mutaciones)
         cantidadDeEspecies++
         return nuevaEspecie
     }
