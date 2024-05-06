@@ -1,8 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
-import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
@@ -24,6 +24,9 @@ class Especie() {
 
     @ManyToOne
     var patogeno: Patogeno? = null
+
+    @ManyToMany
+    var posiblesMutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
         if (nombre.isBlank()){
@@ -57,11 +60,31 @@ class Especie() {
     }
 
     fun nombrePatogeno(): String {
-        return this.patogeno.toString()
+        return this.patogeno!!.tipo!!
     }
 
     fun aDTO(): EspecieDTO? {
         return EspecieDTO(this.getId(), this.nombre, this.paisDeOrigen, this.patogeno!!.aDTO())
+    }
+
+    fun defensaDeEspecie(): Int {
+        return patogeno!!.defensa
+    }
+
+    fun capacidadDeBiomecanizacion(): Int {
+        return patogeno!!.cap_de_biomecanizacion
+    }
+
+    fun cantidadDeMutaciones(): Int {
+        return posiblesMutaciones.size
+    }
+
+    fun agregarNuevaMutacionPosible(mutacion : Mutacion) {
+        posiblesMutaciones.add(mutacion)
+    }
+
+    fun tieneLaMutacion(mutacion: Mutacion) : Boolean {
+        return posiblesMutaciones.contains(mutacion)
     }
 
 }

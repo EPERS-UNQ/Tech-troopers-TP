@@ -21,6 +21,7 @@
         <mapping class="ar.edu.unq.eperdemic.modelo.Ubicacion" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Patogeno" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Especie" />
+        <mapping class="ar.edu.unq.eperdemic.modelo.mutacion.Mutacion" />
 
     </session-factory>
 </hibernate-configuration>

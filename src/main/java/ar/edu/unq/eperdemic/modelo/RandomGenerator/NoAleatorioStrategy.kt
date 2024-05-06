@@ -13,7 +13,7 @@ class NoAleatorioStrategy : RandomStrategy {
         return list[num]
     }
 
-    override fun porcentajeExistoso(porcentaje: Int, bool: Boolean): Boolean {
+    override fun porcentajeExitoso(porcentaje: Int, bool: Boolean): Boolean {
         return bool
     }
 

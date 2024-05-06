@@ -9,6 +9,6 @@ interface RandomStrategy {
 
     fun getNumeroRandom(num: Int = 0): Int
     fun <T> getElementoRandomEnLista(list: List<T>, num: Int = 0): T
-    fun porcentajeExistoso(porcentaje: Int, bool: Boolean = true): Boolean
+    fun porcentajeExitoso(porcentaje: Int, bool: Boolean = true): Boolean
 
 }

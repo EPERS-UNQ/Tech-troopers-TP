@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 
 @Entity
 open class Vector() {
@@ -25,6 +26,9 @@ open class Vector() {
 
     @ManyToOne
     var ubicacion: Ubicacion? = null
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var mutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
@@ -60,7 +64,8 @@ open class Vector() {
     }
 
     fun contargiarA(vector: Vector){
-        if (this.tipo.puedeContagiarA(vector.getTipo())){
+        if (this.tipo.puedeContagiarA(vector.getTipo()) ||
+            mutaciones.any { it.habilitaContagiarA(vector.getTipo()) }){
             this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }
         }
     }
@@ -69,10 +74,33 @@ open class Vector() {
         val random = RandomGenerator.getInstance()
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
+        val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
 
-        if (random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
+
+        if (vector.defiendeContra(especie.defensaDeEspecie()) &&
+            random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
+            if (random.porcentajeExistoso(porcentajeDeMutacionExitoso)) {
+                this.mutarConMutacionRandom(especie.posiblesMutaciones.toList()) // Refactor del nombre????
+            }
         }
+    }
+
+    private fun mutarConMutacionRandom(mutacionesDeEspecie: List<Mutacion>) {
+        if(mutacionesDeEspecie.isNotEmpty()) {
+            val random = RandomGenerator.getInstance()
+            val mutacionElegida = random.getElementoRandomEnLista(mutacionesDeEspecie)
+            this.mutaciones.add(mutacionElegida)
+            mutacionElegida.eliminarEspeciesInferiores(this)
+        }
+    }
+
+    private fun defiendeContra(defensaDeLaEspecie : Int): Boolean {
+        return this.defensaDeSupresionBiomecanica() < defensaDeLaEspecie
+    }
+
+    private fun defensaDeSupresionBiomecanica(): Int {
+        return mutaciones.maxOf { it.potencia() }
     }
 
     fun enfermedadesDelVector(): List<Especie> {
@@ -88,5 +116,8 @@ open class Vector() {
         return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
     }
 
+    fun eleminarEspecie(especie : Especie) {
+        especies.remove(especie)
+    }
 
 }

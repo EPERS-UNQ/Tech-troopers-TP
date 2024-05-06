@@ -38,7 +38,7 @@ class RandomGenerator private constructor() {
     }
 
     fun porcentajeExistoso(porcentaje: Int) : Boolean {
-        return strategy.porcentajeExistoso(porcentaje, booleanGlobal)
+        return strategy.porcentajeExitoso(porcentaje, booleanGlobal)
     }
 
 }

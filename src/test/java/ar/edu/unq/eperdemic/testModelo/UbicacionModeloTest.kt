@@ -23,7 +23,7 @@ class UbicacionModeloTest {
     }
 
     @Test
-    fun testCuandoSeIntentaCrearUnaUbicacionSinNombre(){
+    fun errorAlIntentarCrearUnaUbicacionSinNombre(){
 
         val errorMensaje = Assertions.assertThrows(ErrorNombre::class.java){
             Ubicacion("")

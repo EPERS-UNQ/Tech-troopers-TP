@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.modelo
 import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import javax.persistence.*
 
 @Entity
