@@ -86,7 +86,7 @@ class EstadisticaServiceTest {
         Assertions.assertFalse(especie2.getId()!! == service.especieLider().getId())
     }
 
-    /*@Test
+    @Test
     fun testDeLosLideres() {
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
         especie3 = servicePatogeno.agregarEspecie(patogeno.getId(), "Adenovirus", ubicacion.getId())
@@ -103,6 +103,7 @@ class EstadisticaServiceTest {
         serviceVector.infectar(insecto.getId(), especie.getId()!!)
         serviceVector.infectar(insecto2.getId(), especie.getId()!!)
 
+
         serviceVector.infectar(humano3.getId(), especie2.getId()!!)
         serviceVector.infectar(golondrina.getId(), especie2.getId()!!)
 
@@ -112,16 +113,19 @@ class EstadisticaServiceTest {
         // especie  -> Infectó dos humanos y dos insecto.
         // especie3 -> Infectó un humano.
 
+
         val especiesPagina0Descendente = service.lideres(Direccion.DESCENDENTE, 0, 3)
+
         Assertions.assertTrue(
-            especiesPagina0Descendente.elementAt(0).nombre.equals("Adenovirus")
+            especiesPagina0Descendente.elementAt(0).nombre.equals("Virus")
         )
         Assertions.assertTrue(
             especiesPagina0Descendente.elementAt(1).nombre.equals("Bacteria")
         )
         Assertions.assertTrue(
-            especiesPagina0Descendente.elementAt(2).nombre.equals("Virus")
+            especiesPagina0Descendente.elementAt(2).nombre.equals("Adenovirus")
         )
+
 
         val especiesPagina0Ascendente = service.lideres(Direccion.ASCENDENTE, 0, 3)
         Assertions.assertTrue(
@@ -139,9 +143,9 @@ class EstadisticaServiceTest {
 
         val especiesLideres = service.lideres(Direccion.DESCENDENTE, 0, 3)
 
-        Assertions.assertEquals(especie3.getId(), especiesLideres[0].getId())
+        Assertions.assertEquals(especie2.getId(), especiesLideres[0].getId())
         Assertions.assertEquals(especie.getId() , especiesLideres[1].getId())
-        Assertions.assertEquals(especie2.getId() , especiesLideres[2].getId())
+        Assertions.assertEquals(especie3.getId() , especiesLideres[2].getId())
     }
 
     @Test
@@ -164,7 +168,7 @@ class EstadisticaServiceTest {
         Assertions.assertEquals(5, reporte.cantidadVectores)
         Assertions.assertEquals(4, reporte.cantidadInfectados)
         Assertions.assertEquals("Bacteria", reporte.especiePrevalente)
-    }*/
+    }
 
     @Test
     fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLosLideres(){

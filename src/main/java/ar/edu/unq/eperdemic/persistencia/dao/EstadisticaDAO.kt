@@ -73,5 +73,5 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
                 order by count(v) desc
             """
     )
-    fun findTopEspeciePrevalente(nombreDeUbicacion: String) : Especie
+    fun findTopEspeciePrevalente(nombreDeUbicacion: String) : List<Especie>
 }

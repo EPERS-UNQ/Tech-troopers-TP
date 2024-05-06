@@ -47,7 +47,7 @@ class EstadisticaServiceImpl ( ) : EstadisticaService {
         return ReporteDeContagios(
                 estadisticaDAO.cantidadDeVectoresEn(nombreDeLaUbicacion),
                 estadisticaDAO.cantidadDeInfectadosEnUbicacion(nombreDeLaUbicacion),
-                estadisticaDAO.findTopEspeciePrevalente(nombreDeLaUbicacion).nombre!!
+                estadisticaDAO.findTopEspeciePrevalente(nombreDeLaUbicacion).elementAt(0).nombre!!
         )
     }
 
