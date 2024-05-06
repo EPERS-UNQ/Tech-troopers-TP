@@ -15,7 +15,7 @@ class UbicacionDTO ( val id: Long?,
 
     fun aModelo(): Ubicacion {
         val ubicacion = Ubicacion()
-        // ubicacion.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
+        ubicacion.setId(this.id)
         ubicacion.setNombre(this.nombre!!)
         return ubicacion
     }

@@ -3,21 +3,23 @@ package ar.edu.unq.eperdemic.controller.dto
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
+import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 
 class VectorDTO ( val id: Long?,
                   val nombre: String?,
                   val ubicacion: UbicacionDTO,
                   val tipo: String,
-                  val especies: MutableSet<EspecieDTO>) {
+                  val especies: MutableSet<EspecieDTO> ) {
 
     companion object {
         fun desdeModelo(vector: Vector) =
             VectorDTO(
                 id           = vector.getId(),
                 nombre       = vector.nombre,
-                ubicacion    = UbicacionDTO.desdeModelo(vector.ubicacion!!),
-                tipo         = vector.getTipo().name(),
+                ubicacion    = vector.ubicacion!!.aDTO()!!,
+                tipo         = vector.getTipo().toString(),
                 especies     = vector.especies
                     .map { especie -> EspecieDTO.desdeModelo(especie) }
                     .toCollection(HashSet())
@@ -27,26 +29,13 @@ class VectorDTO ( val id: Long?,
     fun aModelo(): Vector {
         val vector = Vector()
         val ubicacionDTO = UbicacionDTO(this.ubicacion.id, this.ubicacion.nombre)
-        // vector.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
+        vector.setId(this.id!!)
         vector.nombre = this.nombre
-        vector.ubicacion = UbicacionDTO.aModelo(this.ubicacion)
-        // vector.setTipo(this.tipo) //hacer una funcion que pase un string a un TipoDeVector? se debe hacer un setter?
+        vector.ubicacion = ubicacionDTO.aModelo()
+        vector.setTipo(enumValueOf<TipoVector>(this.tipo))
         vector.especies = this.especies
-            .map { especie -> EspecieDTO.aModelo(especie) }
+            .map { especie -> especie.aModelo() }
             .toCollection(HashSet())
-        return vector
-    }
-
-    fun aModelo(especie: Especie): Vector {
-        val vector = aModelo()
-        // vector.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
-        vector.nombre = this.nombre
-        vector.ubicacion = UbicacionDTO.(this.ubicacion)
-        // vector.setTipo(this.tipo) //hacer una funcion que pase un string a un TipoDeVector? se debe hacer un setter?
-        vector.especies = this.especies?.
-             map { especieDTO -> especieDTO.aModelo(vector) }?.
-             toCollection(HashSet()) ?:
-             HashSet()
         return vector
     }
 

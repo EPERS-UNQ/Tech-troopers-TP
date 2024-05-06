@@ -23,10 +23,10 @@ class UbicacionControllerREST( private val ubicacionService: UbicacionService ) 
     fun actualizarUbicacion( @RequestBody ubicacion: UbicacionDTO ) = ubicacionService.updatear(ubicacion.aModelo())
 
     @GetMapping("/{ubicacionId}")
-    fun recuperarUbicacion( @PathVariable ubicacionId: Long ) = UbicacionDTO.desdeModelo(ubicacionService.recuperar(ubicacionId))
+    fun recuperarUbicacion( @PathVariable ubicacionId: Long ) = ubicacionService.recuperar(ubicacionId).aDTO()
 
     @GetMapping("/todasLasUbicaciones")
-    fun recuperarTodasLasUbicaciones() = ubicacionService.recuperarTodos().map { ubicacion -> UbicacionDTO.desdeModelo(ubicacion) }
+    fun recuperarTodasLasUbicaciones() = ubicacionService.recuperarTodos().map { ubicacion -> ubicacion.aDTO() }
 
     @PutMapping("/moverUbicacion")
     fun moverUbicacion( @RequestBody vectorId: Long, ubicacionId: Long ) = ubicacionService.mover(vectorId, ubicacionId)

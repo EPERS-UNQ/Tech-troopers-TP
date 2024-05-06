@@ -20,10 +20,10 @@ class EspecieControllerREST( private val especieService: EspecieService ) {
     fun modificarEspecie( @RequestBody especie: EspecieDTO) = especieService.updatear(especie.aModelo())
 
     @GetMapping("/{especieId}")
-    fun recuperarEspecie( @PathVariable especieId: Long ) = EspecieDTO.desdeModelo(especieService.recuperar(especieId!!))
+    fun recuperarEspecie( @PathVariable especieId: Long ) = especieService.recuperar(especieId!!).aDTO()
 
     @GetMapping("/todasLasEspecies")
-    fun recuperarTodasLasEspecies() = especieService.recuperarTodos().map { especie -> EspecieDTO.desdeModelo(especie) }
+    fun recuperarTodasLasEspecies() = especieService.recuperarTodos().map { especie -> especie.aDTO() }
 
     @GetMapping("/cantInfectados/{especieId}")
     fun cantidadDeVectoresInfectados( @PathVariable especieId: Long ) = especieService.cantidadDeInfectados(especieId)

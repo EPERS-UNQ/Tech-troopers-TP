@@ -25,7 +25,7 @@ class PatogenoDTO ( val id: Long?,
 
     fun aModelo(): Patogeno {
         val patogeno = Patogeno()
-        // patogeno.id  = this.id  // se deberia hacer un setter o no se deberia colocar, ya que se genera automaticamente en el back?
+        patogeno.setId(this.id)
         patogeno.tipo                 = this.tipo
         patogeno.capContagioHumano    = this.contagioHumano
         patogeno.capContagioAnimal    = this.contagioAnimal

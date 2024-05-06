@@ -16,10 +16,10 @@ class PatogenoControllerREST( private val patogenoService: PatogenoService ) {
     fun actualizarPatogeno( @RequestBody patogenoDTO: PatogenoDTO) = patogenoService.updatear(patogenoDTO.aModelo())
 
     @GetMapping("/{patogenoId}")
-    fun recuperarPatogeno( @PathVariable patogenoId: Long ) = PatogenoDTO.desdeModelo(patogenoService.recuperar(patogenoId))
+    fun recuperarPatogeno( @PathVariable patogenoId: Long ) = patogenoService.recuperar(patogenoId).aDTO()
 
     @GetMapping("/todosLosPatogenos")
-    fun recuperarTodosLosPatogenos() = patogenoService.recuperarTodos().map { patogeno -> PatogenoDTO.desdeModelo(patogeno) }
+    fun recuperarTodosLosPatogenos() = patogenoService.recuperarTodos().map { patogeno -> patogeno.aDTO() }
 
     @PostMapping("/agregarEspecie/{patogenoId}/{nombreEspecie}/{ubicacionId}")
     fun agregarEspecie( @PathVariable patogenoId: Long, nombreEspecie: String, ubicacionId: Long ) = patogenoService.agregarEspecie(patogenoId, nombreEspecie, ubicacionId)
@@ -28,6 +28,6 @@ class PatogenoControllerREST( private val patogenoService: PatogenoService ) {
     fun esPandemia( @PathVariable especieId: Long ) = patogenoService.esPandemia(especieId)
 
     //@GetMapping("/especiesDePatogeno")
-    //fun especiesDePatogeno() = patogenoService.especiesDePatogeno().map { especie -> EspecieDTO.desdeModelo(especie) }
+    //fun especiesDePatogeno() = patogenoService.especiesDePatogeno().map { especie -> especie.aDTO() }
 
 }
