@@ -19,8 +19,7 @@ class MutacionServiceImpl() : MutacionService {
 
     override fun agregarMutacion(especieId: Long, mutacion: Mutacion) {
 
-        val especie = especieDAO.findByIdOrNull(especieId)!!
-
+        var especie = especieDAO.findByIdOrNull(especieId)
         if (especie == null) {
             throw NoExisteLaEspecie()
         }

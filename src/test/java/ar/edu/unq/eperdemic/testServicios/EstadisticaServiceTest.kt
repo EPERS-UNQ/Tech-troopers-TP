@@ -67,14 +67,14 @@ class EstadisticaServiceTest {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         servicePatogeno.crear(patogeno)
 
-        especie  = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
+        especie  = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
 
     }
 
     @Test
     fun testEspecieLider() {
 
-        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
+        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId()!!)
 
         serviceVector.crear(humano2)
         serviceVector.crear(golondrina)
@@ -88,8 +88,8 @@ class EstadisticaServiceTest {
 
     @Test
     fun testDeLosLideres() {
-        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
-        especie3 = servicePatogeno.agregarEspecie(patogeno.getId(), "Adenovirus", ubicacion.getId())
+        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId()!!)
+        especie3 = servicePatogeno.agregarEspecie(patogeno.getId(), "Adenovirus", ubicacion.getId()!!)
         humano3  = Vector("Bautista", ubicacion, TipoVector.HUMANO)
         insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
         insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
@@ -151,7 +151,7 @@ class EstadisticaServiceTest {
     @Test
     fun testReporteDeContagios() {
 
-        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
+        especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId()!!)
         insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
         insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
         serviceVector.crear(insecto)

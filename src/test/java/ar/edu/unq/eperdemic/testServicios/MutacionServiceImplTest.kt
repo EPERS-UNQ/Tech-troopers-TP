@@ -44,14 +44,16 @@ class MutacionServiceImplTest {
     lateinit var rabia: Patogeno
     lateinit var china: Ubicacion
     lateinit var corea: Ubicacion
+    lateinit var japon: Ubicacion
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
     lateinit var cromaColera: Especie
     lateinit var mecaViruela: Especie
     lateinit var roboRabia: Especie
-    var bioalteracionMecanica : Mutacion = BioalteracionMecanica(TipoVector.ANIMAL)
-    var supresionBiomecanica : Mutacion = SupresionBiomecanica(35)
+    lateinit var supresionBiomecanica: Mutacion
+    lateinit var bioalteracionMecanica: Mutacion
+
 
     @BeforeEach
     fun crearModelo() {
@@ -60,13 +62,17 @@ class MutacionServiceImplTest {
         colera = Patogeno("Colera", 90, 5, 1, 60, 95)
         viruela = Patogeno("Viruela", 70, 10, 15, 30, 66)
         rabia = Patogeno("Rabia",1,1,1,35,1)
-        china = Ubicacion("China")
         corea = Ubicacion("Corea")
+        japon = Ubicacion("Japon")
+        china = Ubicacion("China")
         john = Vector("John", corea, TipoVector.HUMANO)
-        viktor = Vector("Viktor", china, TipoVector.HUMANO)
-        monoAndroide = Vector("Mono-17", corea, TipoVector.ANIMAL)
+        viktor = Vector("Viktor", japon, TipoVector.HUMANO)
+        monoAndroide = Vector("Mono-17", china, TipoVector.ANIMAL)
+        supresionBiomecanica = SupresionBiomecanica(35)
+        bioalteracionMecanica = BioalteracionMecanica(TipoVector.ANIMAL)
 
         servicioUbicacion.crear(corea)
+        servicioUbicacion.crear(japon)
         servicioUbicacion.crear(china)
         servicioPatogeno.crear(colera)
         servicioPatogeno.crear(viruela)
@@ -75,9 +81,9 @@ class MutacionServiceImplTest {
         servicioVector.crear(viktor)
         servicioVector.crear(monoAndroide)
 
-        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", china.getId())
-        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", china.getId())
-        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", corea.getId())
+        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", china.getId()!!)
+        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", japon.getId()!!)
+        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", corea.getId()!!)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -104,7 +110,9 @@ class MutacionServiceImplTest {
     fun seAgregaUnaNuevaMutacionAUnaEspecie() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+        val MecaViruela = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
+        Assertions.assertEquals(2, supresionBiomecanica.getId()!!)
         Assertions.assertEquals(1, mecaViruela.cantidadDeMutaciones())
         Assertions.assertTrue(mecaViruela.tieneLaMutacion(supresionBiomecanica))
 
@@ -126,7 +134,7 @@ class MutacionServiceImplTest {
 //    }
 
     @AfterEach
-    fun borrarRegistros() {
+    fun tearDown() {
         dataService.cleanAll()
     }
 

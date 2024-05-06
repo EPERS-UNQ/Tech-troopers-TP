@@ -8,13 +8,13 @@ class Ubicacion() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    private var id: Long? = null
 
     @Column(unique = true)
     private var nombre: String? = null
 
-    fun getId(): Long {
-        return this.id!!
+    fun getId(): Long? {
+        return this.id
     }
 
     constructor(nombre: String) : this() {

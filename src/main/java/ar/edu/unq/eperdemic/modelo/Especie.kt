@@ -19,13 +19,13 @@ class Especie() {
     var paisDeOrigen: String? = null
 
     @ManyToMany(mappedBy = "especies", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var vectores:  MutableSet<Vector> = HashSet()
+    var vectores: MutableSet<Vector> = HashSet()
 
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var posiblesMutaciones: MutableSet<Mutacion> = HashSet()
+    @ManyToMany(mappedBy = "especies_mutadas", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var posibles_mutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String) : this() {
         if (nombre.isBlank()){
@@ -68,15 +68,15 @@ class Especie() {
     }
 
     fun cantidadDeMutaciones(): Int {
-        return posiblesMutaciones.size
+        return this.posibles_mutaciones.size
     }
 
     fun agregarNuevaMutacionPosible(mutacion : Mutacion) {
-        posiblesMutaciones.add(mutacion)
+        this.posibles_mutaciones.add(mutacion)
     }
 
     fun tieneLaMutacion(mutacion: Mutacion) : Boolean {
-        return posiblesMutaciones.contains(mutacion)
+        return this.posibles_mutaciones.contains(mutacion)
     }
 
 }

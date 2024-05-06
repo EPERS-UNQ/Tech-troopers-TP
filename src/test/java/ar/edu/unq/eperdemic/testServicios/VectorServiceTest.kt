@@ -56,7 +56,7 @@ class VectorServiceTest {
 
         servicePatogeno.crear(patogeno)
 
-        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
+        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
