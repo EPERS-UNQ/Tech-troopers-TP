@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
+import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
+import ar.edu.unq.eperdemic.controller.dto.VectorDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.*
@@ -36,13 +38,16 @@ open class Vector() {
     fun getId(): Long {
         return this.id!!
     }
+    fun setId(idNew: Long){
+        this.id = idNew
+    }
 
     fun getTipo(): TipoVector {
         return this.tipo
     }
 
-    fun setId(idNew: Long){
-        this.id = idNew
+    fun setTipo(nuevoTipo: TipoVector) {
+        this.tipo = nuevoTipo
     }
 
     fun estaInfectado(): Boolean{
@@ -77,4 +82,11 @@ open class Vector() {
     fun estaInfectadoCon(especie: Especie): Boolean {
         return especies.contains(especie)
     }
+
+    fun aDTO(): VectorDTO? {
+        var especiesDTO : List<EspecieDTO> = especies.map { especie -> especie!!.aDTO()!! }
+        return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
+import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -38,6 +40,9 @@ class Especie() {
     fun getId(): Long? {
         return this.id
     }
+    fun setId(nuevoId: Long?) {
+        this.id = nuevoId
+    }
 
     fun agregarVector(vector: Vector) {
         vectores.add(vector)
@@ -53,6 +58,10 @@ class Especie() {
 
     fun nombrePatogeno(): String {
         return this.patogeno.toString()
+    }
+
+    fun aDTO(): EspecieDTO? {
+        return EspecieDTO(this.getId(), this.nombre, this.paisDeOrigen, this.patogeno!!.aDTO())
     }
 
 }

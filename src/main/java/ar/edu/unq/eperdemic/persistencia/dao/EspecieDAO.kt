@@ -13,7 +13,7 @@ interface EspecieDAO : CrudRepository<Especie, Long> {
                 from Especie e 
                 where e.patogeno.id = ?1 
                 order by e.nombre 
-            """
+        """
     )
     fun especiesDelPatogenoId(patogenoId: Long, direccion: String, pageable: Pageable): List<Especie>
 

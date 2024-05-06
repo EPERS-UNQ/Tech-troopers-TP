@@ -8,16 +8,6 @@ import org.springframework.data.repository.CrudRepository
 
 interface EstadisticaDAO : CrudRepository<Especie, Long> {
 
-//    @Query(
-//            """
-//              select e
-//              from Especie e
-//              join e.vectores v
-//              where v.tipo = 'HUMANO'
-//              group by e
-//              order by count(v) desc
-//            """
-//    )
     fun findTopByVectoresTipoOrderByVectoresDesc(tipo: TipoVector): Especie
 
     @Query(

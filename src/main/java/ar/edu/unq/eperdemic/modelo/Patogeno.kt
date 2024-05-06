@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import javax.persistence.*
@@ -73,6 +74,12 @@ class Patogeno() {
 
     private fun esCampoValido(campoAComprobar : Int) : Boolean {
         return (campoAComprobar > 0) && (campoAComprobar < 101)
+    }
+
+
+    fun aDTO(): PatogenoDTO? {
+        return PatogenoDTO(this.getId(), this.tipo, this.cap_contagio_humano, this.cap_contagio_animal,
+                           this.cap_contagio_insecto, this.defensa, this.cap_de_biomecanizacion)
     }
 
 }
