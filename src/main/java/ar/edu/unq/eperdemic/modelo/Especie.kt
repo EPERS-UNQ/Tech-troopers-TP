@@ -24,7 +24,7 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var posiblesMutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String) : this() {

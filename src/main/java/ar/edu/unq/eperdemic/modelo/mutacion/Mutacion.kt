@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract class Mutacion() {
 
     @Id
