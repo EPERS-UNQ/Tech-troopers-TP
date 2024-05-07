@@ -20,7 +20,10 @@ class MutacionServiceImpl() : MutacionService {
     override fun agregarMutacion(especieId: Long, mutacion: Mutacion) {
 
         val especie = especieDAO.findByIdOrNull(especieId)
-        mutacion.mutarLaEspecie(especie!!)
+        if (especie == null) {
+            throw NoExisteLaEspecie()
+        }
+        mutacion.mutarLaEspecie(especie)
         mutacionDAO.save(mutacion)
         especieDAO.save(especie)
     }

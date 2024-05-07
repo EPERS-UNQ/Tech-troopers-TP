@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.AleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
@@ -59,9 +60,9 @@ class MutacionServiceImplTest {
     fun crearModelo() {
 
         dataService = DataServiceImpl(HibernateDataDAO())
-        colera = Patogeno("Colera", 90, 5, 1, 60, 95)
-        viruela = Patogeno("Viruela", 70, 10, 15, 30, 66)
-        rabia = Patogeno("Rabia",1,1,1,35,1)
+        colera = Patogeno("Colera", 90, 5, 1, 60, 45)
+        viruela = Patogeno("Viruela", 90, 10, 15, 30, 30)
+        rabia = Patogeno("Rabia",1,1,1,35,10)
         corea = Ubicacion("Corea")
         japon = Ubicacion("Japon")
         china = Ubicacion("China")
@@ -74,20 +75,20 @@ class MutacionServiceImplTest {
         servicioUbicacion.crear(corea)
         servicioUbicacion.crear(japon)
         servicioUbicacion.crear(china)
-        servicioPatogeno.crear(colera)
         servicioPatogeno.crear(viruela)
+        servicioPatogeno.crear(colera)
         servicioPatogeno.crear(rabia)
         servicioVector.crear(john)
         servicioVector.crear(viktor)
         servicioVector.crear(monoAndroide)
 
-        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", china.getId()!!)
-        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", japon.getId()!!)
-        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", corea.getId()!!)
+        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", corea.getId()!!)
+        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId()!!)
+        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
 
         random = RandomGenerator.getInstance()
-        random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
+        random.setStrategy(AleatorioStrategy())
+        random.setNumeroGlobal(1)
 
     }
 
@@ -132,11 +133,19 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(otraRoboRabia.tieneLaMutacion(bioalteracionMecanica))
 
     }
-//
-//    @Test
-//    fun unVectorMutaConExitoLuegoDeContagiarAOtro() {
-//        servicioVector.infectar()
-//    }
+
+    @Test
+    fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val johnMutado = servicioVector.recuperar(john.getId())
+
+        Assertions.assertTrue(johnMutado.tieneUnaMutacion())
+        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+
+    }
 
 
     @AfterEach

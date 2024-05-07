@@ -86,9 +86,6 @@ class Especie() {
 
     fun tieneLaMutacion(mutacion: Mutacion) : Boolean {
         val id = mutacion.getId()
-        if (id == null) {
-            throw NoExisteLaUbicacion()
-        }
         val resultado = posibles_mutaciones.any { it.getId() == id }
         return resultado
     }

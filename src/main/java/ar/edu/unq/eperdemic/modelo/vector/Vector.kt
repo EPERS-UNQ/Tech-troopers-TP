@@ -76,7 +76,7 @@ open class Vector() {
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
 
-        if (vector.defiendeContra(especie.defensaDeEspecie()) &&
+        if (!vector.defiendeContra(especie.defensaDeEspecie()) &&
             random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
             if (random.porcentajeExistoso(porcentajeDeMutacionExitoso)) {
@@ -95,10 +95,13 @@ open class Vector() {
     }
 
     private fun defiendeContra(defensaDeLaEspecie : Int): Boolean {
-        return this.defensaDeSupresionBiomecanica() < defensaDeLaEspecie
+        return this.defensaDeSupresionBiomecanica() > defensaDeLaEspecie
     }
 
     private fun defensaDeSupresionBiomecanica(): Int {
+        if (mutaciones.isEmpty()) {
+            return 0
+        }
         return mutaciones.maxOf { it.potencia() }
     }
 
@@ -117,6 +120,14 @@ open class Vector() {
 
     fun eliminarEspecie(especie : Especie) {
         especies.remove(especie)
+    }
+
+    fun tieneUnaMutacion(): Boolean {
+        return mutaciones.isNotEmpty()
+    }
+
+    fun estaMutadoCon(unaMutacion : Mutacion): Boolean{
+        return mutaciones.any { it.getId() == unaMutacion.getId() }
     }
 
 }
