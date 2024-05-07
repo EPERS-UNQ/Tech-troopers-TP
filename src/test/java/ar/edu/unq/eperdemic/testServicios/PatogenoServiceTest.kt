@@ -127,7 +127,7 @@ class PatogenoServiceTest {
         servicioPatogeno.crear(covid)
         servicioVector.crear(pedro)
 
-        val especie: Especie = servicioPatogeno.agregarEspecie(covid.getId(), "Virus", corea.getId())
+        val especie: Especie = servicioPatogeno.agregarEspecie(covid.getId(), "Virus", corea.getId()!!)
         val cantidadDeEspecies = servicioPatogeno.recuperar(covid.getId())!!.cantidadDeEspecies
 
         Assertions.assertEquals(1, cantidadDeEspecies)
@@ -142,11 +142,11 @@ class PatogenoServiceTest {
         servicioVector.crear(pedro)
         servicioVector.crear(pepe)
 
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId()!!)
 
         val especiesPagina1 = servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.ASCENDENTE, 1, 2)
         Assertions.assertTrue(
@@ -168,11 +168,11 @@ class PatogenoServiceTest {
         servicioVector.crear(pedro)
         servicioVector.crear(pepe)
 
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId())
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId()!!)
 
         val especiesPagina1 = servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.DESCENDENTE, 1, 2)
         Assertions.assertTrue(
@@ -219,7 +219,7 @@ class PatogenoServiceTest {
         servicioPatogeno.crear(salmonella)
         servicioVector.crear(pedro)
 
-        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
+        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
 
         servicioVector.infectar(pedro.getId(),enterica.getId()!!)
 
@@ -234,7 +234,7 @@ class PatogenoServiceTest {
         servicioVector.crear(pepe)
         servicioVector.crear(pedro)
 
-        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
+        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
 
         servicioVector.infectar(pepe.getId(),enterica.getId()!!)
         servicioVector.infectar(pedro.getId(),enterica.getId()!!)
@@ -249,7 +249,7 @@ class PatogenoServiceTest {
         Assertions.assertThrows(NoHayVectorException::class.java) {
             servicioPatogeno.crear(salmonella)
             servicioUbicacion.crear(corea)
-            servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
+            servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
         }
 
     }
@@ -268,7 +268,7 @@ class PatogenoServiceTest {
      */
 
     @AfterEach
-    fun borrarRegistros() {
+    fun tearDown() {
         dataService.cleanAll()
     }
 

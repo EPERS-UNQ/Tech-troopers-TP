@@ -20,6 +20,6 @@ class EstadisticaControllerREST ( private val estadisticaService: EstadisticaSer
     fun especiesLideres( @PathVariable direccion: String, pagina: Int, cantPorPagina: Int ) = estadisticaService.lideres(enumValueOf<Direccion>(direccion), pagina, cantPorPagina)
 
     @GetMapping("/reporteDeContagios/{nombreUbicacion}")
-    fun reporteDeContagios( @PathVariable nombreUbicacion: String ) = estadisticaService.reporteDeContagios(nombreUbicacion)
+    fun reporteDeContagios( @PathVariable nombreUbicacion: String ) = estadisticaService.reporteDeContagios(nombreUbicacion).aDTO()
 
 }

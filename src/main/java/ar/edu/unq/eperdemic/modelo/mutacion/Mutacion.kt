@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo.mutacion
 
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
@@ -10,7 +11,10 @@ abstract class Mutacion() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected var id: Long? = null
+    private var id: Long? = null
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    var especies_mutadas: MutableSet<Vector> = HashSet()
 
     abstract fun atributo() : Any
 
@@ -19,5 +23,9 @@ abstract class Mutacion() {
     abstract fun potencia() : Int
 
     abstract fun eliminarEspeciesInferiores(vector : Vector)
+
+    fun getId() : Long? {
+        return this.id
+    }
 
 }

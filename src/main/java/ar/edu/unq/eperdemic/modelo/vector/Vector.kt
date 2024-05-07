@@ -76,12 +76,11 @@ open class Vector() {
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
 
-
         if (vector.defiendeContra(especie.defensaDeEspecie()) &&
             random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
             if (random.porcentajeExistoso(porcentajeDeMutacionExitoso)) {
-                this.mutarConMutacionRandom(especie.posiblesMutaciones.toList()) // Refactor del nombre????
+                this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
             }
         }
     }
@@ -112,11 +111,11 @@ open class Vector() {
     }
 
     fun aDTO(): VectorDTO? {
-        var especiesDTO : List<EspecieDTO> = especies.map { especie -> especie!!.aDTO()!! }
+        val especiesDTO : List<EspecieDTO> = especies.map { especie -> especie!!.aDTO()!! }
         return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
     }
 
-    fun eleminarEspecie(especie : Especie) {
+    fun eliminarEspecie(especie : Especie) {
         especies.remove(especie)
     }
 

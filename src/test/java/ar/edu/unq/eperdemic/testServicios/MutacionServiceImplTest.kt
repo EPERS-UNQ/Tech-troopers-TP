@@ -44,14 +44,16 @@ class MutacionServiceImplTest {
     lateinit var rabia: Patogeno
     lateinit var china: Ubicacion
     lateinit var corea: Ubicacion
+    lateinit var japon: Ubicacion
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
     lateinit var cromaColera: Especie
     lateinit var mecaViruela: Especie
     lateinit var roboRabia: Especie
-    lateinit var supresionBiomecanica : Mutacion
-    lateinit var bioalteracionMecanica : Mutacion
+    lateinit var supresionBiomecanica: Mutacion
+    lateinit var bioalteracionMecanica: Mutacion
+
 
     @BeforeEach
     fun crearModelo() {
@@ -60,15 +62,17 @@ class MutacionServiceImplTest {
         colera = Patogeno("Colera", 90, 5, 1, 60, 95)
         viruela = Patogeno("Viruela", 70, 10, 15, 30, 66)
         rabia = Patogeno("Rabia",1,1,1,35,1)
-        china = Ubicacion("China")
         corea = Ubicacion("Corea")
+        japon = Ubicacion("Japon")
+        china = Ubicacion("China")
         john = Vector("John", corea, TipoVector.HUMANO)
-        viktor = Vector("Viktor", china, TipoVector.HUMANO)
-        monoAndroide = Vector("Mono-17", corea, TipoVector.ANIMAL)
-        bioalteracionMecanica = BioalteracionGenetica(TipoVector.ANIMAL)
+        viktor = Vector("Viktor", japon, TipoVector.HUMANO)
+        monoAndroide = Vector("Mono-17", china, TipoVector.ANIMAL)
         supresionBiomecanica = SupresionBiomecanica(35)
+        bioalteracionMecanica = BioalteracionGenetica(TipoVector.ANIMAL)
 
         servicioUbicacion.crear(corea)
+        servicioUbicacion.crear(japon)
         servicioUbicacion.crear(china)
         servicioPatogeno.crear(colera)
         servicioPatogeno.crear(viruela)
@@ -77,9 +81,9 @@ class MutacionServiceImplTest {
         servicioVector.crear(viktor)
         servicioVector.crear(monoAndroide)
 
-        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", china.getId())
-        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", china.getId())
-        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", corea.getId())
+        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", china.getId()!!)
+        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", japon.getId()!!)
+        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", corea.getId()!!)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -89,37 +93,40 @@ class MutacionServiceImplTest {
 
     @Test
     fun seTrataDeAgregarUnaNuevaMutacionAUnaEspecieQueNoExiste() {
+
         Assertions.assertThrows(NoExisteLaEspecie::class.java) {
             servicioMutacion.agregarMutacion(17, supresionBiomecanica)
         }
     }
 
-//    @Test
-//    fun inicialmenteUnaEspecieNoTieneMutacionesPosibles() {
-//
-//        Assertions.assertEquals(0, mecaViruela.cantidadDeMutaciones())
-//
-//    }
+    @Test
+    fun inicialmenteUnaEspecieNoTieneMutacionesPosibles() {
+
+        Assertions.assertEquals(0, mecaViruela.cantidadDeMutaciones())
+
+    }
 
     @Test
     fun seAgregaUnaNuevaMutacionAUnaEspecie() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+        val otraMecaViruela = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
+        Assertions.assertEquals(2, supresionBiomecanica.getId()!!)
         Assertions.assertEquals(1, mecaViruela.cantidadDeMutaciones())
         Assertions.assertTrue(mecaViruela.tieneLaMutacion(supresionBiomecanica))
 
     }
 
-//    @Test
-//    fun unaEspeciePuedeTenerVariasMutacionesPosibles() {
-//
-//        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
-//        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
-//
-//        Assertions.assertEquals(2, mecaViruela.cantidadDeMutaciones())
-//
-//    }
+    @Test
+    fun unaEspeciePuedeTenerVariasMutacionesPosibles() {
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+
+        Assertions.assertEquals(2, mecaViruela.cantidadDeMutaciones())
+
+    }
 //
 //    @Test
 //    fun unVectorMutaConExitoLuegoDeContagiarAOtro() {
@@ -127,7 +134,7 @@ class MutacionServiceImplTest {
 //    }
 
     @AfterEach
-    fun borrarRegistros() {
+    fun tearDown() {
         dataService.cleanAll()
     }
 

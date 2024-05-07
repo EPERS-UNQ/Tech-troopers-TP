@@ -2,15 +2,23 @@ package ar.edu.unq.eperdemic.modelo.mutacion
 
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import javax.persistence.Entity
 
-class BioalteracionGenetica(val tipoVector : TipoVector) : Mutacion(){
+@Entity
+class BioalteracionGenetica() : Mutacion() {
+
+    lateinit var tipoNuevo : TipoVector
+
+    constructor(nuevoTipoDeVector : TipoVector) : this() { //AGREGAR RESTRICCIÓN DE TIPO.
+        this.tipoNuevo = nuevoTipoDeVector
+    }
 
     override fun atributo(): Any {
-        return tipoVector
+        return this.tipoNuevo
     }
 
     override fun habilitaContagiarA(vector: TipoVector) : Boolean {
-        return this.tipoVector == vector
+        return this.tipoNuevo == vector
     }
 
     override fun potencia(): Int {

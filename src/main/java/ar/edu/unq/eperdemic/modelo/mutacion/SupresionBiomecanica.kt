@@ -2,18 +2,15 @@ package ar.edu.unq.eperdemic.modelo.mutacion
 
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import javax.persistence.Entity
 
-class SupresionBiomecanica(val potencia : Int) : Mutacion(){ //AGREGAR RESTRICCIÓN DEL 1 AL 100.
+@Entity
+class SupresionBiomecanica() : Mutacion(){
 
-    override fun eliminarEspeciesInferiores(vector : Vector) {
+    var potencia : Int = 0
 
-        val especies = vector.especies
-
-        for (e in especies) {
-            if (e.defensaDeEspecie() < potencia)
-                vector.eleminarEspecie(e)
-        }
-
+    constructor(potenciaDeSupresion : Int) : this() { //AGREGAR RESTRICCIÓN DEL 1 AL 100.
+        this.potencia = potenciaDeSupresion
     }
 
     override fun atributo(): Any {
@@ -26,6 +23,17 @@ class SupresionBiomecanica(val potencia : Int) : Mutacion(){ //AGREGAR RESTRICCI
 
     override fun potencia(): Int {
         return potencia
+    }
+
+    override fun eliminarEspeciesInferiores(vector : Vector) {
+
+        val especies = vector.especies
+
+        for (e in especies) {
+            if (e.defensaDeEspecie() < potencia)
+                vector.eliminarEspecie(e)
+        }
+
     }
 
 }

@@ -71,7 +71,7 @@ class EspecieServiceImplTest {
 
         servicePatogeno.crear(patogeno)
 
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
 
     }
 
@@ -101,7 +101,7 @@ class EspecieServiceImplTest {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
 
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId())
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId()!!)
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
@@ -137,7 +137,7 @@ class EspecieServiceImplTest {
     fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
         Assertions.assertThrows(PersistenceException::class.java){
-            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
+            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
         }
     }
 
