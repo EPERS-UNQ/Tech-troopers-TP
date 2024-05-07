@@ -61,7 +61,7 @@ class MutacionServiceImplTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
         colera = Patogeno("Colera", 90, 5, 1, 30, 45)
-        viruela = Patogeno("Viruela", 90, 80, 15, 40, 35)
+        viruela = Patogeno("Viruela", 90, 80, 15, 15, 35)
         rabia = Patogeno("Rabia",1,1,1,35,10)
         corea = Ubicacion("Corea")
         japon = Ubicacion("Japon")
@@ -191,7 +191,7 @@ class MutacionServiceImplTest {
     }
 
     @Test
-    fun unVectorMutadoConBioalteracionMecanicaPuedeContagiarAUnTipoDeVectorNuevo() {
+    fun unVectorMutadoConBioalteracionMecanicaHabilitaAContagiarAUnTipoDeVectorNuevo() {
 
         random.setStrategy(NoAleatorioStrategy())
         random.setBooleanoGlobal(true)
@@ -218,7 +218,7 @@ class MutacionServiceImplTest {
     }
 
     @Test
-    fun cuandoUnVectorMutaConSupresionBiomecanicaElimanaLaEspecieConBajaDefensa() {
+    fun cuandoUnVectorMutaConSupresionBiomecanicaElimanaLasEspeciesConBajaDefensa() {
 
         random.setStrategy(NoAleatorioStrategy())
         random.setBooleanoGlobal(true)
@@ -238,14 +238,33 @@ class MutacionServiceImplTest {
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val johnMutado = servicioVector.recuperar(john.getId())
-        val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
-        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.tieneUnaMutacion())
         Assertions.assertTrue(johnMutado.estaMutadoCon(supresionBiomecanica))
         Assertions.assertEquals(2, johnMutado.enfermedadesDelVector().size)
         Assertions.assertTrue(johnMutado.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.estaInfectadoCon(roboRabia))
+
+    }
+
+    @Test
+    fun cuandoUnVectorMutaConSupresionBiomecanicaNoPuedeSerInfectadoConEspeciesDeBajaDefensa() {
+
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val johnMutado = servicioVector.recuperar(john.getId())
+
+        Assertions.assertTrue(johnMutado.tieneUnaMutacion())
+        Assertions.assertTrue(johnMutado.estaMutadoCon(supresionBiomecanica))
+
+        servicioVector.infectar(john.getId(),cromaColera.getId()!!)
+
+        Assertions.assertFalse(john.estaInfectadoCon(cromaColera))
 
     }
 

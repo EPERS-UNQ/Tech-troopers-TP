@@ -59,8 +59,10 @@ open class Vector() {
     }
 
     open fun infectar(especie: Especie) {
-        this.especies.add(especie)
-        especie.agregarVector(this)
+        if (!this.defiendeContra(especie)){
+            this.especies.add(especie)
+            especie.agregarVector(this)
+        }
     }
 
     fun contargiarA(vector: Vector){
@@ -76,8 +78,7 @@ open class Vector() {
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
 
-        if (!vector.defiendeContra(especie.defensaDeEspecie()) &&
-            random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
+        if (!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
             if (random.porcentajeExistoso(porcentajeDeMutacionExitoso)) {
                 this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
@@ -94,8 +95,8 @@ open class Vector() {
         }
     }
 
-    private fun defiendeContra(defensaDeLaEspecie : Int): Boolean {
-        return this.defensaDeSupresionBiomecanica() > defensaDeLaEspecie
+    private fun defiendeContra(especie : Especie): Boolean {
+        return this.defensaDeSupresionBiomecanica() > especie.defensaDeEspecie()
     }
 
     private fun defensaDeSupresionBiomecanica(): Int {

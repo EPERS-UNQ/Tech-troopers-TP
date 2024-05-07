@@ -72,7 +72,6 @@ class VectorModeloTest {
 
     @Test
     fun unVectorEstaInfectadoConUnaEspecieEnParticular() {
-        val viruela = Especie()
 
         humano.infectar(viruela)
 
@@ -141,7 +140,7 @@ class VectorModeloTest {
 
     @Test
     fun seSabeLasEnfermedadesDeUnVector(){
-        val viruela = Especie()
+
         humano.infectar(viruela)
 
         Assertions.assertEquals(viruela.hashCode(), humano.enfermedadesDelVector().first().hashCode())
