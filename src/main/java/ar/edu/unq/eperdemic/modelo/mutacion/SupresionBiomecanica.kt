@@ -27,7 +27,7 @@ class SupresionBiomecanica() : Mutacion(){
 
     override fun eliminarEspeciesInferiores(vector : Vector) {
 
-        val especies = vector.especies
+        val especies = vector.enfermedadesDelVector()
 
         for (e in especies) {
             if (e.defensaDeEspecie() < potencia)

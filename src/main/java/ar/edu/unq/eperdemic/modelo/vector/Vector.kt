@@ -110,7 +110,7 @@ open class Vector() {
     }
 
     fun estaInfectadoCon(especie: Especie): Boolean {
-        return especies.contains(especie)
+        return especies.any { it.getId() == especie.getId()}
     }
 
     fun aDTO(): VectorDTO? {

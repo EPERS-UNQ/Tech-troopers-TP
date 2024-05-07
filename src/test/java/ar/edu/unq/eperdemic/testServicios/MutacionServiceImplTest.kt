@@ -60,8 +60,8 @@ class MutacionServiceImplTest {
     fun crearModelo() {
 
         dataService = DataServiceImpl(HibernateDataDAO())
-        colera = Patogeno("Colera", 90, 5, 1, 60, 45)
-        viruela = Patogeno("Viruela", 90, 10, 15, 30, 30)
+        colera = Patogeno("Colera", 90, 5, 1, 30, 45)
+        viruela = Patogeno("Viruela", 90, 80, 15, 40, 35)
         rabia = Patogeno("Rabia",1,1,1,35,10)
         corea = Ubicacion("Corea")
         japon = Ubicacion("Japon")
@@ -133,6 +133,45 @@ class MutacionServiceImplTest {
     }
 
     @Test
+    fun unVectorNoMutaSinoLograContagiarAOtroVector() {
+
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(false)
+        random.setNumeroGlobal(1)
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
+        val johnNoMutado = servicioVector.recuperar(john.getId())
+        val viktorNoContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertFalse(viktorNoContagiado.estaInfectadoCon(mecaViruelaConMutacion))
+        Assertions.assertFalse(johnNoMutado.tieneUnaMutacion())
+
+    }
+
+    @Test
+    fun unVectorNoMutaConExitoLuegoDeContagiarAOtroVector() {
+
+        random.setStrategy(AleatorioStrategy())
+        viruela.cap_de_biomecanizacion = 1
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
+        val johnNoMutado = servicioVector.recuperar(john.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
+        Assertions.assertFalse(johnNoMutado.tieneUnaMutacion()) // a veces si muta :)
+
+    }
+
+    @Test
     fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
 
         random.setStrategy(NoAleatorioStrategy())
@@ -143,12 +182,74 @@ class MutacionServiceImplTest {
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val johnMutado = servicioVector.recuperar(john.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.tieneUnaMutacion())
         Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
 
     }
 
+    @Test
+    fun unVectorMutadoConBioalteracionMecanicaPuedeContagiarAUnTipoDeVectorNuevo() {
+
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val johnMutado = servicioVector.recuperar(john.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
+        Assertions.assertFalse(monoAndroide.estaInfectadoCon(mecaViruela))
+        Assertions.assertTrue(johnMutado.tieneUnaMutacion())
+        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+
+        random.setStrategy(AleatorioStrategy())
+
+        servicioUbicacion.mover(john.getId(),china.getId()!!)
+
+        val monoAndroideContagiado = servicioVector.recuperar(monoAndroide.getId())
+
+        Assertions.assertTrue(monoAndroideContagiado.estaInfectadoCon(mecaViruela)) // esto tambien es random :p
+        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+
+    }
+
+    @Test
+    fun cuandoUnVectorMutaConSupresionBiomecanicaElimanaLaEspecieConBajaDefensa() {
+
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
+
+        servicioVector.infectar(john.getId(), roboRabia.getId()!!)
+        servicioVector.infectar(john.getId(), cromaColera.getId()!!)
+
+        val johnContagiado = servicioVector.recuperar(john.getId())
+
+        Assertions.assertTrue(johnContagiado.estaInfectadoCon(mecaViruela))
+        Assertions.assertTrue(johnContagiado.estaInfectadoCon(roboRabia))
+        Assertions.assertTrue(johnContagiado.estaInfectadoCon(cromaColera))
+        Assertions.assertEquals(3, johnContagiado.enfermedadesDelVector().size)
+
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
+        val johnMutado = servicioVector.recuperar(john.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
+        Assertions.assertTrue(johnMutado.tieneUnaMutacion())
+        Assertions.assertTrue(johnMutado.estaMutadoCon(supresionBiomecanica))
+        Assertions.assertEquals(2, johnMutado.enfermedadesDelVector().size)
+        Assertions.assertTrue(johnMutado.estaInfectadoCon(mecaViruela))
+        Assertions.assertTrue(johnMutado.estaInfectadoCon(roboRabia))
+
+    }
 
     @AfterEach
     fun tearDown() {
