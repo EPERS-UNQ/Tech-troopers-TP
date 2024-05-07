@@ -89,8 +89,8 @@ open class Vector() {
         if(mutacionesDeEspecie.isNotEmpty()) {
             val random = RandomGenerator.getInstance()
             val mutacionElegida = random.getElementoRandomEnLista(mutacionesDeEspecie)
-            this.mutaciones.add(mutacionElegida)
             mutacionElegida.eliminarEspeciesInferiores(this)
+            this.mutaciones.add(mutacionElegida)
         }
     }
 
