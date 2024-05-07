@@ -27,7 +27,7 @@ class UbicacionServiceImp() : UbicacionService {
         try {
             newUbicacion = ubicacionDAO.save(ubicacion)
         } catch (e: DataIntegrityViolationException) {
-            throw ErrorNombre(ubicacion.getNombre()!!)
+            throw ErrorNombre("El nombre de la ubicacion ya existe")
         }
         return newUbicacion
     }

@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.modelo.mutacion
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
