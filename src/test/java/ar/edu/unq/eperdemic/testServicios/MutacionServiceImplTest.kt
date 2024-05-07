@@ -208,13 +208,11 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(johnMutado.tieneUnaMutacion())
         Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
 
-        random.setStrategy(AleatorioStrategy())
-
         servicioUbicacion.mover(john.getId(),china.getId()!!)
 
         val monoAndroideContagiado = servicioVector.recuperar(monoAndroide.getId())
 
-        Assertions.assertTrue(monoAndroideContagiado.estaInfectadoCon(mecaViruela)) // esto tambien es random :p
+        Assertions.assertTrue(monoAndroideContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
 
     }
