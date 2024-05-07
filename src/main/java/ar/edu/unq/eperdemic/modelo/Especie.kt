@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -25,7 +26,7 @@ class Especie() {
     @ManyToOne
     var patogeno: Patogeno? = null
 
-    @ManyToMany(mappedBy = "especies_mutadas", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var posibles_mutaciones: MutableSet<Mutacion> = HashSet()
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
@@ -75,16 +76,21 @@ class Especie() {
         return patogeno!!.cap_de_biomecanizacion
     }
 
-    fun cantidadDeMutaciones(): Int {
-        return this.posibles_mutaciones.size
-    }
-
     fun agregarNuevaMutacionPosible(mutacion : Mutacion) {
         this.posibles_mutaciones.add(mutacion)
     }
 
+    fun cantidadDeMutaciones(): Int {
+        return this.posibles_mutaciones.size
+    }
+
     fun tieneLaMutacion(mutacion: Mutacion) : Boolean {
-        return this.posibles_mutaciones.contains(mutacion)
+        val id = mutacion.getId()
+        if (id == null) {
+            throw NoExisteLaUbicacion()
+        }
+        val resultado = posibles_mutaciones.any { it.getId() == id }
+        return resultado
     }
 
 }

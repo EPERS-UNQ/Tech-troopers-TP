@@ -110,21 +110,26 @@ class MutacionServiceImplTest {
     fun seAgregaUnaNuevaMutacionAUnaEspecie() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
+
         val otraMecaViruela = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
-        Assertions.assertEquals(2, supresionBiomecanica.getId()!!)
-        Assertions.assertEquals(1, mecaViruela.cantidadDeMutaciones())
-        Assertions.assertTrue(mecaViruela.tieneLaMutacion(supresionBiomecanica))
+        Assertions.assertEquals(1, supresionBiomecanica.getId()!!)
+        Assertions.assertEquals(1, otraMecaViruela.cantidadDeMutaciones())
+        Assertions.assertTrue(otraMecaViruela.tieneLaMutacion(supresionBiomecanica))
 
     }
 
     @Test
     fun unaEspeciePuedeTenerVariasMutacionesPosibles() {
 
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(roboRabia.getId()!!, supresionBiomecanica)
+        servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionMecanica)
 
-        Assertions.assertEquals(2, mecaViruela.cantidadDeMutaciones())
+        val otraRoboRabia = servicioEspecie.recuperar(roboRabia.getId()!!)
+
+        Assertions.assertEquals(2, otraRoboRabia.cantidadDeMutaciones())
+        Assertions.assertTrue(otraRoboRabia.tieneLaMutacion(supresionBiomecanica))
+        Assertions.assertTrue(otraRoboRabia.tieneLaMutacion(bioalteracionMecanica))
 
     }
 //
@@ -136,7 +141,7 @@ class MutacionServiceImplTest {
 
     @AfterEach
     fun tearDown() {
-        dataService.cleanAll()
+       dataService.cleanAll()
     }
 
 
