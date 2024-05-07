@@ -87,8 +87,6 @@ class MutacionServiceImplTest {
         roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
 
         random = RandomGenerator.getInstance()
-        random.setStrategy(AleatorioStrategy())
-        random.setNumeroGlobal(1)
 
     }
 
@@ -112,11 +110,11 @@ class MutacionServiceImplTest {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
 
-        val otraMecaViruela = servicioEspecie.recuperar(mecaViruela.getId()!!)
+        val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
         Assertions.assertEquals(1, supresionBiomecanica.getId()!!)
-        Assertions.assertEquals(1, otraMecaViruela.cantidadDeMutaciones())
-        Assertions.assertTrue(otraMecaViruela.tieneLaMutacion(supresionBiomecanica))
+        Assertions.assertEquals(1, mecaViruelaConMutacion.cantidadDeMutaciones())
+        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(supresionBiomecanica))
 
     }
 
@@ -126,16 +124,20 @@ class MutacionServiceImplTest {
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, supresionBiomecanica)
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionMecanica)
 
-        val otraRoboRabia = servicioEspecie.recuperar(roboRabia.getId()!!)
+        val roboRabiaConMutacion = servicioEspecie.recuperar(roboRabia.getId()!!)
 
-        Assertions.assertEquals(2, otraRoboRabia.cantidadDeMutaciones())
-        Assertions.assertTrue(otraRoboRabia.tieneLaMutacion(supresionBiomecanica))
-        Assertions.assertTrue(otraRoboRabia.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertEquals(2, roboRabiaConMutacion.cantidadDeMutaciones())
+        Assertions.assertTrue(roboRabiaConMutacion.tieneLaMutacion(supresionBiomecanica))
+        Assertions.assertTrue(roboRabiaConMutacion.tieneLaMutacion(bioalteracionMecanica))
 
     }
 
     @Test
     fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
+
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)

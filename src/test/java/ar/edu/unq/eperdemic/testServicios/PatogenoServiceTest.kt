@@ -60,7 +60,7 @@ class PatogenoServiceTest {
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
+        random.setNumeroGlobal(1)
 
     }
 

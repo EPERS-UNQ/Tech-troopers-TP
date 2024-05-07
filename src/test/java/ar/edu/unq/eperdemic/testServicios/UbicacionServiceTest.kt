@@ -78,7 +78,7 @@ class UbicacionServiceTest {
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
+        random.setNumeroGlobal(1)
 
     }
 
@@ -153,7 +153,7 @@ class UbicacionServiceTest {
 
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
-        random.setNumeroGlobal(1)
+        random.setNumeroGlobal(2)
         serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
         serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
         val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))

@@ -10,7 +10,7 @@ class NoAleatorioStrategy : RandomStrategy {
     }
 
     override fun <T> getElementoRandomEnLista(list: List<T>, num: Int): T {
-        return list[num]
+        return list[num-1]
     }
 
     override fun porcentajeExitoso(porcentaje: Int, bool: Boolean): Boolean {

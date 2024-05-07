@@ -65,7 +65,7 @@ class RandomGeneratorTest {
         randomGenerator.setNumeroGlobal(1)
         val list = listOf("a", "b", "c")
         val randomElement = randomGenerator.getElementoRandomEnLista(list)
-        Assertions.assertTrue(randomElement == "b")
+        Assertions.assertTrue(randomElement == "a")
     }
 
     @Test

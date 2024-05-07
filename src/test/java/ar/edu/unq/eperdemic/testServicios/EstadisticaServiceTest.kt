@@ -53,7 +53,7 @@ class EstadisticaServiceTest {
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
+        random.setNumeroGlobal(1)
 
         ubicacion = Ubicacion("Argentina")
         serviceUbicacion.crear(ubicacion)

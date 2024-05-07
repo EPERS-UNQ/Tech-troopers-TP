@@ -63,7 +63,7 @@ class EspecieServiceImplTest {
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
-        random.setNumeroGlobal(0)
+        random.setNumeroGlobal(1)
         random.setBooleanoGlobal(true)
 
         serviceUbicacion.crear(ubicacion)
