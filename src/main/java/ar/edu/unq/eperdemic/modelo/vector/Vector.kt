@@ -75,14 +75,12 @@ open class Vector() {
     private fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator.getInstance()
 
-//        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
-//        val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
-//        random.porcentajeExistoso(porcentajeDeContagioExitoso)
-//        random.porcentajeExistoso(porcentajeDeMutacionExitoso)
+        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
+        val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
 
-        if (!vector.defiendeContra(especie) && especie.porcentajeDeContagioExitoso(vector.getTipo())) {
+        if (!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
             vector.infectar(especie)
-            if (especie.porcentajeDeMutacionExitoso()) {
+            if (random.porcentajeAltExistoso(porcentajeDeMutacionExitoso)) {
                 this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
             }
         }

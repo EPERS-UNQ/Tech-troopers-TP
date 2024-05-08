@@ -20,4 +20,8 @@ class AleatorioStrategy : RandomStrategy {
         throw IllegalArgumentException("El porcentaje debe estar entre 1 y 110.")
     }
 
+    override fun porcentajeAltExitoso(porcentaje: Int, booleanGlobal: Boolean): Boolean {
+        return this.porcentajeExitoso(porcentaje, booleanGlobal)
+    }
+
 }

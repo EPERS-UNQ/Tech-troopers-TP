@@ -6,14 +6,12 @@ import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
-import ar.edu.unq.eperdemic.modelo.RandomGenerator.AleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.mutacion.BioalteracionGenetica
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
-import ar.edu.unq.eperdemic.modelo.mutacion.mutacionStrategy.MutacionStrategy
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.*
@@ -139,7 +137,10 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorNoMutaSinoLograContagiarAOtroVector() {
 
+        random.setBooleanoGlobal(false)
+
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
@@ -149,19 +150,17 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
         Assertions.assertFalse(viktorNoContagiado.estaInfectadoCon(mecaViruelaConMutacion))
         Assertions.assertFalse(johnNoMutado.tieneUnaMutacion())
-
     }
 
     @Test
     fun unVectorNoMutaConExitoLuegoDeContagiarAOtroVector() {
+        random.setBooleanoAltGlobal(false)
 
         servicioVector.infectar(john.getId()!!, mecaViruela.getId()!!)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
-
-        mecaViruelaConMutacion.setStrategy(MutacionStrategy()) // REVISAR
 
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
@@ -170,7 +169,7 @@ class MutacionServiceImplTest {
 
         Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
-        Assertions.assertFalse(johnNoMutado.tieneUnaMutacion()) // a veces si muta :)
+        Assertions.assertFalse(johnNoMutado.tieneUnaMutacion())
 
     }
 

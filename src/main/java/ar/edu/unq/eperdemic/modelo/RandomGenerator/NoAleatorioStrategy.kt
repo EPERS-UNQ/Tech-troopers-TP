@@ -17,4 +17,8 @@ class NoAleatorioStrategy : RandomStrategy {
         return bool
     }
 
+    override fun porcentajeAltExitoso(porcentaje: Int, booleanGlobal: Boolean): Boolean {
+        return this.porcentajeExitoso(porcentaje, booleanGlobal)
+    }
+
 }
