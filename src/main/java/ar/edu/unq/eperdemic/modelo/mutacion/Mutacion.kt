@@ -13,9 +13,6 @@ abstract class Mutacion() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
 
-    @ManyToMany(mappedBy = "posibles_mutaciones",cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    var especies_mutadas: MutableSet<Especie> = HashSet()
-
     abstract fun atributo() : Any
 
     abstract fun habilitaContagiarA(vector: TipoVector) : Boolean
@@ -29,7 +26,6 @@ abstract class Mutacion() {
     }
 
     fun mutarLaEspecie(especieMutada : Especie) {
-        especies_mutadas.add(especieMutada)
         especieMutada.agregarNuevaMutacionPosible(this)
     }
 

@@ -13,6 +13,7 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.mutacion.BioalteracionGenetica
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
+import ar.edu.unq.eperdemic.modelo.mutacion.mutacionStrategy.MutacionStrategy
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.*
@@ -87,6 +88,9 @@ class MutacionServiceImplTest {
         roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
 
         random = RandomGenerator.getInstance()
+        random.setStrategy(NoAleatorioStrategy())
+        random.setBooleanoGlobal(true)
+        random.setNumeroGlobal(1)
 
     }
 
@@ -135,10 +139,6 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorNoMutaSinoLograContagiarAOtroVector() {
 
-        random.setStrategy(NoAleatorioStrategy())
-        random.setBooleanoGlobal(false)
-        random.setNumeroGlobal(1)
-
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
@@ -155,13 +155,16 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorNoMutaConExitoLuegoDeContagiarAOtroVector() {
 
-        random.setStrategy(AleatorioStrategy())
-        viruela.cap_de_biomecanizacion = 1
+        servicioVector.infectar(john.getId()!!, mecaViruela.getId()!!)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
+
+        mecaViruelaConMutacion.setStrategy(MutacionStrategy()) // REVISAR
+
+        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+
         val johnNoMutado = servicioVector.recuperar(john.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
@@ -173,10 +176,6 @@ class MutacionServiceImplTest {
 
     @Test
     fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
-
-        random.setStrategy(NoAleatorioStrategy())
-        random.setBooleanoGlobal(true)
-        random.setNumeroGlobal(1)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
@@ -192,10 +191,6 @@ class MutacionServiceImplTest {
 
     @Test
     fun unVectorMutadoConBioalteracionMecanicaHabilitaAContagiarAUnTipoDeVectorNuevo() {
-
-        random.setStrategy(NoAleatorioStrategy())
-        random.setBooleanoGlobal(true)
-        random.setNumeroGlobal(1)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
@@ -219,10 +214,6 @@ class MutacionServiceImplTest {
 
     @Test
     fun cuandoUnVectorMutaConSupresionBiomecanicaElimanaLasEspeciesConBajaDefensa() {
-
-        random.setStrategy(NoAleatorioStrategy())
-        random.setBooleanoGlobal(true)
-        random.setNumeroGlobal(1)
 
         servicioVector.infectar(john.getId(), roboRabia.getId()!!)
         servicioVector.infectar(john.getId(), cromaColera.getId()!!)
@@ -249,10 +240,6 @@ class MutacionServiceImplTest {
 
     @Test
     fun cuandoUnVectorMutaConSupresionBiomecanicaNoPuedeSerInfectadoConEspeciesDeBajaDefensa() {
-
-        random.setStrategy(NoAleatorioStrategy())
-        random.setBooleanoGlobal(true)
-        random.setNumeroGlobal(1)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)

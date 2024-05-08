@@ -9,7 +9,7 @@ class SupresionBiomecanica() : Mutacion(){
 
     var potencia : Int = 0
 
-    constructor(potenciaDeSupresion : Int) : this() { //AGREGAR RESTRICCIÓN DEL 1 AL 100.
+    constructor(potenciaDeSupresion : Int) : this() { // AGREGAR RESTRICCIÓN DEL 1 AL 100.
         this.potencia = potenciaDeSupresion
     }
 

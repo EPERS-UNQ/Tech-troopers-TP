@@ -43,18 +43,4 @@ class MutacionModeloTest {
         Assertions.assertEquals(TipoVector.INSECTO, bioalteracionMecanica.atributo())
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

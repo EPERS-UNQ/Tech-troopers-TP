@@ -3,10 +3,14 @@ package ar.edu.unq.eperdemic.modelo
 import ar.edu.unq.eperdemic.controller.dto.EspecieDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
+import ar.edu.unq.eperdemic.modelo.mutacion.mutacionStrategy.MutacionStandarStrategy
+import ar.edu.unq.eperdemic.modelo.mutacion.mutacionStrategy.MutacionStrategy
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
+import kotlin.jvm.Transient
 
 
 @Entity
@@ -29,6 +33,9 @@ class Especie() {
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var posibles_mutaciones: MutableSet<Mutacion> = HashSet()
 
+    @Transient
+    var mutacionStrategia: MutacionStrategy = MutacionStandarStrategy()
+
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
         if (nombre.isBlank()){
             throw ErrorNombre("El nombre de la especie no puede ser vacio.")
@@ -46,6 +53,10 @@ class Especie() {
     }
     fun setId(nuevoId: Long?) {
         this.id = nuevoId
+    }
+
+    fun setStrategy(newStrategy: MutacionStrategy){
+        this.mutacionStrategia = newStrategy
     }
 
     fun agregarVector(vector: Vector) {
@@ -88,6 +99,16 @@ class Especie() {
         val id = mutacion.getId()
         val resultado = posibles_mutaciones.any { it.getId() == id }
         return resultado
+    }
+
+    fun porcentajeDeContagioExitoso(tipoVector: TipoVector): Boolean {
+        val random = RandomGenerator.getInstance()
+        val porcentajeDeContagioExitoso = random.getNumeroRandom() + this.capacidadDeContagioPara(tipoVector)
+        return random.porcentajeExistoso(porcentajeDeContagioExitoso)
+    }
+
+    fun porcentajeDeMutacionExitoso(): Boolean {
+        return this.mutacionStrategia.porcentajeDeMutacionExitoso(this)
     }
 
 }

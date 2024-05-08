@@ -75,12 +75,14 @@ open class Vector() {
     private fun intentarInfectar(vector: Vector, especie: Especie){
         val random = RandomGenerator.getInstance()
 
-        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
-        val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
+//        val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
+//        val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
+//        random.porcentajeExistoso(porcentajeDeContagioExitoso)
+//        random.porcentajeExistoso(porcentajeDeMutacionExitoso)
 
-        if (!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
+        if (!vector.defiendeContra(especie) && especie.porcentajeDeContagioExitoso(vector.getTipo())) {
             vector.infectar(especie)
-            if (random.porcentajeExistoso(porcentajeDeMutacionExitoso)) {
+            if (especie.porcentajeDeMutacionExitoso()) {
                 this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
             }
         }
@@ -96,7 +98,7 @@ open class Vector() {
     }
 
     private fun defiendeContra(especie : Especie): Boolean {
-        return this.defensaDeSupresionBiomecanica() > especie.defensaDeEspecie()
+        return this.defensaDeSupresionBiomecanica() >= especie.defensaDeEspecie()
     }
 
     private fun defensaDeSupresionBiomecanica(): Int {
