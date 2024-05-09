@@ -66,8 +66,7 @@ open class Vector() {
     }
 
     fun contargiarA(vector: Vector){
-        if (this.tipo.puedeContagiarA(vector.getTipo()) ||
-            mutaciones.any { it.habilitaContagiarA(vector.getTipo()) }){
+        if (this.puedeContagiarA(vector)){
             this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }
         }
     }
@@ -86,7 +85,12 @@ open class Vector() {
         }
     }
 
-    private fun mutarConMutacionRandom(mutacionesDeEspecie: List<Mutacion>) {
+    fun puedeContagiarA(vector: Vector) : Boolean {
+        return this.tipo.puedeContagiarA(vector.getTipo()) ||
+                this.mutaciones.any { it.habilitaContagiarA(vector.getTipo()) }
+    }
+
+    fun mutarConMutacionRandom(mutacionesDeEspecie: List<Mutacion>) {
         if(mutacionesDeEspecie.isNotEmpty()) {
             val random = RandomGenerator.getInstance()
             val mutacionElegida = random.getElementoRandomEnLista(mutacionesDeEspecie)
@@ -119,8 +123,8 @@ open class Vector() {
         return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
     }
 
-    fun eliminarEspecie(especie : Especie) {
-        especies.remove(especie)
+    fun eliminarEspecie(especie : Especie) : Boolean {
+        return especies.remove(especie)
     }
 
     fun tieneUnaMutacion(): Boolean {

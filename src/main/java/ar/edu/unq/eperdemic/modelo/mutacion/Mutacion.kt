@@ -21,6 +21,10 @@ abstract class Mutacion() {
 
     abstract fun eliminarEspeciesInferiores(vector : Vector)
 
+    fun setId(id: Long) {
+        this.id = id
+    }
+
     fun getId() : Long? {
         return this.id
     }
