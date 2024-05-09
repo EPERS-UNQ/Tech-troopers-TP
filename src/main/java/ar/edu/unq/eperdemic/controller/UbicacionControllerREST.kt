@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 class UbicacionControllerREST( private val ubicacionService: UbicacionService ) {
 
     @PostMapping("/")
-    fun crearUbicacion( @RequestBody ubicacion: UbicacionCreacionDTO) = ubicacionService.crear(ubicacion.aModelo())
+    fun crearUbicacion( @RequestBody ubicacion: UbicacionCreacionDTO) = ubicacionService.crear(ubicacion.aModelo()).aDTO()
 
     @PutMapping("/actualizarUbicacion")
     fun actualizarUbicacion( @RequestBody ubicacion: UbicacionDTO ) = ubicacionService.updatear(ubicacion.aModelo())
@@ -29,7 +29,7 @@ class UbicacionControllerREST( private val ubicacionService: UbicacionService ) 
     @GetMapping("/todasLasUbicaciones")
     fun recuperarTodasLasUbicaciones() = ubicacionService.recuperarTodos().map { ubicacion -> ubicacion.aDTO() }
 
-    @PutMapping("/moverUbicacion")
+    @PostMapping("/moverUbicacion")
     fun moverUbicacion( @RequestBody vectorId: Long, ubicacionId: Long ) = ubicacionService.mover(vectorId, ubicacionId)
 
     @PutMapping("/expandirUbicacion/{ubicacionId}")

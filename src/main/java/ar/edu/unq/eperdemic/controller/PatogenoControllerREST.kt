@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.controller
 
 import ar.edu.unq.eperdemic.controller.dto.dtoCreacion.PatogenoCreacionDTO
 import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
+import ar.edu.unq.eperdemic.controller.dto.dtoCreacion.EspecieCreacionDTO
 import ar.edu.unq.eperdemic.modelo.Direccion
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.web.bind.annotation.*
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 class PatogenoControllerREST( private val patogenoService: PatogenoService ) {
 
     @PostMapping("/")
-    fun crearPatogeno( @RequestBody patogeno: PatogenoCreacionDTO) = patogenoService.crear(patogeno.aModelo())
+    fun crearPatogeno( @RequestBody patogeno: PatogenoCreacionDTO) = patogenoService.crear(patogeno.aModelo()).aDTO()
 
     @PutMapping("/actualizarPatogeno")
     fun actualizarPatogeno( @RequestBody patogenoDTO: PatogenoDTO) = patogenoService.updatear(patogenoDTO.aModelo())
@@ -23,8 +24,8 @@ class PatogenoControllerREST( private val patogenoService: PatogenoService ) {
     @GetMapping("/todosLosPatogenos")
     fun recuperarTodosLosPatogenos() = patogenoService.recuperarTodos().map { patogeno -> patogeno.aDTO() }
 
-    @PostMapping("/agregarEspecie/{patogenoId}/{nombreEspecie}/{ubicacionId}")
-    fun agregarEspecie( @PathVariable patogenoId: Long, nombreEspecie: String, ubicacionId: Long ) = patogenoService.agregarEspecie(patogenoId, nombreEspecie, ubicacionId)
+    @PostMapping("/agregarEspecie")
+    fun agregarEspecie( @RequestBody especieCreacionDTO: EspecieCreacionDTO) = patogenoService.agregarEspecie(especieCreacionDTO.patogenoId, especieCreacionDTO.nombre, especieCreacionDTO.ubicacionId).aDTO()
 
     @GetMapping("/esPandemia/{especieId}")
     fun esPandemia( @PathVariable especieId: Long ) = patogenoService.esPandemia(especieId)

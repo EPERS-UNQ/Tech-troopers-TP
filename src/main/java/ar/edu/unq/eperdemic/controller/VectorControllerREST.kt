@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 class VectorControllerREST( private val vectorService: VectorService ) {
 
     @PostMapping("/")
-    fun crearVector( @RequestBody vectorDTO: VectorCreacionDTO) = vectorService.crear(vectorDTO.aModelo())
+    fun crearVector( @RequestBody vectorDTO: VectorCreacionDTO) = vectorService.crear(vectorDTO.aModelo()).aDTO()
 
     @PutMapping("/actualizarVector")
     fun actualizarVector( @RequestBody vectorDTO: VectorDTO ) = vectorService.updatear(vectorDTO.aModelo())
@@ -26,6 +26,6 @@ class VectorControllerREST( private val vectorService: VectorService ) {
     fun infectarVector( @RequestBody vectorId: Long, especieId: Long) = vectorService.infectar(vectorId, especieId)
 
     @PutMapping("/enfermedades/{vectorId}")
-    fun enfermedades( @PathVariable vectorId: Long ) = vectorService.enfermedades(vectorId)
+    fun enfermedades( @PathVariable vectorId: Long ) = vectorService.enfermedades(vectorId).map { especie -> especie.aDTO() }
 
 }
