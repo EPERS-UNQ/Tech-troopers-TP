@@ -48,7 +48,7 @@ class MutacionModeloTest {
 
         bioalteracionMecanica = BioalteracionGenetica(TipoVector.INSECTO)
         bioalteracionMecanica.setId(1)
-        supresionBiomecanica = SupresionBiomecanica(100)
+        supresionBiomecanica = SupresionBiomecanica(30)
         supresionBiomecanica.setId(2)
 
         random = RandomGenerator.getInstance()
