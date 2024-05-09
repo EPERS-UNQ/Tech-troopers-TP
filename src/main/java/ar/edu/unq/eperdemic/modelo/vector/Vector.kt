@@ -127,7 +127,7 @@ open class Vector() {
         return especies.remove(especie)
     }
 
-    fun tieneUnaMutacion(): Boolean {
+    fun estaMutado(): Boolean {
         return mutaciones.isNotEmpty()
     }
 
