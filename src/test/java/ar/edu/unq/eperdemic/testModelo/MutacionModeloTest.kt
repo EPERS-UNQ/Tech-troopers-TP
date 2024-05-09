@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.testModelo
 
+import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
@@ -91,6 +92,17 @@ class MutacionModeloTest {
         supresionBiomecanica.eliminarEspeciesInferiores(vector1)
 
         Assertions.assertFalse(vector1.estaInfectadoCon(especie))
+    }
+
+    @Test
+    fun errorAlIntentarInicializarUnaMutacionConUnValorDePotenciaNoPermitido(){
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            SupresionBiomecanica(101)
+        }
+
+        Assertions.assertThrows(LimiteDeCampoErroneo::class.java) {
+            SupresionBiomecanica(-50)
+        }
     }
 
 }

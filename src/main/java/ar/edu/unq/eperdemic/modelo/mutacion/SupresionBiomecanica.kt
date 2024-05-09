@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo.mutacion
 
+import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.Entity
@@ -10,6 +11,9 @@ class SupresionBiomecanica() : Mutacion(){
     var potencia : Int = 0
 
     constructor(potenciaDeSupresion : Int) : this() { // AGREGAR RESTRICCIÓN DEL 1 AL 100.
+        if (!(esCampoValido(potenciaDeSupresion))) {
+            throw LimiteDeCampoErroneo()
+        }
         this.potencia = potenciaDeSupresion
     }
 
@@ -36,6 +40,10 @@ class SupresionBiomecanica() : Mutacion(){
             }
         }
 
+    }
+
+    private fun esCampoValido(campoAComprobar : Int) : Boolean {
+        return (campoAComprobar > 0) && (campoAComprobar < 101)
     }
 
 }

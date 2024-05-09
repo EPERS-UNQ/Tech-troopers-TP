@@ -44,7 +44,9 @@ class MutacionServiceImplTest {
     lateinit var rabia: Patogeno
     lateinit var china: Ubicacion
     lateinit var corea: Ubicacion
+    lateinit var tailandia: Ubicacion
     lateinit var japon: Ubicacion
+    lateinit var indonesia: Ubicacion
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
@@ -52,7 +54,7 @@ class MutacionServiceImplTest {
     lateinit var mecaViruela: Especie
     lateinit var roboRabia: Especie
     lateinit var supresionBiomecanica: Mutacion
-    lateinit var bioalteracionMecanica: Mutacion
+    lateinit var bioalteracionGenetica: Mutacion
 
 
     @BeforeEach
@@ -64,15 +66,19 @@ class MutacionServiceImplTest {
         rabia = Patogeno("Rabia",1,1,1,35,10)
         corea = Ubicacion("Corea")
         japon = Ubicacion("Japon")
+        tailandia = Ubicacion("Tailandia")
+        indonesia = Ubicacion("Indonesia")
         china = Ubicacion("China")
         john = Vector("John", corea, TipoVector.HUMANO)
         viktor = Vector("Viktor", japon, TipoVector.HUMANO)
         monoAndroide = Vector("Mono-17", china, TipoVector.ANIMAL)
         supresionBiomecanica = SupresionBiomecanica(35)
-        bioalteracionMecanica = BioalteracionGenetica(TipoVector.ANIMAL)
+        bioalteracionGenetica = BioalteracionGenetica(TipoVector.ANIMAL)
 
         servicioUbicacion.crear(corea)
+        servicioUbicacion.crear(indonesia)
         servicioUbicacion.crear(japon)
+        servicioUbicacion.crear(tailandia)
         servicioUbicacion.crear(china)
         servicioPatogeno.crear(viruela)
         servicioPatogeno.crear(colera)
@@ -88,6 +94,7 @@ class MutacionServiceImplTest {
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
         random.setBooleanoGlobal(true)
+        random.setBooleanoAltGlobal(true)
         random.setNumeroGlobal(1)
 
     }
@@ -124,13 +131,13 @@ class MutacionServiceImplTest {
     fun unaEspeciePuedeTenerVariasMutacionesPosibles() {
 
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, supresionBiomecanica)
-        servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica)
 
         val roboRabiaConMutacion = servicioEspecie.recuperar(roboRabia.getId()!!)
 
         Assertions.assertEquals(2, roboRabiaConMutacion.cantidadDeMutaciones())
         Assertions.assertTrue(roboRabiaConMutacion.tieneLaMutacion(supresionBiomecanica))
-        Assertions.assertTrue(roboRabiaConMutacion.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertTrue(roboRabiaConMutacion.tieneLaMutacion(bioalteracionGenetica))
 
     }
 
@@ -139,7 +146,7 @@ class MutacionServiceImplTest {
 
         random.setBooleanoGlobal(false)
 
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
 
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
@@ -147,7 +154,7 @@ class MutacionServiceImplTest {
         val johnNoMutado = servicioVector.recuperar(john.getId())
         val viktorNoContagiado = servicioVector.recuperar(viktor.getId())
 
-        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionGenetica))
         Assertions.assertFalse(viktorNoContagiado.estaInfectadoCon(mecaViruelaConMutacion))
         Assertions.assertFalse(johnNoMutado.tieneUnaMutacion())
     }
@@ -158,7 +165,7 @@ class MutacionServiceImplTest {
 
         servicioVector.infectar(john.getId()!!, mecaViruela.getId()!!)
 
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
@@ -167,7 +174,7 @@ class MutacionServiceImplTest {
         val johnNoMutado = servicioVector.recuperar(john.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
-        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionMecanica))
+        Assertions.assertTrue(mecaViruelaConMutacion.tieneLaMutacion(bioalteracionGenetica))
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertFalse(johnNoMutado.tieneUnaMutacion())
 
@@ -176,7 +183,7 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
 
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val johnMutado = servicioVector.recuperar(john.getId())
@@ -184,14 +191,14 @@ class MutacionServiceImplTest {
 
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.tieneUnaMutacion())
-        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionGenetica))
 
     }
 
     @Test
-    fun unVectorMutadoConBioalteracionMecanicaHabilitaAContagiarAUnTipoDeVectorNuevo() {
+    fun unVectorHumanoMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorAnimal() {
 
-        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionMecanica)
+        servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
         servicioUbicacion.mover(john.getId(),japon.getId()!!)
 
         val johnMutado = servicioVector.recuperar(john.getId())
@@ -200,14 +207,64 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
         Assertions.assertFalse(monoAndroide.estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.tieneUnaMutacion())
-        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionGenetica))
 
         servicioUbicacion.mover(john.getId(),china.getId()!!)
 
         val monoAndroideContagiado = servicioVector.recuperar(monoAndroide.getId())
 
         Assertions.assertTrue(monoAndroideContagiado.estaInfectadoCon(mecaViruela))
-        Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionMecanica))
+
+    }
+
+    @Test
+    fun unVectorAnimalMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorAnimal() {
+
+        val gatoAndroide = servicioVector.crear(Vector("Stray", tailandia, TipoVector.ANIMAL))
+
+        servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica)
+        servicioUbicacion.mover(monoAndroide.getId(), japon.getId()!!)
+
+        val monoMutado = servicioVector.recuperar(monoAndroide.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(roboRabia))
+        Assertions.assertFalse(gatoAndroide.estaInfectadoCon(roboRabia))
+        Assertions.assertTrue(monoMutado.tieneUnaMutacion())
+        Assertions.assertTrue(monoMutado.estaMutadoCon(bioalteracionGenetica))
+
+        servicioUbicacion.mover(monoAndroide.getId(), tailandia.getId()!!)
+
+        val gatoAndroideContagiado = servicioVector.recuperar(gatoAndroide.getId())
+
+        Assertions.assertTrue(gatoAndroideContagiado.estaInfectadoCon(roboRabia))
+
+    }
+
+    @Test
+    fun unVectorInsectoMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorInsecto() {
+
+        val turboGrillo = servicioVector.crear(Vector("Pepe", tailandia, TipoVector.INSECTO))
+        val bioMosquito = servicioVector.crear(Vector("Raul", indonesia, TipoVector.INSECTO))
+        val bioalteracionGenetica2 = BioalteracionGenetica(TipoVector.INSECTO)
+        servicioVector.infectar(bioMosquito.getId(), roboRabia.getId()!!)
+
+        servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica2)
+        servicioUbicacion.mover(bioMosquito.getId(), japon.getId()!!)
+
+        val bioMosquitoMutado = servicioVector.recuperar(bioMosquito.getId())
+        val viktorContagiado = servicioVector.recuperar(viktor.getId())
+
+        Assertions.assertTrue(viktorContagiado.estaInfectadoCon(roboRabia))
+        Assertions.assertFalse(turboGrillo.estaInfectadoCon(roboRabia))
+        Assertions.assertTrue(bioMosquitoMutado.estaInfectadoCon(roboRabia))
+        Assertions.assertTrue(bioMosquitoMutado.estaMutadoCon(bioalteracionGenetica2))
+
+        servicioUbicacion.mover(bioMosquito.getId(), tailandia.getId()!!)
+
+        val turboGrilloContagiado = servicioVector.recuperar(turboGrillo.getId())
+
+        Assertions.assertTrue(turboGrilloContagiado.estaInfectadoCon(roboRabia))
 
     }
 
