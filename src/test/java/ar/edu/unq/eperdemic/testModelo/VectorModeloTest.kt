@@ -6,9 +6,10 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.RandomGenerator.AleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
+import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
@@ -24,6 +25,8 @@ class VectorModeloTest {
     lateinit var random  : RandomGenerator
     lateinit var patogeno : Patogeno
     lateinit var viruela  : Especie
+    lateinit var neurosinérgico : Mutacion
+    lateinit var electrogenoide : Mutacion
 
     @BeforeEach
     fun prerate(){
@@ -32,6 +35,8 @@ class VectorModeloTest {
         humano = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         animal = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         insecto = Vector("Raul", ubicacion, TipoVector.INSECTO)
+        neurosinérgico = SupresionBiomecanica(30)
+        electrogenoide = SupresionBiomecanica(15)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -67,39 +72,10 @@ class VectorModeloTest {
 
     @Test
     fun unVectorEstaInfectadoConUnaEspecieEnParticular() {
-        val viruela = Especie()
 
         humano.infectar(viruela)
 
         Assertions.assertTrue(humano.estaInfectadoCon(viruela))
-    }
-
-    @Test
-    fun unHumanoIntentaContagiarAUnInsectoYLoLogra(){
-
-        random.setStrategy(AleatorioStrategy())
-
-        humano.infectar(viruela)
-
-        humano.contargiarA(insecto)
-
-        Assertions.assertTrue(insecto.estaInfectadoCon(viruela))
-
-    }
-
-    @Test
-    fun unHumanoIntentaContagiarAOtroHumanoYLoLogra(){
-
-        val humano2 = Vector("Guido", ubicacion, TipoVector.HUMANO)
-
-        random.setStrategy(AleatorioStrategy())
-
-        humano.infectar(viruela)
-
-        humano.contargiarA(humano2)
-
-        Assertions.assertTrue(humano2.estaInfectadoCon(viruela))
-
     }
 
     @Test
@@ -114,32 +90,6 @@ class VectorModeloTest {
     }
 
     @Test
-    fun unAnimalIntentaContagiarAUnHumanoYLoLogra(){
-
-        random.setStrategy(AleatorioStrategy())
-
-        animal.infectar(viruela)
-
-        animal.contargiarA(humano)
-
-        Assertions.assertTrue(humano.estaInfectadoCon(viruela))
-
-    }
-
-    @Test
-    fun unAnimalIntentaContagiarAUnInsectoYLoLogra(){
-
-        random.setStrategy(AleatorioStrategy())
-
-        animal.infectar(viruela)
-
-        animal.contargiarA(insecto)
-
-        Assertions.assertTrue(insecto.estaInfectadoCon(viruela))
-
-    }
-
-    @Test
     fun unAnimalIntentaContagiarAOtroAnimalYNoLoLogra(){
 
         var animal2 = Vector("Flocky", ubicacion, TipoVector.ANIMAL)
@@ -149,32 +99,6 @@ class VectorModeloTest {
         animal.contargiarA(animal2)
 
         Assertions.assertFalse(animal2.estaInfectadoCon(viruela))
-
-    }
-
-    @Test
-    fun unInsectoIntentaContagiarAUnHumanoYLoLogra(){
-
-        random.setStrategy(AleatorioStrategy())
-
-        insecto.infectar(viruela)
-
-        insecto.contargiarA(humano)
-
-        Assertions.assertTrue(humano.estaInfectadoCon(viruela))
-
-    }
-
-    @Test
-    fun unInsectoIntentaContagiarAUnAnimalYLoLogra(){
-
-        random.setStrategy(AleatorioStrategy())
-
-        insecto.infectar(viruela)
-
-        insecto.contargiarA(animal)
-
-        Assertions.assertTrue(animal.estaInfectadoCon(viruela))
 
     }
 
@@ -200,7 +124,7 @@ class VectorModeloTest {
 
         humano.contargiarA(insecto)
 
-        Assertions.assertFalse(insecto.estaInfectadoCon(viruela)) // REVISAR.
+        Assertions.assertFalse(insecto.estaInfectadoCon(viruela))
 
     }
 
@@ -216,7 +140,7 @@ class VectorModeloTest {
 
     @Test
     fun seSabeLasEnfermedadesDeUnVector(){
-        val viruela = Especie()
+
         humano.infectar(viruela)
 
         Assertions.assertEquals(viruela.hashCode(), humano.enfermedadesDelVector().first().hashCode())

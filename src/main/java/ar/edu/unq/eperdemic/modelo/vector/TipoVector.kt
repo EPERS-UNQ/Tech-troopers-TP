@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
-enum class TipoVector {
+enum class TipoVector() {
     HUMANO,
     ANIMAL,
     INSECTO;

@@ -1,18 +1,19 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
 
-interface UbicacionDAO {
+interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
 
-    fun crear(ubicacion: Ubicacion): Ubicacion
 
-    fun actualizar(ubicacion: Ubicacion)
+    @Query("""
+        select count(u)
+        from Ubicacion u
+    """)
+    fun countByNombre(): Int
 
-    fun recuperar(id: Long?): Ubicacion
-
-    fun recuperarTodos(): List<Ubicacion>
-
-    fun cantidadDeUbicaciones(): Int
+    @Query("select u.nombre from Ubicacion u where u.id = ?1")
     fun recuperarPorNombre(ubicacionId: Long?): String
 
 }

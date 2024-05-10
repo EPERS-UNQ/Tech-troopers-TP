@@ -4,7 +4,9 @@ class RandomGenerator private constructor() {
 
     private var strategy: RandomStrategy = AleatorioStrategy()
     private var numeroGlobal  = 1
-    private var booleanGlobal = true
+    private var booleanInfeccionGlobal = true
+    private var booleanMutacionGlobal  = true
+
 
     companion object {
         private var instance: RandomGenerator? = null
@@ -26,19 +28,27 @@ class RandomGenerator private constructor() {
     }
 
     fun setBooleanoGlobal(bool: Boolean) {
-        this.booleanGlobal = bool
+        this.booleanInfeccionGlobal = bool
+    }
+
+    fun setBooleanoAltGlobal(bool: Boolean) {
+        this.booleanMutacionGlobal = bool
     }
 
     fun getNumeroRandom(): Int {
-        return strategy.getNumeroRandom(numeroGlobal)
+        return this.strategy.getNumeroRandom(numeroGlobal)
     }
 
     fun <T> getElementoRandomEnLista(list: List<T>): T {
-        return strategy.getElementoRandomEnLista(list, numeroGlobal)
+        return this.strategy.getElementoRandomEnLista(list, numeroGlobal)
     }
 
     fun porcentajeExistoso(porcentaje: Int) : Boolean {
-        return strategy.porcentajeExistoso(porcentaje, booleanGlobal)
+        return this.strategy.porcentajeExitoso(porcentaje, booleanInfeccionGlobal)
+    }
+
+    fun porcentajeAltExistoso(porcentaje: Int): Boolean {
+        return this.strategy.porcentajeAltExitoso(porcentaje, booleanMutacionGlobal)
     }
 
 }

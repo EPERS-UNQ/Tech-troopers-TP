@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.services
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+
 interface UbicacionService {
     fun crear(ubicacion : Ubicacion) : Ubicacion
 
@@ -11,5 +12,6 @@ interface UbicacionService {
     fun recuperarTodos() : Collection<Ubicacion>
 
     fun mover(vectorId: Long, ubicacionId: Long)
+
     fun expandir(ubicacionId: Long)
 }

@@ -1,12 +1,8 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
+import org.springframework.data.repository.CrudRepository
 
-interface PatogenoDAO {
-    fun crear(patogeno: Patogeno) : Patogeno
-    fun recuperar(id: Long?): Patogeno
-    fun actualizar(patogeno: Patogeno)
-    fun recuperarATodos() : List<Patogeno>
+interface PatogenoDAO : CrudRepository<Patogeno, Long> {
 
 }

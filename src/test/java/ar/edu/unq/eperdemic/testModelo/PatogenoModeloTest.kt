@@ -45,17 +45,17 @@ class PatogenoModeloTest {
 
     @Test
     fun seSabeLaCapacidadDeContagioAHumanosDeUnPatogeno() {
-        Assertions.assertEquals(70, salmonella.capContagioHumano)
+        Assertions.assertEquals(70, salmonella.cap_contagio_humano)
     }
 
     @Test
     fun seSabeLaCapacidadDeContagioAAnimalesDeUnPatogeno() {
-        Assertions.assertEquals(10, salmonella.capContagioAnimal)
+        Assertions.assertEquals(10, salmonella.cap_contagio_animal)
     }
 
     @Test
     fun seSabeLaCapacidadDeContagioAInsectosDeUnPatogeno() {
-        Assertions.assertEquals(15, salmonella.capContagioInsecto)
+        Assertions.assertEquals(15, salmonella.cap_contagio_insecto)
     }
 
     @Test
@@ -65,7 +65,7 @@ class PatogenoModeloTest {
 
     @Test
     fun seSabeLaCapacidadDeBiomecanizacionDeUnPatogeno() {
-        Assertions.assertEquals(66, salmonella.capDeBiomecanizacion)
+        Assertions.assertEquals(66, salmonella.cap_de_biomecanizacion)
     }
 
     @Test

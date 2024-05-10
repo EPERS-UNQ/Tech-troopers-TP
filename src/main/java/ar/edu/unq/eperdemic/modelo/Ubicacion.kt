@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 
@@ -14,7 +15,10 @@ class Ubicacion() {
     private var nombre: String? = null
 
     fun getId(): Long? {
-        return this.id!!
+        return this.id
+    }
+    fun setId(nuevoId: Long) {
+        this.id = nuevoId
     }
 
     constructor(nombre: String) : this() {
@@ -31,5 +35,10 @@ class Ubicacion() {
     fun setNombre(nombre: String) {
         this.nombre = nombre
     }
+
+    fun aDTO(): UbicacionDTO? {
+        return UbicacionDTO(this.getId(), this.nombre)
+    }
+
 
 }
