@@ -44,10 +44,12 @@ class EstadisticaServiceImpl ( ) : EstadisticaService {
     }
 
     override fun reporteDeContagios(nombreDeLaUbicacion: String): ReporteDeContagios {
+        val pageable: Pageable = PageRequest.of(0, 1)
+
         return ReporteDeContagios(
                 estadisticaDAO.cantidadDeVectoresEn(nombreDeLaUbicacion),
                 estadisticaDAO.cantidadDeInfectadosEnUbicacion(nombreDeLaUbicacion),
-                estadisticaDAO.findTopEspeciePrevalente(nombreDeLaUbicacion).elementAt(0).nombre!!
+                estadisticaDAO.findTopEspeciePrevalente(nombreDeLaUbicacion, pageable).firstOrNull()!!
         )
     }
 

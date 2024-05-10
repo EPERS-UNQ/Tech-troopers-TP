@@ -55,7 +55,7 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
 
     @Query(
             """
-                select e
+                select e.nombre
                 from Especie e
                 join e.vectores v
                 where v.ubicacion.nombre = ?1
@@ -63,5 +63,5 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
                 order by count(v) desc
             """
     )
-    fun findTopEspeciePrevalente(nombreDeUbicacion: String) : List<Especie>
+    fun findTopEspeciePrevalente(nombreDeUbicacion: String, pageable: Pageable) : List<String>
 }
