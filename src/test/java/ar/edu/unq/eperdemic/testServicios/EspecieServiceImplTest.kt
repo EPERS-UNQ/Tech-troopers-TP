@@ -14,10 +14,6 @@ import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.impl.EspecieServiceImpl
-import ar.edu.unq.eperdemic.services.impl.PatogenoServiceImpl
-import ar.edu.unq.eperdemic.services.impl.UbicacionServiceImp
-import ar.edu.unq.eperdemic.services.impl.VectorServiceImp
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -26,9 +22,8 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.context.junit.jupiter.SpringExtension
-
-import javax.persistence.PersistenceException
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -136,7 +131,7 @@ class EspecieServiceImplTest {
     @Test
     fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
-        Assertions.assertThrows(PersistenceException::class.java){
+        Assertions.assertThrows(DataIntegrityViolationException::class.java){
             servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
         }
     }

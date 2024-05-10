@@ -9,7 +9,7 @@ class BioalteracionGenetica() : Mutacion() {
 
     lateinit var tipoNuevo : TipoVector
 
-    constructor(nuevoTipoDeVector : TipoVector) : this() { // AGREGAR RESTRICCIÓN DE TIPO. <- Contemplar en controller.
+    constructor(nuevoTipoDeVector : TipoVector) : this() {
         this.tipoNuevo = nuevoTipoDeVector
     }
 

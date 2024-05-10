@@ -22,14 +22,7 @@ class UbicacionServiceImp() : UbicacionService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-
-        val newUbicacion : Ubicacion
-        try {
-            newUbicacion = ubicacionDAO.save(ubicacion)
-        } catch (e: DataIntegrityViolationException) {
-            throw ErrorNombre("El nombre de la ubicacion ya existe")
-        }
-        return newUbicacion
+        return ubicacionDAO.save(ubicacion)
     }
 
     override fun updatear(ubicacion: Ubicacion) {

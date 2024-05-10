@@ -38,6 +38,7 @@ class Patogeno() {
 
     var cantidadDeEspecies: Int = 0
 
+    @Column(unique = true)
     var tipo: String? = null
 
     @Column(columnDefinition = "INT CHECK (cap_contagio_humano <= 100)")

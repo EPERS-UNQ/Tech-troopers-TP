@@ -23,10 +23,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
-
-import javax.persistence.PersistenceException
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -202,7 +201,7 @@ class UbicacionServiceTest {
 
         val ubicacion = Ubicacion("Argentina")
 
-        Assertions.assertThrows(PersistenceException::class.java){
+        Assertions.assertThrows(DataIntegrityViolationException::class.java){
             serviceUbicacion.crear(ubicacion)
         }
     }

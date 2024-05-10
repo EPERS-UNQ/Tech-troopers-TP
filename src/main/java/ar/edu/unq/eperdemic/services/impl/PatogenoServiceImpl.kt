@@ -32,13 +32,7 @@ class PatogenoServiceImpl() : PatogenoService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
-        val newPatogeno : Patogeno
-        try {
-            newPatogeno = patogenoDAO.save(patogeno)
-        } catch (e: DataIntegrityViolationException) {
-            throw ErrorNombre(patogeno.tipo!!)
-        }
-        return newPatogeno
+        return patogenoDAO.save(patogeno)
     }
 
     override fun updatear(patogeno: Patogeno) {
@@ -70,14 +64,7 @@ class PatogenoServiceImpl() : PatogenoService {
             val vectorAInfectar = RandomGenerator.getInstance().getElementoRandomEnLista(vectoresEnUbicacion)
             vectorAInfectar.infectar(especie)
             patogenoDAO.save(patogeno)
-            val newEspecie : Especie
-            try {
-                newEspecie = especieDAO.save(especie)
-            } catch (e: DataIntegrityViolationException) {
-                throw ErrorNombre(nombreEspecie)
-            }
-            return newEspecie
-
+            return especieDAO.save(especie)
     }
 
     override fun especiesDePatogeno(patogenoId: Long, direccion: Direccion, pagina: Int, cantidadPorPagina:Int): List<Especie> {
