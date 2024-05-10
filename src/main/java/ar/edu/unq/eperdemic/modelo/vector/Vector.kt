@@ -76,8 +76,10 @@ open class Vector() {
 
         val porcentajeDeContagioExitoso = random.getNumeroRandom() + especie.capacidadDeContagioPara(vector.getTipo())
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
+        val mutacionQueHabilita = this.mutaciones.find { it.habilitaContagiarA(vector.getTipo()) }
 
-        if (!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) {
+        if ((!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) &&
+            (mutacionQueHabilita == null || especie.posibles_mutaciones.contains(mutacionQueHabilita))) {
             vector.infectar(especie)
             if (random.porcentajeAltExistoso(porcentajeDeMutacionExitoso)) {
                 this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
