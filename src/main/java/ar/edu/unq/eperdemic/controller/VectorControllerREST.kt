@@ -19,7 +19,7 @@ class VectorControllerREST( private val vectorService: VectorService ) {
     @GetMapping("/{vectorId}")
     fun vectorUbicacion( @PathVariable vectorId: Long ) = vectorService.recuperar(vectorId).aDTO()
 
-    @GetMapping("/todosLasVectores")
+    @GetMapping("/todosLosVectores")
     fun recuperarTodasLasVectores() = vectorService.recuperarTodos().map { vector -> vector.aDTO() }
 
     @PutMapping("/infectar/{vectorId}/{especieId}")
