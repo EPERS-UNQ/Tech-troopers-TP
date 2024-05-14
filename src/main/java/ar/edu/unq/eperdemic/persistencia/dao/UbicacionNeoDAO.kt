@@ -3,7 +3,9 @@ package ar.edu.unq.eperdemic.persistencia.dao
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.neo4j.repository.Neo4jRepository
+import org.springframework.stereotype.Repository
 
+@Repository
 interface UbicacionNeoDAO : Neo4jRepository<Ubicacion, Long> {
 
     @Query(
