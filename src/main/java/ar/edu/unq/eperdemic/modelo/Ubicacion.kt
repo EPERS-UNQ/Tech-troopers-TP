@@ -3,8 +3,9 @@ package ar.edu.unq.eperdemic.modelo
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
+import org.springframework.data.neo4j.core.schema.Node
 
-@Entity
+@Node
 class Ubicacion() {
 
     @Id
