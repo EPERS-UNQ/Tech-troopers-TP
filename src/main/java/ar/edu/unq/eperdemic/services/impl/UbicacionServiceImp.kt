@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,10 +20,13 @@ import org.springframework.transaction.annotation.Transactional
 class UbicacionServiceImp() : UbicacionService {
 
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeoDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        return ubicacionDAO.save(ubicacion)
+        ubicacionDAO.save(ubicacion)
+        ubicacionNeoDAO.save(ubicacion)
+        return ubicacion
     }
 
     override fun updatear(ubicacion: Ubicacion) {
@@ -83,7 +87,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
-        ubicacionDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
     }
 }
 
