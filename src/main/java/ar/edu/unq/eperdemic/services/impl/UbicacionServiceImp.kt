@@ -81,6 +81,10 @@ class UbicacionServiceImp() : UbicacionService {
         }
 
     }
+
+    override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
+        ubicacionDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+    }
 }
 
 

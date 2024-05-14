@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 import org.springframework.data.neo4j.core.schema.Node
+import org.springframework.data.neo4j.core.schema.Relationship
 
 @Node
 class Ubicacion() {
@@ -14,6 +15,9 @@ class Ubicacion() {
 
     @Column(unique = true)
     private var nombre: String? = null
+
+    @Relationship(type = "CAMINO")
+    var camino: Camino? = null
 
     fun getId(): Long? {
         return this.id

@@ -3,6 +3,7 @@ package ar.edu.unq.eperdemic.services
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 
 interface UbicacionService {
+
     fun crear(ubicacion : Ubicacion) : Ubicacion
 
     fun updatear(ubicacion : Ubicacion)
@@ -14,4 +15,6 @@ interface UbicacionService {
     fun mover(vectorId: Long, ubicacionId: Long)
 
     fun expandir(ubicacionId: Long)
+
+    fun conectar(nombreDeUbicacion1:String, nombreDeUbicacion2:String, tipoCamino:String)
 }
