@@ -4,6 +4,8 @@ import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.camino.Camino
+import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -86,7 +88,8 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
-        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+        val caminoAConvertir: Camino = Camino()
+        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, caminoAConvertir.convertirACamino(tipoCamino))
     }
 
     override fun conectados(nombreDeUbicacion: String): List<Ubicacion> {

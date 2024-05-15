@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
@@ -15,14 +16,14 @@ interface Neo4jUbicacionDAO : Neo4jRepository<Ubicacion, Long> {
             MERGE (u1) - [:Camino {tipo: ${'$'} tipoCamino}] -> (u2)
         """
     )
-    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String)
+    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: TipoDeCamino)
 
     @Query(
         """
-            MATCH(c:Camino)
-            MATCH(u:Ubicacion {nombre: ${'$'}}nombreDeUbicacion)
-            MATCH (u)-[CAMINO]-(c)
-            RETURN c
+            MATCH (u1:Ubicacion)
+            MATCH (u2:Ubicacion {nombre: ${'$'}} nombreDeUbicacion)
+            MATCH (u2)-[CAMINO]-(u1)
+            RETURN u1
         """
     )
     fun caminosDesde(nombreDeUbicacion:String): List<Ubicacion>
