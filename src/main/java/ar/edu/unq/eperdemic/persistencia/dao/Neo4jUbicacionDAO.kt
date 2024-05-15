@@ -11,8 +11,8 @@ interface Neo4jUbicacionDAO : Neo4jRepository<Ubicacion, Long> {
 
     @Query(
         """
-            MERGE (u1:Ubicacion {nombre: ${'$'} nombreDeUbicacion1})
-            MERGE (u2:Ubicacion {nombre: ${'$'} nombreDeUbicacion2})
+            MATCH (u1:Ubicacion {nombre: ${'$'} nombreDeUbicacion1})
+            MATCH (u2:Ubicacion {nombre: ${'$'} nombreDeUbicacion2})
             MERGE (u1) - [:Camino {tipo: ${'$'} tipoCamino}] -> (u2)
         """
     )
@@ -22,7 +22,7 @@ interface Neo4jUbicacionDAO : Neo4jRepository<Ubicacion, Long> {
         """
             MATCH (u1:Ubicacion)
             MATCH (u2:Ubicacion {nombre: ${'$'}} nombreDeUbicacion)
-            MATCH (u2)-[CAMINO]-(u1)
+            MATCH (u2)-[CAMINO]->(u1)
             RETURN u1
         """
     )

@@ -12,7 +12,7 @@ class Camino() {
     @RelationshipId
     private var id: Long? = null
 
-    var tipo: TipoDeCamino? = null // <- Tiene que ser de tipo TipoDeCamino pero lo pongo como String por la consulta en UbicacionDAO.
+    var tipo: TipoDeCamino? = null
 
     @TargetNode
     var ubicacion: Ubicacion? = null

@@ -97,7 +97,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented") // algoritmo de dijkstra
     }
 }
 
