@@ -1,26 +1,25 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
-import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
 
 @Service
 @Transactional
 class UbicacionServiceImp() : UbicacionService {
 
     @Autowired private lateinit var ubicacionDAO: UbicacionDAO
-    @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeoDAO
+    @Autowired private lateinit var ubicacionNeoDAO: Neo4jUbicacionDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
@@ -88,6 +87,14 @@ class UbicacionServiceImp() : UbicacionService {
 
     override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
         ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+    }
+
+    override fun conectados(nombreDeUbicacion: String): List<Ubicacion> {
+        return ubicacionNeoDAO.caminosDesde(nombreDeUbicacion)
+    }
+
+    override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {
+        TODO("Not yet implemented")
     }
 }
 

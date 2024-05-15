@@ -2,11 +2,13 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.camino.Camino
 import javax.persistence.*
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 
 @Node
+@Entity
 class Ubicacion() {
 
     @Id
@@ -16,6 +18,7 @@ class Ubicacion() {
     @Column(unique = true)
     private var nombre: String? = null
 
+    @Transient
     @Relationship(type = "CAMINO")
     var camino: Camino? = null
 
