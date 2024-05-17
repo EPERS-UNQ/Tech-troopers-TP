@@ -6,7 +6,8 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.camino.Camino
 import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
-import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
+import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -56,16 +57,32 @@ class UbicacionServiceImp() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
-        vector.ubicacion = nuevaUbicacion
+        this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+                                        TipoDeCamino.puedeCruzar(vector.getTipo()))
+
+        // Aca iria el mover
+    }
+
+    fun moverHasta(vector: Vector, ubicacion: Ubicacion) {
+        vector.ubicacion = ubicacion
         vectorDAO.save(vector)
 
-        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(ubicacion.getId()!!)
 
         if (vector.estaInfectado()) {
             todosLosVectores.map {
                 vector.contargiarA(it)
                 vectorDAO.save(it)
             }
+        }
+    }
+
+    fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
+        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
+            print("UbicacionMuyLejana")
+        }
+        if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiFin, nomUbiFin, tiposPermitidos)) {
+            print("UbicacionNoAlcanzable ")
         }
     }
 
@@ -93,7 +110,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun conectados(nombreDeUbicacion: String): List<Ubicacion> {
-        return ubicacionNeoDAO.caminosDesde(nombreDeUbicacion)
+        return ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
     }
 
     override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {

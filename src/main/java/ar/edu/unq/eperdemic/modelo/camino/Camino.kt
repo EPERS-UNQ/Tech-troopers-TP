@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo.camino
 
 import ar.edu.unq.eperdemic.exceptions.ErrorTipoCaminoInvalido
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 import org.springframework.data.neo4j.core.schema.RelationshipId
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
@@ -17,6 +18,10 @@ class Camino() {
     @TargetNode
     var ubicacion: Ubicacion? = null
 
+    fun Camino(tipo: TipoDeCamino) {
+        this.tipo = tipo;
+    }
+
     fun convertirACamino(camino: String): TipoDeCamino {
         return when (camino.lowercase()) {
             "terrestre" -> TipoDeCamino.TERRESTRE
@@ -25,5 +30,4 @@ class Camino() {
             else -> { throw ErrorTipoCaminoInvalido("El tipo de camino es invalido.") }
         }
     }
-
 }
