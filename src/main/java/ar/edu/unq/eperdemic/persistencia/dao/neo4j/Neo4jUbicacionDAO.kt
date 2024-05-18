@@ -32,25 +32,32 @@ interface Neo4jUbicacionDAO : Neo4jRepository<Ubicacion, Long> {
     @Query(
         """
             MATCH (n:Ubicacion {nombre: ${'$'}} nomUbiInicio), (m:Ubicacion {nombre: ${'$'}} nomUbiFin)
-            RETURN exists((n)--(m)) AS estan_conectados
+            RETURN exists((n)-[:Camino*]->(m)) AS estan_conectados
         """
     )
     fun esUbicacionCercana(nomUbiInicio: String, nomUbiFin: String): Boolean
 
     @Query(
         """
-        MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
-        WHERE ALL(rel IN relationships((n)-[:CAMINO*]->(m)) WHERE rel.tipo IN ${'$'}tiposPermitidos)
-        RETURN EXISTS((n)-[:CAMINO*]->(m)) AS existeCamino
-    """
+            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
+            MATCH path = (n)-[:Camino*]->(m)
+            WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
+            RETURN EXISTS((n)-[:Camino*]->(m)) AS existeCamino
+        """
     )
     fun esUbicacionAlcanzable(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): Boolean
 
     @Query(
         """
-            
+            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
+            MATCH path = (n)-[:Camino*]->(m)
+            WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
+            RETURN [node IN nodes(path)] AS nombres_ubicaciones
+            ORDER BY nombres_ubicaciones
+            LIMIT 1
         """
     )
-    fun caminoIdealAlAsar(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<Ubicacion>
+    fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<Ubicacion>
 
 }
+

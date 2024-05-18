@@ -2,6 +2,8 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.exceptions.UbicacionMuyLejana
+import ar.edu.unq.eperdemic.exceptions.UbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.camino.Camino
@@ -60,10 +62,15 @@ class UbicacionServiceImp() : UbicacionService {
         this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
                                         TipoDeCamino.puedeCruzar(vector.getTipo()))
 
-        // Aca iria el mover
+        val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+            TipoDeCamino.puedeCruzar(vector.getTipo()))
+
+        for (nodo in nodosHastaDestino) {
+            this.moverHasta(vector, nodo)
+        }
     }
 
-    fun moverHasta(vector: Vector, ubicacion: Ubicacion) {
+    private fun moverHasta(vector: Vector, ubicacion: Ubicacion) {
         vector.ubicacion = ubicacion
         vectorDAO.save(vector)
 
@@ -77,12 +84,12 @@ class UbicacionServiceImp() : UbicacionService {
         }
     }
 
-    fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
+    private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
         if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
-            print("UbicacionMuyLejana")
+            throw UbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiFin, nomUbiFin, tiposPermitidos)) {
-            print("UbicacionNoAlcanzable ")
+            throw UbicacionNoAlcanzable()
         }
     }
 
