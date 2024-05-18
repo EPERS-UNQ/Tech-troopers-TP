@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
@@ -11,11 +10,10 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -28,7 +26,7 @@ class PatogenoServiceImpl() : PatogenoService {
 
     @Autowired private lateinit var patogenoDAO: PatogenoDAO
     @Autowired private lateinit var especieDAO: EspecieDAO
-    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var ubicacionDAO: UbicacionJpaDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
