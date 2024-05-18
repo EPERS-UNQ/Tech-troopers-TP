@@ -1,4 +1,4 @@
 package ar.edu.unq.eperdemic.modelo
 
-class Ubicacion {
+class UbicacionNeo4j {
 }
