@@ -12,7 +12,6 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*

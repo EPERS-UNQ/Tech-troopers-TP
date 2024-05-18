@@ -5,7 +5,6 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.camino.Camino
-import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -25,22 +24,24 @@ class UbicacionServiceImp() : UbicacionService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        ubicacionDAO.save(ubicacion)
-        ubicacionNeoDAO.save(ubicacion)
+        ubicacionDAO.save(ubicacion.aJPA())
+        ubicacionNeoDAO.save(ubicacion.aNeo4j())
         return ubicacion
     }
 
     override fun updatear(ubicacion: Ubicacion) {
-        ubicacionDAO.save(ubicacion)
+        ubicacionDAO.save(ubicacion.aJPA())
+        ubicacionNeoDAO.save(ubicacion.aNeo4j())
     }
 
     override fun recuperar(id: Long): Ubicacion {
 
         val ubicacion = ubicacionDAO.findByIdOrNull(id)
+        val neo = ubicacionNeoDAO.findBy()
         if (ubicacion == null) {
             throw NoExisteLaUbicacion()
         }
-        return ubicacion
+        return ubicacion.aModelo()
     }
 
     override fun recuperarTodos(): Collection<Ubicacion> {

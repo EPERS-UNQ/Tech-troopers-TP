@@ -1,10 +1,11 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJPA
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.jpa.repository.Query
 
-interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
+interface UbicacionDAO : CrudRepository<UbicacionJPA, Long> {
 
     @Query("""
         select count(u)

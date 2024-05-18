@@ -2,13 +2,10 @@ package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
-import ar.edu.unq.eperdemic.modelo.camino.Camino
 import javax.persistence.*
-import org.springframework.data.neo4j.core.schema.Node
-import org.springframework.data.neo4j.core.schema.Relationship
 
 @Entity
-class Ubicacion() {
+class UbicacionJPA() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +13,7 @@ class Ubicacion() {
 
     @Column(unique = true)
     private var nombre: String? = null
-    
+
     fun getId(): Long? {
         return this.id
     }
@@ -43,5 +40,8 @@ class Ubicacion() {
         return UbicacionDTO(this.getId(), this.nombre)
     }
 
+    fun aModelo(): Ubicacion {
+        return Ubicacion(this.nombre!!)
+    }
 
 }

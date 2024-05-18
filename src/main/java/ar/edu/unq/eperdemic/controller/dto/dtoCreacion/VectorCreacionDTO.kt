@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 class VectorCreacionDTO (val nombre: String?,
-                         val ubicacion: UbicacionDTO,
+                         val ubicacion: UbicacionDTO, // ubicacionID: Long
                          val tipo: String, ) {
 
     fun aModelo(): Vector {
