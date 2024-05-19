@@ -10,7 +10,7 @@ interface UbicacionService {
 
     fun recuperar(id : Long) : Ubicacion
 
-    fun recuperarTodos() : Collection<Ubicacion>
+    fun recuperarTodos() : List<Ubicacion>
 
     fun mover(vectorId: Long, ubicacionId: Long)
 

@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
@@ -15,7 +14,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable

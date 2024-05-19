@@ -1,14 +1,14 @@
-package ar.edu.unq.eperdemic.persistencia.dao.neo4j
+package ar.edu.unq.eperdemic.modelo.neo4j
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.camino.Camino
+import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-interface Neo4jUbicacionDAO : Neo4jRepository<Ubicacion, Long> {
+interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """

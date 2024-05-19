@@ -9,9 +9,9 @@ import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.camino.Camino
 import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.neo4j.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.modelo.neo4j.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -23,37 +23,36 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class UbicacionServiceImp() : UbicacionService {
 
-    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var ubicacionJpaDAO: UbicacionDAO
     @Autowired private lateinit var ubicacionNeoDAO: Neo4jUbicacionDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
-        ubicacionDAO.save(ubicacion)
-        ubicacionNeoDAO.save(ubicacion)
+        ubicacionJpaDAO.save(ubicacion)
         return ubicacion
     }
 
     override fun updatear(ubicacion: Ubicacion) {
-        ubicacionDAO.save(ubicacion)
+        ubicacionJpaDAO.save(ubicacion)
     }
 
     override fun recuperar(id: Long): Ubicacion {
 
-        val ubicacion = ubicacionDAO.findByIdOrNull(id)
-        if (ubicacion == null) {
+        val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
+        if (ubicacionJpa == null) {
             throw NoExisteLaUbicacion()
         }
-        return ubicacion
+        return ubicacionJpa
     }
 
-    override fun recuperarTodos(): Collection<Ubicacion> {
-        return ubicacionDAO.findAll().toList()
+    override fun recuperarTodos(): List<Ubicacion> {
+        return ubicacionJpaDAO.findAll().toList()
     }
 
     override fun mover(vectorId: Long, ubicacionId: Long) {
 
         val vector = vectorDAO.findById(vectorId).orElse(null)
-        val nuevaUbicacion = ubicacionDAO.findById(ubicacionId).orElse(null)
+        val nuevaUbicacion = ubicacionJpaDAO.findById(ubicacionId).orElse(null)
 
         if (nuevaUbicacion == null || vector == null) {
             throw ErrorDeMovimiento()
