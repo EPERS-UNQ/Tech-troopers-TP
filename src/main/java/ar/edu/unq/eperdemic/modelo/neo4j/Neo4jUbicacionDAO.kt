@@ -2,7 +2,7 @@ package ar.edu.unq.eperdemic.modelo.neo4j
 
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
-import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
+import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
@@ -52,12 +52,12 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
             MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
             MATCH path = (n)-[:Camino*]->(m)
             WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
-            RETURN [node IN nodes(path)] AS nombres_ubicaciones
+            RETURN [node IN nodes(path) | node.name] AS nombres_ubicaciones
             ORDER BY nombres_ubicaciones
             LIMIT 1
         """
     )
-    fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<Ubicacion>
+    fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<String>
 
 }
 

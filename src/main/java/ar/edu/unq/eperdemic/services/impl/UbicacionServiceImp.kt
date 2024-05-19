@@ -6,12 +6,13 @@ import ar.edu.unq.eperdemic.exceptions.UbicacionMuyLejana
 import ar.edu.unq.eperdemic.exceptions.UbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.camino.Camino
-import ar.edu.unq.eperdemic.modelo.camino.TipoDeCamino
+import ar.edu.unq.eperdemic.modelo.neo4j.camino.Camino
+import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.Neo4jUbicacionDAO
+import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -29,11 +30,13 @@ class UbicacionServiceImp() : UbicacionService {
 
     override fun crear(ubicacion: Ubicacion) : Ubicacion {
         ubicacionJpaDAO.save(ubicacion)
+        ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()!!))
         return ubicacion
     }
 
     override fun updatear(ubicacion: Ubicacion) {
         ubicacionJpaDAO.save(ubicacion)
+        ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()!!))
     }
 
     override fun recuperar(id: Long): Ubicacion {
@@ -62,18 +65,21 @@ class UbicacionServiceImp() : UbicacionService {
                                         TipoDeCamino.puedeCruzar(vector.getTipo()))
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo()))
+            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(1)
+
 
         for (nodo in nodosHastaDestino) {
             this.moverHasta(vector, nodo)
         }
     }
 
-    private fun moverHasta(vector: Vector, ubicacion: Ubicacion) {
-        vector.ubicacion = ubicacion
+    private fun moverHasta(vector: Vector, nombreUbi: String) {
+        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)
+
+        vector.ubicacion = nuevaUbicacion
         vectorDAO.save(vector)
 
-        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(ubicacion.getId()!!)
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
 
         if (vector.estaInfectado()) {
             todosLosVectores.map {

@@ -15,4 +15,7 @@ interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
     @Query("select u.nombre from Ubicacion u where u.id = ?1")
     fun recuperarPorNombre(ubicacionId: Long?): String
 
+    @Query("select u from Ubicacion u where u.nombre = ?1")
+    fun recuperarPorNombreReal(ubicacion: String): Ubicacion
+
 }

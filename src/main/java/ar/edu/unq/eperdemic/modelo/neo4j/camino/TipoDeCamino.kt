@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.modelo.camino
+package ar.edu.unq.eperdemic.modelo.neo4j.camino
 
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 
