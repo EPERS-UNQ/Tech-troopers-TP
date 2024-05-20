@@ -183,21 +183,21 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun cuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
+    fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
             serviceUbicacion.mover(vector1.getId()!!, 50)
         }
     }
 
     @Test
-    fun cuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
+    fun errorCuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
             serviceUbicacion.mover(35, ubi1.getId()!!)
         }
     }
 
     @Test
-    fun testCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
+    fun errorCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
         val ubicacion = Ubicacion("Argentina")
 
@@ -207,7 +207,7 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun testSeTrataDeRecuperarUnaUbicacionQueNoExiste() {
+    fun errorCuandoSeTrataDeRecuperarUnaUbicacionQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
             serviceUbicacion.recuperar(15)

@@ -36,7 +36,7 @@ class RandomGeneratorTest {
     }
 
     @Test
-    fun getNumeroRandomLanzaUnaExcepcionSiElNumeroEstaFueraDelRango1_10() {
+    fun errorAlHacerGetNumeroRandomLanzaUnaExcepcionSiElNumeroEstaFueraDelRango1_10() {
         randomGenerator.setStrategy(NoAleatorioStrategy())
         randomGenerator.setNumeroGlobal(15)
         Assertions.assertThrows(IllegalArgumentException::class.java) {
@@ -52,7 +52,7 @@ class RandomGeneratorTest {
     }
 
     @Test
-    fun getElementoRandomEnListaLanzaUnaExcepcionSiLaListaEstaVacia() {
+    fun errorAlHacerGetElementoRandomEnListaLanzaUnaExcepcionSiLaListaEstaVacia() {
         Assertions.assertThrows(IllegalArgumentException::class.java) {
             randomGenerator.getElementoRandomEnLista(emptyList())
         }

@@ -136,7 +136,7 @@ class VectorServiceTest {
     }
 
     @Test
-    fun testSeTrataDeRecuperarUnVectorQueNoExiste() {
+    fun errorCuandoSeTrataDeRecuperarUnVectorQueNoExiste() {
 
         Assertions.assertThrows(NoExisteElVector::class.java) {
             service.recuperar(15)

@@ -192,7 +192,7 @@ class EstadisticaServiceTest {
     }
 
     @Test
-    fun testReporteDeContagiosDeUnaUbicacionVacia2() {
+    fun testReporteDeContagiosDeUnaUbicacionVacia() {
         val ubicacionVacia = Ubicacion("Vietnam")
         val ubicacionRecuperada = serviceUbicacion.crear(ubicacionVacia)
 
@@ -200,7 +200,16 @@ class EstadisticaServiceTest {
 
         Assertions.assertEquals(0, reporte.cantidadVectores)
         Assertions.assertEquals(0, reporte.cantidadInfectados)
-        Assertions.assertEquals("Especie no encontrada", reporte.especiePrevalente)
+        Assertions.assertEquals("No existe una Especie prevalente.", reporte.especiePrevalente)
+    }
+
+    @Test
+    fun testReporteDeContagiosDeUnaUbicacionQueNoExiste() {
+        val reporte : ReporteDeContagios = service.reporteDeContagios("Noruega")
+
+        Assertions.assertEquals(0, reporte.cantidadVectores)
+        Assertions.assertEquals(0, reporte.cantidadInfectados)
+        Assertions.assertEquals("No existe una Especie prevalente.", reporte.especiePrevalente)
     }
 
     @AfterEach
