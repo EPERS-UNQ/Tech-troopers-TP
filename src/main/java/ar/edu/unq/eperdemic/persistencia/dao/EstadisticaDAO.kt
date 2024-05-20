@@ -55,7 +55,7 @@ interface EstadisticaDAO : CrudRepository<Especie, Long> {
 
     @Query(
             """
-                select e.nombre
+                select COALESCE(e.nombre, NULL)
                 from Especie e
                 join e.vectores v
                 where v.ubicacion.nombre = ?1

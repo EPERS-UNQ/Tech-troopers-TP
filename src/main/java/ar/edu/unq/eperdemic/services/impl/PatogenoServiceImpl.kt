@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
@@ -15,7 +14,6 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -56,7 +54,7 @@ class PatogenoServiceImpl() : PatogenoService {
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
 
             val patogeno: Patogeno = patogenoDAO.findByIdOrNull(idDePatogeno)!!
-            val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarPorNombre(ubicacionId))
+            val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarNombrePorID(ubicacionId))
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
             if (vectoresEnUbicacion.isEmpty()) {
                 throw NoHayVectorException()
@@ -81,6 +79,6 @@ class PatogenoServiceImpl() : PatogenoService {
 
 
     override fun esPandemia(especieId: Long): Boolean {
-        return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countByNombre() / 2
+        return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countUbicaciones() / 2
     }
 }

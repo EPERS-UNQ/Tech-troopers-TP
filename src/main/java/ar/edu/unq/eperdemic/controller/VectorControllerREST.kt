@@ -23,9 +23,9 @@ class VectorControllerREST( private val vectorService: VectorService ) {
     fun recuperarTodasLasVectores() = vectorService.recuperarTodos().map { vector -> vector.aDTO() }
 
     @PutMapping("/infectar/{vectorId}/{especieId}")
-    fun infectarVector( @RequestBody vectorId: Long, especieId: Long) = vectorService.infectar(vectorId, especieId)
+    fun infectarVector( @PathVariable vectorId: Long, especieId: Long) = vectorService.infectar(vectorId, especieId)
 
-    @PutMapping("/enfermedades/{vectorId}")
+    @GetMapping("/enfermedades/{vectorId}")
     fun enfermedades( @PathVariable vectorId: Long ) = vectorService.enfermedades(vectorId).map { especie -> especie.aDTO() }
 
 }

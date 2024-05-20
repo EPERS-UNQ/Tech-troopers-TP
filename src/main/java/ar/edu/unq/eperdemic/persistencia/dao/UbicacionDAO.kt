@@ -11,9 +11,9 @@ interface UbicacionDAO : CrudRepository<Ubicacion, Long> {
         select count(u)
         from Ubicacion u
     """)
-    fun countByNombre(): Int
+    fun countUbicaciones(): Int
 
     @Query("select u.nombre from Ubicacion u where u.id = ?1")
-    fun recuperarPorNombre(ubicacionId: Long?): String
+    fun recuperarNombrePorID(ubicacionId: Long?): String
 
 }
