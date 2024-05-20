@@ -192,7 +192,7 @@ class EstadisticaServiceTest {
     }
 
     @Test
-    fun testReporteDeContagiosDeUnaUbicacionVacia() {
+    fun testReporteDeContagiosDeUnaUbicacionVacia2() {
         val ubicacionVacia = Ubicacion("Vietnam")
         val ubicacionRecuperada = serviceUbicacion.crear(ubicacionVacia)
 
@@ -200,7 +200,7 @@ class EstadisticaServiceTest {
 
         Assertions.assertEquals(0, reporte.cantidadVectores)
         Assertions.assertEquals(0, reporte.cantidadInfectados)
-        Assertions.assertEquals(null, reporte.especiePrevalente)
+        Assertions.assertEquals("Especie no encontrada", reporte.especiePrevalente)
     }
 
     @AfterEach
