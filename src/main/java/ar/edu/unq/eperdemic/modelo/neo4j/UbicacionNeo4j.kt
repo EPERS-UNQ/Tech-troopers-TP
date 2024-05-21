@@ -25,4 +25,7 @@ class UbicacionNeo4j() {
     @Relationship(type = "CAMINO")
     var camino: Camino? = null
 
+    fun getNombre(): String? {
+        return this.nombre
+    }
 }

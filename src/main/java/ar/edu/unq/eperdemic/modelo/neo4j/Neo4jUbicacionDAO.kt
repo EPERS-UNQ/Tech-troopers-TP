@@ -12,26 +12,26 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
-            MATCH (u1:Ubicacion {nombre: ${'$'} nombreDeUbicacion1})
-            MATCH (u2:Ubicacion {nombre: ${'$'} nombreDeUbicacion2})
-            MERGE (u1) - [:Camino {tipo: ${'$'} tipoCamino}] -> (u2)
+            MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion1})
+            MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion2})
+            CREATE (u1) -[:Camino {tipo: ${'$'}tipoCamino}]-> (u2)
         """
     )
-    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: TipoDeCamino)
+    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String)
 
     @Query(
         """
-            MATCH (u1:Ubicacion)
-            MATCH (u2:Ubicacion {nombre: ${'$'}} nombreDeUbicacion)
+            MATCH (u1:UbicacionNeo4j)
+            MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion})
             MATCH (u2)-[CAMINO]->(u1)
             RETURN u1
         """
     )
-    fun ubicacionesConectadas(nombreDeUbicacion:String): List<Ubicacion>
+    fun ubicacionesConectadas(nombreDeUbicacion:String): List<UbicacionNeo4j>
 
     @Query(
         """
-            MATCH (n:Ubicacion {nombre: ${'$'}} nomUbiInicio), (m:Ubicacion {nombre: ${'$'}} nomUbiFin)
+            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
             RETURN exists((n)-[:Camino*]->(m)) AS estan_conectados
         """
     )

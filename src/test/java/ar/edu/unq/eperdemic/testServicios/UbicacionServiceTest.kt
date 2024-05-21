@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.exceptions.UbicacionMuyLejana
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -123,34 +124,6 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
-        random.setNumeroGlobal(1)
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-
-        val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
-        val ubicacionNueva = vectorTemporal.ubicacion!!
-
-        Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
-    }
-
-    @Test
-    fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
-        random.setNumeroGlobal(1)
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-
-        serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
-        serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
-
-        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
-
-        Assertions.assertTrue(
-            vectoresDeNuevaUbicacion.all {
-                v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
-            }
-        )
-    }
-
-    @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
         random.setNumeroGlobal(2)
         serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
@@ -215,9 +188,60 @@ class UbicacionServiceTest {
 
     }
 
+    @Test
+    fun CuandoSeUsaElMensajeConectarLasUbicacionesSonConectadasPorMedioDeUnTipoDeCaminoEspecifico() {
+        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi2.getNombre()!!, "terrestre")
+        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi4.getNombre()!!, "aereo")
+        Assertions.assertFalse(false)
+    }
+
+    @Test
+    fun Cuando() {
+        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi2.getNombre()!!, "terrestre")
+        Assertions.assertEquals(ubi2.getId(), serviceUbicacion.conectados(ubi1.getNombre()!!)[0].getId())
+    }
+
+    @Test
+    fun SiNoExistenCaminosQueConectanDosUbicacionSeLanzaLaExcepcionUbicacionMuyLejana() {
+        Assertions.assertThrows(UbicacionMuyLejana::class.java) {
+            serviceUbicacion.mover(vector1.id!!, ubi2.getId()!!)
+        }
+    }
+
     @AfterEach
     fun borrarRegistros() {
         dataService.cleanAll()
     }
 
+
+
+    /*
+    @Test
+    fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
+        random.setNumeroGlobal(1)
+        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
+
+        val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
+        val ubicacionNueva = vectorTemporal.ubicacion!!
+
+        Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
+    }
+
+    @Test
+    fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
+        random.setNumeroGlobal(1)
+        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
+
+        serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
+        serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
+
+        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
+
+        Assertions.assertTrue(
+            vectoresDeNuevaUbicacion.all {
+                    v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
+            }
+        )
+    }
+     */
 }

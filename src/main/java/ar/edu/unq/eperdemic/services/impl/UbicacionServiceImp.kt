@@ -118,11 +118,18 @@ class UbicacionServiceImp() : UbicacionService {
 
     override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
         val caminoAConvertir: Camino = Camino()
-        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, caminoAConvertir.convertirACamino(tipoCamino))
+        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+        //caminoAConvertir.convertirACamino(tipoCamino)
     }
 
     override fun conectados(nombreDeUbicacion: String): List<Ubicacion> {
-        return ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
+        val ubicacionNeo = ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
+        val ubicacion: MutableList<Ubicacion> = mutableListOf()
+
+        for(u in ubicacionNeo) {
+            ubicacion.add(ubicacionJpaDAO.recuperarPorNombreReal(u.getNombre()!!))
+        }
+        return ubicacion
     }
 
     override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {
