@@ -1,8 +1,8 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
-import ar.edu.unq.eperdemic.exceptions.UbicacionMuyLejana
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -64,8 +64,8 @@ class UbicacionServiceTest {
         dataService = DataServiceImpl(HibernateDataDAO())
 
         ubi1 = serviceUbicacion.crear(Ubicacion("Argentina"))
-        ubi2 = serviceUbicacion.crear(Ubicacion("paraguay"))
-        ubi4 = serviceUbicacion.crear(Ubicacion("Chiles"))
+        ubi2 = serviceUbicacion.crear(Ubicacion("Paraguay"))
+        ubi4 = serviceUbicacion.crear(Ubicacion("Chile"))
 
         vector1 = serviceVector.crear(Vector("Jose", ubi2, TipoVector.HUMANO))
         vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
@@ -203,7 +203,7 @@ class UbicacionServiceTest {
 
     @Test
     fun SiNoExistenCaminosQueConectanDosUbicacionSeLanzaLaExcepcionUbicacionMuyLejana() {
-        Assertions.assertThrows(UbicacionMuyLejana::class.java) {
+        Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
             serviceUbicacion.mover(vector1.id!!, ubi2.getId()!!)
         }
     }

@@ -1,9 +1,9 @@
 package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
+import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
-import ar.edu.unq.eperdemic.exceptions.UbicacionMuyLejana
-import ar.edu.unq.eperdemic.exceptions.UbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.Ubicacion
 import ar.edu.unq.eperdemic.modelo.neo4j.camino.Camino
@@ -91,10 +91,10 @@ class UbicacionServiceImp() : UbicacionService {
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
         if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
-            throw UbicacionMuyLejana()
+            throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiFin, nomUbiFin, tiposPermitidos)) {
-            throw UbicacionNoAlcanzable()
+            throw ErrorUbicacionNoAlcanzable()
         }
     }
 

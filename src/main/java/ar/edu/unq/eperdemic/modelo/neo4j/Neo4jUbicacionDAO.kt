@@ -23,7 +23,7 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
         """
             MATCH (u1:UbicacionNeo4j)
             MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion})
-            MATCH (u2)-[CAMINO]->(u1)
+            MATCH (u2)-[:Camino*]->(u1)
             RETURN u1
         """
     )
@@ -31,8 +31,8 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
-            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
-            RETURN exists((n)-[:Camino*]->(m)) AS estan_conectados
+            MATCH (u1:Ubicacion {nombre: ${'$'}nomUbiInicio}), (u2:Ubicacion {nombre: ${'$'}nomUbiFin})
+            RETURN exists((u1)-[:Camino*]->(u2)) AS estan_conectados
         """
     )
     fun esUbicacionCercana(nomUbiInicio: String, nomUbiFin: String): Boolean
