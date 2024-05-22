@@ -49,15 +49,13 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
-            MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (m:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio})
-            MATCH path = (n)-[:Camino*]->(m)
+            MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (m:UbicacionNeo4j {nombre: ${'$'}nomUbiFin})
+            MATCH path = shortestPath((n)-[:Camino*]->(m))
             WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
-            RETURN [node IN nodes(path) | node.name] AS nombres_ubicaciones
-            ORDER BY nombres_ubicaciones
-            LIMIT 1
+            RETURN [node IN nodes(path)] AS nombres_ubicaciones
         """
     )
-    fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<String>
+    fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<UbicacionNeo4j>
 
     @Query("MATCH(n) DETACH DELETE n")
     fun detachDelete()

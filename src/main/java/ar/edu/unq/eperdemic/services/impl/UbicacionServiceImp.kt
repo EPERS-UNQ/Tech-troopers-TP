@@ -65,11 +65,12 @@ class UbicacionServiceImp() : UbicacionService {
                                         TipoDeCamino.puedeCruzar(vector.getTipo()))
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(1)
+            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(0)
 
+        val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
 
-        for (nodo in nodosHastaDestino) {
-            this.moverHasta(vector, nodo)
+        for (ubi in listaDeUbicaciones) {
+            this.moverHasta(vector, ubi)
         }
     }
 
@@ -93,7 +94,7 @@ class UbicacionServiceImp() : UbicacionService {
         if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
-        if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiFin, nomUbiFin, tiposPermitidos)) {
+        if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
             throw ErrorUbicacionNoAlcanzable()
         }
     }

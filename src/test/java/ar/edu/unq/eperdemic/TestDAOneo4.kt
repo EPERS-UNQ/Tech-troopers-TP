@@ -79,6 +79,11 @@ class TestDAOneo4 {
         Assertions.assertTrue(ubicacionNeoDAO.esUbicacionAlcanzable("Argentina", "Uruguay", listOf("Terrestre", "Aquatico")))
     }
 
+    @Test
+    fun test3() {
+        Assertions.assertEquals(listOf("Argentina", "Uruguay"),ubicacionNeoDAO.caminoIdeal("Argentina","Uruguay", listOf("Aquatico")))
+    }
+
     @AfterEach
     fun tearDown() {
         ubicacionNeoDAO.deleteAll()

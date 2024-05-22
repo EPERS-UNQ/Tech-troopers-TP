@@ -11,9 +11,9 @@ enum class TipoDeCamino {
     companion object {
         fun puedeCruzar(tipo: TipoVector): List<String> {
             return when (tipo) {
-                TipoVector.HUMANO  -> listOf("terrestre", "maritimo")
-                TipoVector.ANIMAL  -> listOf("terrestre", "maritimo", "aereo")
-                TipoVector.INSECTO -> listOf("terrestre", "aereo")
+                TipoVector.HUMANO  -> listOf("Terrestre", "Aquatico")
+                TipoVector.ANIMAL  -> listOf("Terrestre", "Aquatico", "Aereo")
+                TipoVector.INSECTO -> listOf("Terrestre", "Aereo")
             }
         }
     }
