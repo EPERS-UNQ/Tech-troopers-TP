@@ -37,6 +37,26 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
+            MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (u2:UbicacionNeo4j {nombre: ${'$'}nomUbiFin})
+            RETURN exists((u1)-[:Camino]->(u2)) AS estan_conectados
+        """
+    )
+    fun esUbicacionLindante(nomUbiInicio: String, nomUbiFin: String): Boolean
+
+    @Query(
+        """
+            MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio})
+            MATCH (m:UbicacionNeo4j {nombre: ${'$'}nomUbiFin})
+            MATCH path = (n)-[c:Camino]->(m)
+            WHERE ALL (rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos) 
+            RETURN COUNT(path) > 0 AS existeCamino
+        """
+    )
+    fun hayCaminoCruzable(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): Boolean
+
+
+    @Query(
+        """
             MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio})
             OPTIONAL MATCH (m:UbicacionNeo4j {nombre:${'$'}nomUbiFin})
             WITH n, m

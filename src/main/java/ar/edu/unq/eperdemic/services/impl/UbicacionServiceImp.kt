@@ -61,17 +61,11 @@ class UbicacionServiceImp() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
-        this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-                                        TipoDeCamino.puedeCruzar(vector.getTipo()))
+        this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+            TipoDeCamino.puedeCruzar(vector.getTipo()))
 
-        val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(0)
+        this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
-        val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
-
-        for (ubi in listaDeUbicaciones) {
-            this.moverHasta(vector, ubi)
-        }
     }
 
     private fun moverHasta(vector: Vector, nombreUbi: String) {
@@ -87,6 +81,15 @@ class UbicacionServiceImp() : UbicacionService {
                 vector.contargiarA(it)
                 vectorDAO.save(it)
             }
+        }
+    }
+
+    private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
+        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
+            throw ErrorUbicacionMuyLejana()
+        }
+        if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
+            throw ErrorUbicacionNoAlcanzable()
         }
     }
 
@@ -118,9 +121,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
-        val caminoAConvertir: Camino = Camino()
         ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
-        //caminoAConvertir.convertirACamino(tipoCamino)
     }
 
     override fun conectados(nombreDeUbicacion: String): List<UbicacionJpa> {
@@ -134,7 +135,25 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {
-        TODO("Not yet implemented") // algoritmo de dijkstra
+
+        val vector = vectorDAO.findById(vectorId).orElse(null)
+        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreDeUbicacion)
+
+        if (nuevaUbicacion == null || vector == null) {
+            throw ErrorDeMovimiento()
+        }
+
+        this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+            TipoDeCamino.puedeCruzar(vector.getTipo()))
+
+        val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(0)
+
+        val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
+
+        for (ubi in listaDeUbicaciones) {
+            this.moverHasta(vector, ubi)
+        }
     }
 
     override fun deleteAll() {
