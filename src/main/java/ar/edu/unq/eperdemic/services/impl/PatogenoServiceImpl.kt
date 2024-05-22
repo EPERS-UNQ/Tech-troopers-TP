@@ -77,7 +77,6 @@ class PatogenoServiceImpl() : PatogenoService {
 
     }
 
-
     override fun esPandemia(especieId: Long): Boolean {
         return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countByNombre() / 2
     }

@@ -11,7 +11,7 @@ import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
+import ar.edu.unq.eperdemic.modelo.neo4j.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
