@@ -30,7 +30,7 @@ class UbicacionControllerREST( private val ubicacionService: UbicacionService ) 
     fun recuperarTodasLasUbicaciones() = ubicacionService.recuperarTodos().map { ubicacion -> ubicacion.aDTO() }
 
     @PostMapping("/moverUbicacion/{vectorId}/{ubicacionId}")
-    fun moverUbicacion( @PathVariable vectorId: Long, ubicacionId: Long ) = ubicacionService.mover(vectorId, ubicacionId)
+    fun moverUbicacion( @PathVariable vectorId: Long, @PathVariable ubicacionId: Long ) = ubicacionService.mover(vectorId, ubicacionId)
 
     @PutMapping("/expandirUbicacion/{ubicacionId}")
     fun expandirUbicacion( @PathVariable ubicacionId: Long ) = ubicacionService.expandir(ubicacionId)
