@@ -1,4 +1,4 @@
-package ar.edu.unq.eperdemic.modelo.neo4j
+package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import org.springframework.data.neo4j.repository.Neo4jRepository
@@ -56,6 +56,9 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
         """
     )
     fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<String>
+
+    @Query("MATCH(n) DETACH DELETE n")
+    fun detachDelete()
 
 }
 

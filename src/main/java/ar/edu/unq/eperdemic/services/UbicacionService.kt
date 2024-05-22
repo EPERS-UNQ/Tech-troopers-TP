@@ -22,4 +22,6 @@ interface UbicacionService {
 
     fun moverPorCaminoMasCorto(vectorId:Long, nombreDeUbicacion:String)
 
+    fun deleteAll()
+
 }

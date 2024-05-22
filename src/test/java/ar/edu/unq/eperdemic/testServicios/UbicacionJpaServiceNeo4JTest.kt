@@ -201,8 +201,7 @@ class UbicacionJpaServiceNeo4JTest {
 
     @AfterEach
     fun tearDown() {
-        dataService.cleanAll()
-        //serviceUbicacion.deleteAll() Agregar si nos dan el okey en discord.
+        serviceUbicacion.deleteAll()
     }
 
 }
