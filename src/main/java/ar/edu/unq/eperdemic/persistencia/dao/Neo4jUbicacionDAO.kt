@@ -29,7 +29,7 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
-            MATCH (u1:Ubicacion {nombre: ${'$'}nomUbiInicio}), (u2:Ubicacion {nombre: ${'$'}nomUbiFin})
+            MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (u2:UbicacionNeo4j {nombre: ${'$'}nomUbiFin})
             RETURN exists((u1)-[:Camino*]->(u2)) AS estan_conectados
         """
     )
@@ -37,17 +37,19 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """
-            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
-            MATCH path = (n)-[:Camino*]->(m)
-            WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
-            RETURN EXISTS((n)-[:Camino*]->(m)) AS existeCamino
+            MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio})
+            OPTIONAL MATCH (m:UbicacionNeo4j {nombre:${'$'}nomUbiFin})
+            WITH n, m
+            OPTIONAL MATCH path = shortestPath((n)-[:Camino*]->(m))
+            WHERE path IS NOT NULL AND ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
+            RETURN CASE WHEN path IS NOT NULL THEN true ELSE false END AS existeCamino
         """
     )
     fun esUbicacionAlcanzable(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): Boolean
 
     @Query(
         """
-            MATCH (n:Ubicacion {nombre: ${'$'}nomUbiInicio}), (m:Ubicacion {nombre: ${'$'}nomUbiFin})
+            MATCH (n:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (m:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio})
             MATCH path = (n)-[:Camino*]->(m)
             WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
             RETURN [node IN nodes(path) | node.name] AS nombres_ubicaciones

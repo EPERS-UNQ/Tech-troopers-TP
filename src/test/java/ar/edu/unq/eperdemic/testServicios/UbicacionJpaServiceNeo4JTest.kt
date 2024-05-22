@@ -202,6 +202,7 @@ class UbicacionJpaServiceNeo4JTest {
     @AfterEach
     fun tearDown() {
         serviceUbicacion.deleteAll()
+        dataService.cleanAll()
     }
 
 }
