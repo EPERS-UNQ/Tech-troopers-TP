@@ -25,12 +25,12 @@ open class Vector() {
     var especies: MutableSet<Especie> = HashSet()
 
     @ManyToOne
-    var ubicacion: Ubicacion? = null
+    var ubicacion: UbicacionJpa? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var mutaciones: MutableSet<Mutacion> = HashSet()
 
-    constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
+    constructor(nombre: String, ubicacion: UbicacionJpa, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
             throw ErrorNombre("El nombre del vector no puede estar vacio.")
         }

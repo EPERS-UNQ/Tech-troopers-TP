@@ -5,13 +5,13 @@ import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
 import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.neo4j.camino.Camino
 import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.modelo.neo4j.Neo4jUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,18 +28,18 @@ class UbicacionServiceImp() : UbicacionService {
     @Autowired private lateinit var ubicacionNeoDAO: Neo4jUbicacionDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
-    override fun crear(ubicacion: Ubicacion) : Ubicacion {
+    override fun crear(ubicacion: UbicacionJpa) : UbicacionJpa {
         ubicacionJpaDAO.save(ubicacion)
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()!!))
         return ubicacion
     }
 
-    override fun updatear(ubicacion: Ubicacion) {
+    override fun updatear(ubicacion: UbicacionJpa) {
         ubicacionJpaDAO.save(ubicacion)
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()!!))
     }
 
-    override fun recuperar(id: Long): Ubicacion {
+    override fun recuperar(id: Long): UbicacionJpa {
 
         val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
         if (ubicacionJpa == null) {
@@ -48,7 +48,7 @@ class UbicacionServiceImp() : UbicacionService {
         return ubicacionJpa
     }
 
-    override fun recuperarTodos(): List<Ubicacion> {
+    override fun recuperarTodos(): List<UbicacionJpa> {
         return ubicacionJpaDAO.findAll().toList()
     }
 
@@ -122,9 +122,9 @@ class UbicacionServiceImp() : UbicacionService {
         //caminoAConvertir.convertirACamino(tipoCamino)
     }
 
-    override fun conectados(nombreDeUbicacion: String): List<Ubicacion> {
+    override fun conectados(nombreDeUbicacion: String): List<UbicacionJpa> {
         val ubicacionNeo = ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
-        val ubicacion: MutableList<Ubicacion> = mutableListOf()
+        val ubicacion: MutableList<UbicacionJpa> = mutableListOf()
 
         for(u in ubicacionNeo) {
             ubicacion.add(ubicacionJpaDAO.recuperarPorNombreReal(u.getNombre()!!))
@@ -135,22 +135,5 @@ class UbicacionServiceImp() : UbicacionService {
     override fun moverPorCaminoMasCorto(vectorId: Long, nombreDeUbicacion: String) {
         TODO("Not yet implemented") // algoritmo de dijkstra
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

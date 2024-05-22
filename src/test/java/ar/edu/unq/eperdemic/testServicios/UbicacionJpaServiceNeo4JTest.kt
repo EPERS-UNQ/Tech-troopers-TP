@@ -8,7 +8,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -23,22 +23,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UbicacionServiceNeo4jTest {
+class UbicacionJpaServiceNeo4JTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
 
-    lateinit var arg: Ubicacion
-    lateinit var chl: Ubicacion
-    lateinit var col: Ubicacion
-    lateinit var vnz: Ubicacion
-    lateinit var par: Ubicacion
-    lateinit var bol: Ubicacion
-    lateinit var urg: Ubicacion
-    lateinit var ecu: Ubicacion
-    lateinit var br: Ubicacion
-    lateinit var per: Ubicacion
+    lateinit var arg: UbicacionJpa
+    lateinit var chl: UbicacionJpa
+    lateinit var col: UbicacionJpa
+    lateinit var vnz: UbicacionJpa
+    lateinit var par: UbicacionJpa
+    lateinit var bol: UbicacionJpa
+    lateinit var urg: UbicacionJpa
+    lateinit var ecu: UbicacionJpa
+    lateinit var br: UbicacionJpa
+    lateinit var per: UbicacionJpa
     lateinit var hornerito: Vector
     lateinit var mosca: Vector
     lateinit var guanaco: Vector
@@ -63,16 +63,16 @@ class UbicacionServiceNeo4jTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        arg = Ubicacion("Argentina")
-        chl = Ubicacion("Chile")
-        col = Ubicacion("Colombia")
-        vnz = Ubicacion("Venezuela")
-        par = Ubicacion("Paraguay")
-        bol = Ubicacion("Bolivia")
-        urg = Ubicacion("Uruguay")
-        ecu = Ubicacion("Ecuador")
-        br = Ubicacion("Brasil")
-        per = Ubicacion("Peru")
+        arg = UbicacionJpa("Argentina")
+        chl = UbicacionJpa("Chile")
+        col = UbicacionJpa("Colombia")
+        vnz = UbicacionJpa("Venezuela")
+        par = UbicacionJpa("Paraguay")
+        bol = UbicacionJpa("Bolivia")
+        urg = UbicacionJpa("Uruguay")
+        ecu = UbicacionJpa("Ecuador")
+        br = UbicacionJpa("Brasil")
+        per = UbicacionJpa("Peru")
         hornerito = Vector("Hornerito", arg, TipoVector.ANIMAL)
         guanaco = Vector("Guanaco", chl, TipoVector.ANIMAL)
         mosca = Vector("Mosca", urg, TipoVector.INSECTO)
@@ -201,7 +201,7 @@ class UbicacionServiceNeo4jTest {
 
     @AfterEach
     fun tearDown() {
-        dataService.cleanAll()
+        serviceUbicacion.deleteAll() // Agregar si nos dan el okey en discord.
     }
 
 }

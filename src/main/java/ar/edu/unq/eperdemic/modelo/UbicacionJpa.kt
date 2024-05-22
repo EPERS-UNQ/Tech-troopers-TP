@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 
 @Entity
-class Ubicacion() {
+class UbicacionJpa() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

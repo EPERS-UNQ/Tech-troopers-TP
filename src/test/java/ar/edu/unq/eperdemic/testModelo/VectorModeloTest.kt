@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VectorModeloTest {
 
-    lateinit var ubicacion : Ubicacion
+    lateinit var ubicacion : UbicacionJpa
     lateinit var humano  : Vector
     lateinit var animal  : Vector
     lateinit var insecto : Vector
@@ -31,7 +31,7 @@ class VectorModeloTest {
     @BeforeEach
     fun prerate(){
 
-        ubicacion = Ubicacion("Argentina")
+        ubicacion = UbicacionJpa("Argentina")
         humano = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         animal = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
         insecto = Vector("Raul", ubicacion, TipoVector.INSECTO)

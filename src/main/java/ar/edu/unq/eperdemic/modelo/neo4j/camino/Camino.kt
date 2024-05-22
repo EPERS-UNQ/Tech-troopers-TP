@@ -1,8 +1,7 @@
 package ar.edu.unq.eperdemic.modelo.neo4j.camino
 
 import ar.edu.unq.eperdemic.exceptions.ErrorTipoCaminoInvalido
-import ar.edu.unq.eperdemic.modelo.Ubicacion
-import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import org.springframework.data.neo4j.core.schema.RelationshipId
 import org.springframework.data.neo4j.core.schema.RelationshipProperties
 import org.springframework.data.neo4j.core.schema.TargetNode
@@ -16,7 +15,7 @@ class Camino() {
     var tipo: TipoDeCamino? = null
 
     @TargetNode
-    var ubicacion: Ubicacion? = null
+    var ubicacion: UbicacionJpa? = null
 
     fun Camino(tipo: TipoDeCamino) {
         this.tipo = tipo;

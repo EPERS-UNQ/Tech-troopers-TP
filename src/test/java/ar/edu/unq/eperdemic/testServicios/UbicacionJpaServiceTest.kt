@@ -6,7 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -31,19 +31,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(PER_CLASS)
-class UbicacionServiceTest {
+class UbicacionJpaServiceTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
 
 
-    lateinit var ubi1: Ubicacion
-    lateinit var ubi2: Ubicacion
-    lateinit var ubi3: Ubicacion
-    lateinit var ubi4: Ubicacion
+    lateinit var ubi1: UbicacionJpa
+    lateinit var ubi2: UbicacionJpa
+    lateinit var ubi3: UbicacionJpa
+    lateinit var ubi4: UbicacionJpa
 
-    lateinit var ubiPersistida1: Ubicacion
+    lateinit var ubiPersistida1: UbicacionJpa
 
     lateinit var vector1: Vector
     lateinit var vector2: Vector
@@ -63,9 +63,9 @@ class UbicacionServiceTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubi1 = serviceUbicacion.crear(Ubicacion("Argentina"))
-        ubi2 = serviceUbicacion.crear(Ubicacion("Paraguay"))
-        ubi4 = serviceUbicacion.crear(Ubicacion("Chile"))
+        ubi1 = serviceUbicacion.crear(UbicacionJpa("Argentina"))
+        ubi2 = serviceUbicacion.crear(UbicacionJpa("Paraguay"))
+        ubi4 = serviceUbicacion.crear(UbicacionJpa("Chile"))
 
         vector1 = serviceVector.crear(Vector("Jose", ubi2, TipoVector.HUMANO))
         vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
@@ -84,7 +84,7 @@ class UbicacionServiceTest {
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
-        ubi3 = serviceUbicacion.crear(Ubicacion("Uruguay"))
+        ubi3 = serviceUbicacion.crear(UbicacionJpa("Uruguay"))
 
         ubiPersistida1 = serviceUbicacion.recuperar(4)
 
@@ -172,7 +172,7 @@ class UbicacionServiceTest {
     @Test
     fun testCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
-        val ubicacion = Ubicacion("Argentina")
+        val ubicacion = UbicacionJpa("Argentina")
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
             serviceUbicacion.crear(ubicacion)
