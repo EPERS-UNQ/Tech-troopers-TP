@@ -69,6 +69,7 @@ class UbicacionServiceImp() : UbicacionService {
     }
 
     private fun moverHasta(vector: Vector, nombreUbi: String) {
+
         val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)
 
         vector.ubicacion = nuevaUbicacion

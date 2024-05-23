@@ -78,7 +78,7 @@ class UbicacionJpaServiceNeo4JTest {
         mosca = Vector("Mosca", urg, TipoVector.INSECTO)
         abeja = Vector("Abeja", col, TipoVector.INSECTO)
         joao = Vector("Joao", br, TipoVector.HUMANO)
-        maria = Vector("Maria", par, TipoVector.HUMANO)
+        maria = Vector("Maria", vnz, TipoVector.HUMANO)
         virus = Patogeno("Virus", 13,14,53,30,10)
         bacteria = Patogeno("Bacteria", 5, 10, 32, 25, 50)
         hongo = Patogeno("Hongo", 65, 20, 30, 45, 15)
@@ -125,6 +125,7 @@ class UbicacionJpaServiceNeo4JTest {
         serviceUbicacion.conectar(br.getNombre()!!, ecu.getNombre()!!, "Aereo")
         serviceUbicacion.conectar(br.getNombre()!!, bol.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(par.getNombre()!!, br.getNombre()!!, "Terrestre")
+        serviceUbicacion.conectar(bol.getNombre()!!, ecu.getNombre()!!, "Terrestre")
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -158,7 +159,7 @@ class UbicacionJpaServiceNeo4JTest {
 
         val nuevasUbicacionesDeUrg = serviceUbicacion.conectados(urg.getNombre()!!)
 
-        Assertions.assertEquals(11, nuevasUbicacionesDeUrg.size)
+        Assertions.assertEquals(14, nuevasUbicacionesDeUrg.size)
     }
 
     @Test
@@ -196,6 +197,32 @@ class UbicacionJpaServiceNeo4JTest {
         Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java){
             serviceUbicacion.mover(mosca.getId(), arg.getId()!!)
         }
+
+    }
+
+    @Test
+    fun unVectorSeMuevePorElCaminoMasCortoCuandoSeMuevePorVariasUbicaciones() {
+
+        Assertions.assertEquals(arg.getNombre(), hornerito.nombreDeUbicacionActual())
+
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),ecu.getNombre()!!)
+
+        val horneritoLuegoDeMoverse = serviceVector.recuperar(hornerito.getId())
+
+        Assertions.assertEquals(ecu.getNombre(), horneritoLuegoDeMoverse.nombreDeUbicacionActual())
+
+    }
+
+    @Test
+    fun cuandoUnVectorContagiadoSeMuevePorVariasUbicacionesTrataDeContagiarEnTodasEllas() {
+
+        Assertions.assertFalse(maria.estaInfectadoCon(granulosis))
+        Assertions.assertFalse(abeja.estaInfectadoCon(granulosis))
+
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),col.getNombre()!!)
+
+        Assertions.assertTrue(maria.estaInfectadoCon(granulosis))
+        Assertions.assertTrue(abeja.estaInfectadoCon(granulosis))
 
     }
 

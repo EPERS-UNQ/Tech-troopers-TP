@@ -137,4 +137,8 @@ open class Vector() {
         return mutaciones.any { it.getId() == unaMutacion.getId() }
     }
 
+    fun nombreDeUbicacionActual(): String {
+        return ubicacion!!.getNombre()!!
+    }
+
 }

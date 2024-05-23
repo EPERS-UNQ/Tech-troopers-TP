@@ -73,6 +73,7 @@ interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
             MATCH path = shortestPath((n)-[:Camino*]->(m))
             WHERE ALL(rel IN relationships(path) WHERE rel.tipo IN ${'$'}tiposPermitidos)
             RETURN [node IN nodes(path)] AS nombres_ubicaciones
+            LIMIT 1
         """
     )
     fun caminoIdeal(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>): List<UbicacionNeo4j>
