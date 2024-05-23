@@ -131,7 +131,7 @@ open class Vector() {
 
     fun aDTO(): VectorDTO? {
         val especiesDTO : List<EspecieDTO> = especies.map { especie -> especie!!.aDTO()!! }
-        return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
+        return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.getId()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
     }
 
     fun eliminarEspecie(especie : Especie) : Boolean {
