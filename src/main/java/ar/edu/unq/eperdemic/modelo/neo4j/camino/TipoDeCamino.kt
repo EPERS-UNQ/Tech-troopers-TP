@@ -11,20 +11,11 @@ enum class TipoDeCamino {
     companion object {
         fun puedeCruzar(tipo: TipoVector): List<String> {
             return when (tipo) {
-                TipoVector.HUMANO  -> listOf("Terrestre", "Aquatico")
-                TipoVector.ANIMAL  -> listOf("Terrestre", "Aquatico", "Aereo")
+                TipoVector.HUMANO  -> listOf("Terrestre", "Maritimo")
+                TipoVector.ANIMAL  -> listOf("Terrestre", "Maritimo", "Aereo")
                 TipoVector.INSECTO -> listOf("Terrestre", "Aereo")
             }
         }
     }
-
-    fun puedeSerCruzadoPor(tipo: TipoVector): Boolean { //No se usa por el momento pero seguramente se tiene que usar mas adelante...
-        return when (this) {
-            TERRESTRE -> tipo == TipoVector.HUMANO || tipo == TipoVector.ANIMAL || tipo == TipoVector.INSECTO
-            MARITIMO  -> tipo == TipoVector.HUMANO || tipo == TipoVector.ANIMAL
-            AEREO     -> tipo == TipoVector.ANIMAL || tipo == TipoVector.INSECTO
-        }
-    }
-
 
 }

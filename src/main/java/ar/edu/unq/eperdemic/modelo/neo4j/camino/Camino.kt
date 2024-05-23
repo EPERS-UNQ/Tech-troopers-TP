@@ -17,16 +17,4 @@ class Camino() {
     @TargetNode
     var ubicacion: UbicacionJpa? = null
 
-    fun Camino(tipo: TipoDeCamino) {
-        this.tipo = tipo;
-    }
-
-    fun convertirACamino(camino: String): TipoDeCamino {
-        return when (camino.lowercase()) {
-            "terrestre" -> TipoDeCamino.TERRESTRE
-            "maritimo"  -> TipoDeCamino.MARITIMO
-            "aereo"     -> TipoDeCamino.AEREO
-            else -> { throw ErrorTipoCaminoInvalido("El tipo de camino es invalido.") }
-        }
-    }
 }

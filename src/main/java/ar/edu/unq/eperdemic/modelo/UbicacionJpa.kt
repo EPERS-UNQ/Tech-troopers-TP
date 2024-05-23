@@ -40,7 +40,4 @@ open class UbicacionJpa() {
         return UbicacionDTO(this.getId(), this.nombre)
     }
 
-
-
-
 }
