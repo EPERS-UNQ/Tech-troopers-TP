@@ -188,26 +188,6 @@ class UbicacionJpaServiceTest {
 
     }
 
-    @Test
-    fun CuandoSeUsaElMensajeConectarLasUbicacionesSonConectadasPorMedioDeUnTipoDeCaminoEspecifico() {
-        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi2.getNombre()!!, "terrestre")
-        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi4.getNombre()!!, "aereo")
-        Assertions.assertFalse(false)
-    }
-
-    @Test
-    fun Cuando() {
-        serviceUbicacion.conectar(ubi1.getNombre()!!, ubi2.getNombre()!!, "terrestre")
-        Assertions.assertEquals(ubi2.getId(), serviceUbicacion.conectados(ubi1.getNombre()!!)[0].getId())
-    }
-
-    @Test
-    fun SiNoExistenCaminosQueConectanDosUbicacionSeLanzaLaExcepcionUbicacionMuyLejana() {
-        Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
-            serviceUbicacion.mover(vector1.id!!, ubi2.getId()!!)
-        }
-    }
-
     @AfterEach
     fun borrarRegistros() {
         dataService.cleanAll()

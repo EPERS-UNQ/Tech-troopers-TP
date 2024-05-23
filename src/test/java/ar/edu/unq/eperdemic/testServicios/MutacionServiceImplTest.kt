@@ -91,6 +91,14 @@ class MutacionServiceImplTest {
         cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId()!!)
         roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
 
+        servicioUbicacion.conectar(corea.getNombre()!!, japon.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre()!!, china.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(china.getNombre()!!, japon.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre()!!, tailandia.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(indonesia.getNombre()!!, japon.getNombre()!!, "Aereo")
+        servicioUbicacion.conectar(japon.getNombre()!!, corea.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(corea.getNombre()!!, china.getNombre()!!, "Terrestre")
+
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
         random.setBooleanoGlobal(true)
@@ -365,6 +373,7 @@ class MutacionServiceImplTest {
     @AfterEach
     fun tearDown() {
        dataService.cleanAll()
+       servicioUbicacion.deleteAll()
     }
 
 
