@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UbicacionJpaServiceNeo4JTest {
+class UbicacionServiceNeo4JTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService

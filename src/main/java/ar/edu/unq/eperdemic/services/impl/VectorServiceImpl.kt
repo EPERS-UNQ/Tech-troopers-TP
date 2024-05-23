@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class VectorServiceImp () : VectorService {
+class VectorServiceImpl () : VectorService {
 
     @Autowired private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var vectorDAO: VectorDAO

@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
-import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
@@ -31,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(PER_CLASS)
-class UbicacionJpaServiceTest {
+class UbicacionServiceJpaTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
@@ -188,14 +187,6 @@ class UbicacionJpaServiceTest {
 
     }
 
-    @AfterEach
-    fun borrarRegistros() {
-        dataService.cleanAll()
-    }
-
-
-
-    /*
     @Test
     fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
         random.setNumeroGlobal(1)
@@ -223,5 +214,11 @@ class UbicacionJpaServiceTest {
             }
         )
     }
-     */
+
+    @AfterEach
+    fun borrarRegistros() {
+        serviceUbicacion.deleteAll()
+        dataService.cleanAll()
+    }
+
 }
