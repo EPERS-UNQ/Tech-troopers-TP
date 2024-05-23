@@ -106,7 +106,7 @@ class UbicacionJpaServiceNeo4JTest {
         granulosis = servicePatogeno.agregarEspecie(virus.getId(), "Granulosis", arg.getId()!!)
         poliedrosisCitoplasmica = servicePatogeno.agregarEspecie(virus.getId(), "Poliedrosis Citoplasmica", chl.getId()!!)
         beauveriaBassiana = servicePatogeno.agregarEspecie(bacteria.getId(), "Beauveria Bassiana", br.getId()!!)
-        metarhiziumAnisopliae = servicePatogeno.agregarEspecie(bacteria.getId(), "Metarhizium Anisopliae", par.getId()!!)
+        metarhiziumAnisopliae = servicePatogeno.agregarEspecie(bacteria.getId(), "Metarhizium Anisopliae", vnz.getId()!!)
         wolbachia = servicePatogeno.agregarEspecie(hongo.getId(), "Wolbachia", urg.getId()!!)
         bacillusThuringiensis = servicePatogeno.agregarEspecie(hongo.getId(), "Bacillus Thuringiensis", col.getId()!!)
 
@@ -131,6 +131,7 @@ class UbicacionJpaServiceNeo4JTest {
         random.setStrategy(NoAleatorioStrategy())
         random.setNumeroGlobal(1)
         random.setBooleanoGlobal(true)
+        random.setBooleanoAltGlobal(true)
 
     }
 
@@ -216,13 +217,19 @@ class UbicacionJpaServiceNeo4JTest {
     @Test
     fun cuandoUnVectorContagiadoSeMuevePorVariasUbicacionesTrataDeContagiarEnTodasEllas() {
 
+        val horneritoInfectado = serviceVector.recuperar(hornerito.getId())
+
         Assertions.assertFalse(maria.estaInfectadoCon(granulosis))
         Assertions.assertFalse(abeja.estaInfectadoCon(granulosis))
+        Assertions.assertTrue(horneritoInfectado.estaInfectadoCon(granulosis))
 
         serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),col.getNombre()!!)
 
-        Assertions.assertTrue(maria.estaInfectadoCon(granulosis))
-        Assertions.assertTrue(abeja.estaInfectadoCon(granulosis))
+        val abejaInfectada = serviceVector.recuperar(abeja.getId())
+        val mariaInfectada = serviceVector.recuperar(maria.getId())
+
+        Assertions.assertTrue(abejaInfectada.estaInfectadoCon(granulosis))
+        Assertions.assertTrue(mariaInfectada.estaInfectadoCon(granulosis))
 
     }
 
