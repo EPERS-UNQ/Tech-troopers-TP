@@ -1,17 +1,27 @@
 package ar.edu.unq.eperdemic.services
 
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 
 interface UbicacionService {
-    fun crear(ubicacion : Ubicacion) : Ubicacion
 
-    fun updatear(ubicacion : Ubicacion)
+    fun crear(ubicacion : UbicacionJpa) : UbicacionJpa
 
-    fun recuperar(id : Long) : Ubicacion
+    fun updatear(ubicacion : UbicacionJpa)
 
-    fun recuperarTodos() : Collection<Ubicacion>
+    fun recuperar(id : Long) : UbicacionJpa
+
+    fun recuperarTodos() : List<UbicacionJpa>
 
     fun mover(vectorId: Long, ubicacionId: Long)
 
     fun expandir(ubicacionId: Long)
+
+    fun conectar(nombreDeUbicacion1:String, nombreDeUbicacion2:String, tipoCamino:String)
+
+    fun conectados(nombreDeUbicacion:String): List<UbicacionJpa>
+
+    fun moverPorCaminoMasCorto(vectorId:Long, nombreDeUbicacion:String)
+
+    fun deleteAll()
+
 }

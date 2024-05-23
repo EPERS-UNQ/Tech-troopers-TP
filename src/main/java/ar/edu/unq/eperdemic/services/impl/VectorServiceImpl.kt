@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-class VectorServiceImp () : VectorService {
+class VectorServiceImpl () : VectorService {
 
     @Autowired private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var vectorDAO: VectorDAO

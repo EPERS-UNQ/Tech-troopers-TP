@@ -25,12 +25,12 @@ open class Vector() {
     var especies: MutableSet<Especie> = HashSet()
 
     @ManyToOne
-    var ubicacion: Ubicacion? = null
+    var ubicacion: UbicacionJpa? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var mutaciones: MutableSet<Mutacion> = HashSet()
 
-    constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
+    constructor(nombre: String, ubicacion: UbicacionJpa, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
             throw ErrorNombre("El nombre del vector no puede estar vacio.")
         }
@@ -131,7 +131,7 @@ open class Vector() {
 
     fun aDTO(): VectorDTO? {
         val especiesDTO : List<EspecieDTO> = especies.map { especie -> especie!!.aDTO()!! }
-        return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.aDTO()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
+        return VectorDTO(this.getId(), this.nombre, this.ubicacion!!.getId()!!, this.getTipo().toString(), especiesDTO.toMutableSet())
     }
 
     fun eliminarEspecie(especie : Especie) : Boolean {
@@ -144,6 +144,10 @@ open class Vector() {
 
     fun estaMutadoCon(unaMutacion : Mutacion): Boolean{
         return mutaciones.any { it.getId() == unaMutacion.getId() }
+    }
+
+    fun nombreDeUbicacionActual(): String {
+        return ubicacion!!.getNombre()!!
     }
 
 }

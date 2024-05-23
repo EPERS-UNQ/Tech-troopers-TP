@@ -1,20 +1,20 @@
 package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class UbicacionModeloTest {
+class UbicacionJpaModeloTest {
 
-    lateinit var ubicacion: Ubicacion
+    lateinit var ubicacion: UbicacionJpa
 
     @BeforeEach
     fun crearModelo(){
-        ubicacion = Ubicacion("Argentina")
+        ubicacion = UbicacionJpa("Argentina")
     }
 
     @Test
@@ -26,7 +26,7 @@ class UbicacionModeloTest {
     fun errorAlIntentarCrearUnaUbicacionSinNombre(){
 
         val errorMensaje = Assertions.assertThrows(ErrorNombre::class.java){
-            Ubicacion("")
+            UbicacionJpa("")
         }
 
         Assertions.assertEquals("El nombre no puede ser vacio.", errorMensaje.message)

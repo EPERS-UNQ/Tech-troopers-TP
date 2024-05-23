@@ -4,11 +4,8 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 
-import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.EspecieService
-import ar.edu.unq.eperdemic.services.runner.HibernateTransactionRunner.runTrx
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

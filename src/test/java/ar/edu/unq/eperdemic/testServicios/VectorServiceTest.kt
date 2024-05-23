@@ -10,9 +10,8 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
@@ -37,7 +36,7 @@ class VectorServiceTest {
 
     lateinit var humano: Vector
     lateinit var golondrina: Vector
-    lateinit var ubicacion: Ubicacion
+    lateinit var ubicacion: UbicacionJpa
 
     lateinit var random : RandomGenerator
 
@@ -45,7 +44,7 @@ class VectorServiceTest {
     fun prepare() {
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubicacion = Ubicacion("Argentina")
+        ubicacion = UbicacionJpa("Argentina")
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
 

@@ -11,7 +11,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -39,8 +39,8 @@ class PatogenoServiceTest {
 
     lateinit var covid: Patogeno
     lateinit var salmonella: Patogeno
-    lateinit var china: Ubicacion
-    lateinit var corea: Ubicacion
+    lateinit var china: UbicacionJpa
+    lateinit var corea: UbicacionJpa
     lateinit var pepe: Vector
     lateinit var pedro: Vector
 
@@ -50,8 +50,8 @@ class PatogenoServiceTest {
         dataService = DataServiceImpl(HibernateDataDAO())
         covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
-        china = Ubicacion("China")
-        corea = Ubicacion("Corea")
+        china = UbicacionJpa("China")
+        corea = UbicacionJpa("Corea")
         pedro = Vector("Pedro", corea, TipoVector.HUMANO)
         pepe = Vector("Pepe", china, TipoVector.HUMANO)
 

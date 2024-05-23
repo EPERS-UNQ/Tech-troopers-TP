@@ -42,7 +42,7 @@ class EstadisticaServiceTest {
     lateinit var insecto    : Vector
     lateinit var insecto2   : Vector
 
-    lateinit var ubicacion: Ubicacion
+    lateinit var ubicacion: UbicacionJpa
 
     lateinit var random : RandomGenerator
 
@@ -55,7 +55,7 @@ class EstadisticaServiceTest {
         random.setStrategy(NoAleatorioStrategy())
         random.setNumeroGlobal(1)
 
-        ubicacion = Ubicacion("Argentina")
+        ubicacion = UbicacionJpa("Argentina")
         serviceUbicacion.crear(ubicacion)
 
         humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
@@ -193,7 +193,7 @@ class EstadisticaServiceTest {
 
     @Test
     fun testReporteDeContagiosDeUnaUbicacionVacia() {
-        val ubicacionVacia = Ubicacion("Vietnam")
+        val ubicacionVacia = UbicacionJpa("Vietnam")
         val ubicacionRecuperada = serviceUbicacion.crear(ubicacionVacia)
 
         val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacionRecuperada.getNombre()!!)

@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.mutacion.BioalteracionGenetica
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
@@ -22,7 +22,7 @@ class MutacionModeloTest {
     lateinit var vector1 : Vector
     lateinit var vector2 : Vector
 
-    lateinit var ubicacion1 : Ubicacion
+    lateinit var ubicacion1 : UbicacionJpa
 
     lateinit var especie  : Especie
     lateinit var especie2  : Especie
@@ -35,7 +35,7 @@ class MutacionModeloTest {
 
     @BeforeEach
     fun crearModelo() {
-        ubicacion1 = Ubicacion("El Paraguay, perro")
+        ubicacion1 = UbicacionJpa("El Paraguay, perro")
 
         vector1 = Vector("araña", ubicacion1, TipoVector.INSECTO)
         vector2 = Vector("mosquito", ubicacion1, TipoVector.INSECTO)
