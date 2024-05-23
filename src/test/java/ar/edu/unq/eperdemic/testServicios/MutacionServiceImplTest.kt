@@ -100,7 +100,7 @@ class MutacionServiceImplTest {
     }
 
     @Test
-    fun seTrataDeAgregarUnaNuevaMutacionAUnaEspecieQueNoExiste() {
+    fun errorAlAgregarUnaNuevaMutacionAUnaEspecieQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaEspecie::class.java) {
             servicioMutacion.agregarMutacion(17, supresionBiomecanica)

@@ -66,7 +66,7 @@ open class Vector() {
     }
 
     fun contargiarA(vector: Vector){
-        if (this.puedeContagiarA(vector)){
+        if (this.puedeContagiarAlTipo(vector.getTipo())){
             this.enfermedadesDelVector().map{ this.intentarInfectar(vector, it) }
         }
     }
@@ -78,8 +78,7 @@ open class Vector() {
         val porcentajeDeMutacionExitoso = random.getNumeroRandom() + especie.capacidadDeBiomecanizacion()
         val mutacionQueHabilita = this.mutaciones.find { it.habilitaContagiarA(vector.getTipo()) }
 
-        if ((!vector.defiendeContra(especie) && random.porcentajeExistoso(porcentajeDeContagioExitoso)) &&
-            (mutacionQueHabilita == null || especie.posibles_mutaciones.contains(mutacionQueHabilita))) {
+        if (puedeContagiarConEspecie(vector, especie, porcentajeDeContagioExitoso) && puedeContagiarConMutacion(mutacionQueHabilita, especie)) {
             vector.infectar(especie)
             if (random.porcentajeAltExistoso(porcentajeDeMutacionExitoso)) {
                 this.mutarConMutacionRandom(especie.posibles_mutaciones.toList())
@@ -87,9 +86,19 @@ open class Vector() {
         }
     }
 
-    fun puedeContagiarA(vector: Vector) : Boolean {
-        return this.tipo.puedeContagiarA(vector.getTipo()) ||
-                this.mutaciones.any { it.habilitaContagiarA(vector.getTipo()) }
+    private fun puedeContagiarConEspecie(vector: Vector, especie: Especie, porcentaje: Int) : Boolean {
+        val random = RandomGenerator.getInstance()
+
+        return !vector.defiendeContra(especie) && random.porcentajeExistoso(porcentaje)
+    }
+
+    private fun puedeContagiarConMutacion(mutacion: Mutacion?, especie: Especie) : Boolean {
+        return mutacion == null || especie.posibles_mutaciones.contains(mutacion)
+    }
+
+    fun puedeContagiarAlTipo(tipo: TipoVector) : Boolean {
+        return this.tipo.puedeContagiarA(tipo) ||
+                this.mutaciones.any { it.habilitaContagiarA(tipo) }
     }
 
     fun mutarConMutacionRandom(mutacionesDeEspecie: List<Mutacion>) {

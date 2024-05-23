@@ -120,7 +120,7 @@ class EspecieServiceImplTest {
     }
 
     @Test
-    fun testSeTrataDeRecuperarUnaEspecieQueNoExiste() {
+    fun errorCuandoSeTrataDeRecuperarUnaEspecieQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaEspecie::class.java) {
             service.recuperar(15)
@@ -129,7 +129,7 @@ class EspecieServiceImplTest {
     }
 
     @Test
-    fun testCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
+    fun errorCuandoCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
             servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)

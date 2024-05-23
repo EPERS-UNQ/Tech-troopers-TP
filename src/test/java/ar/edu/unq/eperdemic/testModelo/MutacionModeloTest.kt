@@ -75,11 +75,11 @@ class MutacionModeloTest {
 
     @Test
     fun siAlgunVectorTieneLaMutacionBioalteracionMecanicaDeTipoInsectoPuedeContagiarAUnInsectoSiOSi() {
-        Assertions.assertFalse(vector1.puedeContagiarA(vector2))
+        Assertions.assertFalse(vector1.puedeContagiarAlTipo(vector2.getTipo()))
 
         vector1.mutarConMutacionRandom(listOf(bioalteracionMecanica))
 
-        Assertions.assertTrue(vector1.puedeContagiarA(vector2))
+        Assertions.assertTrue(vector1.puedeContagiarAlTipo(vector2.getTipo()))
     }
 
     @Test

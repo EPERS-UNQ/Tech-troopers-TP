@@ -188,8 +188,28 @@ class EstadisticaServiceTest {
 
     @Test
     fun cuandoSeIntentaRecuperarUnaEspecieLiderDeUnaUbicacionEnDondeNoHayEspecieLider(){
-        // Se devuelve la única especie que tiene el patogeno sin importar si es especie lider o no.
         Assertions.assertEquals(especie.getId(), service.especieLider().getId())
+    }
+
+    @Test
+    fun testReporteDeContagiosDeUnaUbicacionVacia() {
+        val ubicacionVacia = Ubicacion("Vietnam")
+        val ubicacionRecuperada = serviceUbicacion.crear(ubicacionVacia)
+
+        val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacionRecuperada.getNombre()!!)
+
+        Assertions.assertEquals(0, reporte.cantidadVectores)
+        Assertions.assertEquals(0, reporte.cantidadInfectados)
+        Assertions.assertEquals("No existe una Especie prevalente.", reporte.especiePrevalente)
+    }
+
+    @Test
+    fun testReporteDeContagiosDeUnaUbicacionQueNoExiste() {
+        val reporte : ReporteDeContagios = service.reporteDeContagios("Noruega")
+
+        Assertions.assertEquals(0, reporte.cantidadVectores)
+        Assertions.assertEquals(0, reporte.cantidadInfectados)
+        Assertions.assertEquals("No existe una Especie prevalente.", reporte.especiePrevalente)
     }
 
     @AfterEach

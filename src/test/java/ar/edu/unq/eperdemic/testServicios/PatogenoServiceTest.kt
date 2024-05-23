@@ -76,7 +76,7 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testSeTrataDeRecuperarUnPatogenoQueNoExiste() {
+    fun errorCuandoSeTrataDeRecuperarUnPatogenoQueNoExiste() {
 
         Assertions.assertThrows(NoExisteElPatogeno::class.java) {
             servicioPatogeno.recuperar(15)
@@ -255,7 +255,7 @@ class PatogenoServiceTest {
     }
 
     @Test
-    fun testCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
+    fun errorCuandoSeIntentaCrearDosPatogenosConElMismoNombre(){
 
         servicioPatogeno.crear(covid)
 
