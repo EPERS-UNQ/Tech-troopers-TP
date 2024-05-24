@@ -6,7 +6,6 @@ import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
-import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
@@ -62,7 +61,7 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedenCruzar(vector.getTipo()))
+            TipoVector.puedeCruzar(vector.getTipo()))
 
         this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
@@ -145,10 +144,10 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedenCruzar(vector.getTipo()))
+            TipoVector.puedeCruzar(vector.getTipo()))
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedenCruzar(vector.getTipo())).drop(0)
+            TipoVector.puedeCruzar(vector.getTipo())).drop(0)
 
         val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
 

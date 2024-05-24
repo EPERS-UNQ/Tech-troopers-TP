@@ -14,7 +14,7 @@ enum class TipoVector() {
     }
 
     companion object {
-        fun puedenCruzar(tipo: TipoVector): List<String> {
+        fun puedeCruzar(tipo: TipoVector): List<String> {
             return when (tipo) {
                 HUMANO -> listOf("Terrestre", "Maritimo")
                 ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
