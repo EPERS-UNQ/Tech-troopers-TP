@@ -61,7 +61,7 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector.getTipo()))
+            TipoVector.puedeCruzar(vector))
 
         this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
@@ -144,10 +144,10 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector.getTipo()))
+            TipoVector.puedeCruzar(vector))
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector.getTipo())).drop(0)
+            TipoVector.puedeCruzar(vector)).drop(0)
 
         val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
 

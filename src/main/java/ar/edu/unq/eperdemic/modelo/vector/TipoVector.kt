@@ -1,5 +1,8 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
+import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
+import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
+
 enum class TipoVector() {
     HUMANO,
     ANIMAL,
@@ -14,12 +17,29 @@ enum class TipoVector() {
     }
 
     companion object {
-        fun puedeCruzar(tipo: TipoVector): List<String> {
-            return when (tipo) {
-                HUMANO -> listOf("Terrestre", "Maritimo")
-                ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
-                INSECTO -> listOf("Terrestre", "Aereo")
+        fun puedeCruzar(vector: Vector): List<String> {
+            if(vector.getTipo() == HUMANO && vector.tieneMutacionPropulsionMotora()){
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo", "Aereo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo")
+                }
             }
+            else if (vector.getTipo() == INSECTO && vector.tieneMutacionElectroBranqueas()){
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo", "Maritimo")
+                }
+            }
+            else {
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo")
+                }
+            }
+
         }
     }
 }

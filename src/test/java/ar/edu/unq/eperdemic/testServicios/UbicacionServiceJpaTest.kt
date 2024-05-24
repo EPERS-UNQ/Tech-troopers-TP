@@ -72,8 +72,8 @@ class UbicacionServiceJpaTest {
 
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "juanito", ubi2.getId()!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "corona2", ubi2.getId()!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId()!!)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -129,8 +129,8 @@ class UbicacionServiceJpaTest {
         serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
         val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))
 
-        serviceVector.infectar(vector3.getId()!!, especie1.getId()!!)
-        serviceVector.infectar(vector4.getId()!!, especie2.getId()!!)
+        serviceVector.infectar(vector3.getId(), especie1.getId()!!)
+        serviceVector.infectar(vector4.getId(), especie2.getId()!!)
         serviceUbicacion.expandir(ubi1.getId()!!)
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
@@ -157,7 +157,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
-            serviceUbicacion.mover(vector1.getId()!!, 50)
+            serviceUbicacion.mover(vector1.getId(), 50)
         }
     }
 

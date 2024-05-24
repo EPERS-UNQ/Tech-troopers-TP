@@ -13,13 +13,13 @@ abstract class Mutacion() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
 
-    abstract fun atributo() : Any
+    open fun atributo() : Any { return 0 }
 
-    abstract fun habilitaContagiarA(vector: TipoVector) : Boolean
+    open fun habilitaContagiarA(vector: TipoVector) : Boolean { return false }
 
-    abstract fun potencia() : Int
+    open fun potencia() : Int { return 0 }
 
-    abstract fun eliminarEspeciesInferiores(vector : Vector)
+    open fun eliminarEspeciesInferiores(vector : Vector){}
 
     fun setId(id: Long) {
         this.id = id

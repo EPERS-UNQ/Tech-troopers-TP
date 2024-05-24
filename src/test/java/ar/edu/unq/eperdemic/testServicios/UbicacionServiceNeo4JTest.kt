@@ -9,17 +9,17 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
-import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
+import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.services.PatogenoService
-import ar.edu.unq.eperdemic.services.UbicacionService
-import ar.edu.unq.eperdemic.services.VectorService
+import ar.edu.unq.eperdemic.services.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.util.Assert
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -27,8 +27,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class UbicacionServiceNeo4JTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
-    @Autowired lateinit var serviceVector: VectorService
-    @Autowired lateinit var servicePatogeno: PatogenoService
+    @Autowired lateinit var serviceVector:    VectorService
+    @Autowired lateinit var servicePatogeno:  PatogenoService
+    @Autowired lateinit var serviceMutacion:  MutacionService
+    @Autowired lateinit var serviceEspecie:   EspecieService
 
     lateinit var arg: UbicacionJpa
     lateinit var chl: UbicacionJpa
@@ -38,8 +40,9 @@ class UbicacionServiceNeo4JTest {
     lateinit var bol: UbicacionJpa
     lateinit var urg: UbicacionJpa
     lateinit var ecu: UbicacionJpa
-    lateinit var br: UbicacionJpa
+    lateinit var br:  UbicacionJpa
     lateinit var per: UbicacionJpa
+    lateinit var hn:  UbicacionJpa
     lateinit var hornerito: Vector
     lateinit var mosca: Vector
     lateinit var guanaco: Vector
@@ -55,6 +58,8 @@ class UbicacionServiceNeo4JTest {
     lateinit var metarhiziumAnisopliae: Especie
     lateinit var wolbachia: Especie
     lateinit var bacillusThuringiensis: Especie
+    lateinit var propulsionMotora: PropulsionMotora
+    lateinit var electroBranqueas: ElectroBranqueas
 
     lateinit var random: RandomGenerator
     lateinit var dataService: DataService
@@ -72,8 +77,9 @@ class UbicacionServiceNeo4JTest {
         bol = UbicacionJpa("Bolivia")
         urg = UbicacionJpa("Uruguay")
         ecu = UbicacionJpa("Ecuador")
-        br = UbicacionJpa("Brasil")
+        br  = UbicacionJpa("Brasil")
         per = UbicacionJpa("Peru")
+        hn  = UbicacionJpa("Honduras")
         hornerito = Vector("Hornerito", arg, TipoVector.ANIMAL)
         guanaco = Vector("Guanaco", chl, TipoVector.ANIMAL)
         mosca = Vector("Mosca", urg, TipoVector.INSECTO)
@@ -83,6 +89,8 @@ class UbicacionServiceNeo4JTest {
         virus = Patogeno("Virus", 13,14,53,30,10)
         bacteria = Patogeno("Bacteria", 5, 10, 32, 25, 50)
         hongo = Patogeno("Hongo", 65, 20, 30, 45, 15)
+        propulsionMotora = PropulsionMotora()
+        electroBranqueas = ElectroBranqueas()
 
         serviceUbicacion.crear(arg)
         serviceUbicacion.crear(chl)
@@ -94,6 +102,7 @@ class UbicacionServiceNeo4JTest {
         serviceUbicacion.crear(ecu)
         serviceUbicacion.crear(br)
         serviceUbicacion.crear(per)
+        serviceUbicacion.crear(hn)
         serviceVector.crear(hornerito)
         serviceVector.crear(guanaco)
         serviceVector.crear(mosca)
@@ -115,6 +124,8 @@ class UbicacionServiceNeo4JTest {
         serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Maritimo")
         serviceUbicacion.conectar(arg.getNombre()!!, urg.getNombre()!!, "Maritimo")
+        serviceUbicacion.conectar(urg.getNombre()!!, bol.getNombre()!!, "Aereo")
+        serviceUbicacion.conectar(urg.getNombre()!!, arg.getNombre()!!, "Maritimo")
         serviceUbicacion.conectar(chl.getNombre()!!, urg.getNombre()!!, "Maritimo")
         serviceUbicacion.conectar(chl.getNombre()!!, br.getNombre()!!, "Maritimo")
         serviceUbicacion.conectar(chl.getNombre()!!, per.getNombre()!!, "Terrestre")
@@ -123,10 +134,13 @@ class UbicacionServiceNeo4JTest {
         serviceUbicacion.conectar(per.getNombre()!!, bol.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(vnz.getNombre()!!, col.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(col.getNombre()!!, vnz.getNombre()!!, "Maritimo")
+        serviceUbicacion.conectar(col.getNombre()!!, bol.getNombre()!!, "Aereo")
         serviceUbicacion.conectar(br.getNombre()!!, ecu.getNombre()!!, "Aereo")
         serviceUbicacion.conectar(br.getNombre()!!, bol.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(par.getNombre()!!, br.getNombre()!!, "Terrestre")
         serviceUbicacion.conectar(bol.getNombre()!!, ecu.getNombre()!!, "Terrestre")
+        serviceUbicacion.conectar(bol.getNombre()!!, br.getNombre()!!, "Terrestre")
+        serviceUbicacion.conectar(bol.getNombre()!!, urg.getNombre()!!, "Terrestre")
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -146,22 +160,22 @@ class UbicacionServiceNeo4JTest {
 
         val ubicacionesDeEcu = serviceUbicacion.conectados(ecu.getNombre()!!)
         Assertions.assertTrue(ubicacionesDeEcu.isNotEmpty())
-        Assertions.assertEquals(2, ubicacionesDeEcu.size)
+        Assertions.assertEquals(9, ubicacionesDeEcu.size)
 
     }
 
     @Test
     fun seSabeCuantosCaminosPuedeElegirUnVectorALaHoraDeMoversePorUnaUbicacion() {
 
-        val ubicacionesDeUrg = serviceUbicacion.conectados(urg.getNombre()!!)
+        val ubicacionesDeHonduras = serviceUbicacion.conectados(hn.getNombre()!!)
 
-        Assertions.assertEquals(0, ubicacionesDeUrg.size)
+        Assertions.assertEquals(0, ubicacionesDeHonduras.size)
 
-        serviceUbicacion.conectar(urg.getNombre()!!, chl.getNombre()!!, "Aereo")
+        serviceUbicacion.conectar(hn.getNombre()!!, chl.getNombre()!!, "Aereo")
 
-        val nuevasUbicacionesDeUrg = serviceUbicacion.conectados(urg.getNombre()!!)
+        val nuevasUbicacionesDeHonduras = serviceUbicacion.conectados(hn.getNombre()!!)
 
-        Assertions.assertEquals(8, nuevasUbicacionesDeUrg.size)
+        Assertions.assertEquals(9, nuevasUbicacionesDeHonduras.size)
     }
 
     @Test
@@ -197,7 +211,7 @@ class UbicacionServiceNeo4JTest {
     fun unVectorNoSePuedeMoverEntreUbicacionesQueNoTienenCaminos() {
 
         Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java){
-            serviceUbicacion.mover(mosca.getId(), arg.getId()!!)
+            serviceUbicacion.mover(mosca.getId(), chl.getId()!!)
         }
 
     }
@@ -207,7 +221,7 @@ class UbicacionServiceNeo4JTest {
 
         Assertions.assertEquals(arg.getNombre(), hornerito.nombreDeUbicacionActual())
 
-        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),ecu.getNombre()!!)
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), ecu.getNombre()!!)
 
         val horneritoLuegoDeMoverse = serviceVector.recuperar(hornerito.getId())
 
@@ -232,6 +246,70 @@ class UbicacionServiceNeo4JTest {
         Assertions.assertTrue(abejaInfectada.estaInfectadoCon(granulosis))
         Assertions.assertTrue(mariaInfectada.estaInfectadoCon(granulosis))
 
+    }
+
+    @Test
+    fun cuandoUnVectorHumanoConPropulsionMotoraPuedeCruzarUnCaminoDeTipoAereo() {
+        val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
+        serviceVector.crear(pepe)
+        serviceMutacion.agregarMutacion(beauveriaBassiana.getId()!!, propulsionMotora)
+
+        val beauveriaBassianaConMutacion = serviceEspecie.recuperar(beauveriaBassiana.getId()!!)
+        val joaoInfectado = serviceVector.recuperar(joao.getId())
+
+        Assertions.assertFalse(pepe.estaInfectado())
+        Assertions.assertTrue(joaoInfectado.estaInfectado())
+        Assertions.assertFalse(joaoInfectado.estaMutado())
+
+        serviceUbicacion.mover(joao.getId(), bol.getId()!!)
+
+        val pepeInfectado = serviceVector.recuperar(pepe.getId())
+
+        val joaoMutado = serviceVector.recuperar(joao.getId())
+
+        Assertions.assertTrue(pepeInfectado.estaInfectado())
+        Assertions.assertTrue(beauveriaBassianaConMutacion.tieneLaMutacion(propulsionMotora))
+        Assertions.assertTrue(joaoMutado.estaMutadoCon(propulsionMotora))
+
+        serviceUbicacion.mover(joao.getId(), br.getId()!!)
+
+        serviceUbicacion.mover(joao.getId(), ecu.getId()!!)
+
+        val joaoViajero = serviceVector.recuperar(joao.getId())
+
+        Assertions.assertEquals(ecu.getNombre(), joaoViajero.nombreDeUbicacionActual())
+    }
+
+    @Test
+    fun cuandoUnVectorInsectoConElectroBranqueasPuedeCruzarUnCaminoDeTipoMaritimo() {
+        val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
+        serviceVector.crear(pepe)
+        serviceMutacion.agregarMutacion(wolbachia.getId()!!, electroBranqueas)
+
+        val wolbachiaConMutacion = serviceEspecie.recuperar(wolbachia.getId()!!)
+        val moscaInfectada = serviceVector.recuperar(mosca.getId())
+
+        Assertions.assertFalse(pepe.estaInfectado())
+        Assertions.assertTrue(moscaInfectada.estaInfectado())
+        Assertions.assertFalse(moscaInfectada.estaMutado())
+
+        serviceUbicacion.mover(moscaInfectada.getId(), bol.getId()!!)
+
+        val pepeInfectado = serviceVector.recuperar(pepe.getId())
+
+        val moscaMutada = serviceVector.recuperar(moscaInfectada.getId())
+
+        Assertions.assertTrue(pepeInfectado.estaInfectado())
+        Assertions.assertTrue(wolbachiaConMutacion.tieneLaMutacion(electroBranqueas))
+        Assertions.assertTrue(moscaMutada.estaMutadoCon(electroBranqueas))
+
+        serviceUbicacion.mover(moscaMutada.getId(), urg.getId()!!)
+
+        serviceUbicacion.mover(moscaMutada.getId(), arg.getId()!!)
+
+        val moscaViajera = serviceVector.recuperar(mosca.getId())
+
+        Assertions.assertEquals(arg.getNombre(), moscaViajera.nombreDeUbicacionActual())
     }
 
     @AfterEach
