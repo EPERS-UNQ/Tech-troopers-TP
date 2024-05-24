@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @CrossOrigin
 @RequestMapping("/mutacion")
-class MutacionController( private val mutacionService: MutacionService ) {
+class MutacionControllerREST(private val mutacionService: MutacionService ) {
 
     @PostMapping("/{especieId}")
     fun agregarMutacion(@RequestBody mutacionDTO: MutacionDTO, @PathVariable especieId: Long ) = mutacionService.agregarMutacion(especieId, mutacionDTO.aModelo())
