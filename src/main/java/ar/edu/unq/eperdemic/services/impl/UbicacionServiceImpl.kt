@@ -12,6 +12,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -61,7 +62,7 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo()))
+            TipoVector.puedenCruzar(vector.getTipo()))
 
         this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
@@ -144,10 +145,10 @@ class UbicacionServiceImpl() : UbicacionService {
         }
 
         this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo()))
+            TipoVector.puedenCruzar(vector.getTipo()))
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoDeCamino.puedeCruzar(vector.getTipo())).drop(0)
+            TipoVector.puedenCruzar(vector.getTipo())).drop(0)
 
         val listaDeUbicaciones = nodosHastaDestino.map { it.getNombre()!! }
 

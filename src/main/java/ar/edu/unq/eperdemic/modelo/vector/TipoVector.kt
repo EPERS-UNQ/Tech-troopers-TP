@@ -12,4 +12,14 @@ enum class TipoVector() {
             INSECTO -> tipo == HUMANO || tipo == ANIMAL
         }
     }
+
+    companion object {
+        fun puedenCruzar(tipo: TipoVector): List<String> {
+            return when (tipo) {
+                HUMANO -> listOf("Terrestre", "Maritimo")
+                ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                INSECTO -> listOf("Terrestre", "Aereo")
+            }
+        }
+    }
 }
