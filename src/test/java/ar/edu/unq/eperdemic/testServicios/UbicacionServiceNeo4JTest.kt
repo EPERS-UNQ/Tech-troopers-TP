@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -184,7 +185,7 @@ class UbicacionServiceNeo4JTest {
     }
 
     @Test
-    fun unVectorInsectoNoSePuedeMoverPorCaminosAquiaticos() {
+    fun unVectorInsectoNoSePuedeMoverPorCaminosMaritimo() {
 
         Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
             serviceUbicacion.mover(abeja.getId(), vnz.getId()!!)

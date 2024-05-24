@@ -8,9 +8,9 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.neo4j.camino.TipoDeCamino
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.Neo4jUbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class UbicacionServiceImpl() : UbicacionService {
 
-    @Autowired private lateinit var ubicacionJpaDAO: UbicacionDAO
-    @Autowired private lateinit var ubicacionNeoDAO: Neo4jUbicacionDAO
+    @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
+    @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: UbicacionJpa) : UbicacionJpa {

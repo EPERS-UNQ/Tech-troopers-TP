@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface UbicacionDAO : JpaRepository<UbicacionJpa, Long> {
+interface UbicacionJpaDAO : JpaRepository<UbicacionJpa, Long> {
 
     @Query("""
         select count(u)

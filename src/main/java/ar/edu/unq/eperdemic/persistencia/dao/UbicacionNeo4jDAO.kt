@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-interface Neo4jUbicacionDAO : Neo4jRepository<UbicacionNeo4j, Long> {
+interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
     @Query(
         """

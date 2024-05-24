@@ -187,34 +187,6 @@ class UbicacionServiceJpaTest {
 
     }
 
-//    @Test
-//    fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
-//        random.setNumeroGlobal(1)
-//        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-//
-//        val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
-//        val ubicacionNueva = vectorTemporal.ubicacion!!
-//
-//        Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
-//    }
-//
-//    @Test
-//    fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
-//        random.setNumeroGlobal(1)
-//        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-//
-//        serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
-//        serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
-//
-//        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
-//
-//        Assertions.assertTrue(
-//            vectoresDeNuevaUbicacion.all {
-//                    v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
-//            }
-//        )
-//    }
-
     @AfterEach
     fun borrarRegistros() {
         serviceUbicacion.deleteAll()
