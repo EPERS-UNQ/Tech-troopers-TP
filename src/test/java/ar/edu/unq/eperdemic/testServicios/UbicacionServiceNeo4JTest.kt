@@ -250,6 +250,11 @@ class UbicacionServiceNeo4JTest {
 
     @Test
     fun cuandoUnVectorHumanoConPropulsionMotoraPuedeCruzarUnCaminoDeTipoAereo() {
+
+        Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
+            serviceUbicacion.mover(joao.getId(), ecu.getId()!!)
+        }
+
         val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
         serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(beauveriaBassiana.getId()!!, propulsionMotora)
@@ -282,6 +287,11 @@ class UbicacionServiceNeo4JTest {
 
     @Test
     fun cuandoUnVectorInsectoConElectroBranqueasPuedeCruzarUnCaminoDeTipoMaritimo() {
+
+        Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
+            serviceUbicacion.mover(mosca.getId(), arg.getId()!!)
+        }
+
         val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
         serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(wolbachia.getId()!!, electroBranqueas)
