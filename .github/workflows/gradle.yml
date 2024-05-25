@@ -12,6 +12,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: eperdemic
+        ports:
+          - 3306:3306
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+      neo4j:
+        image: neo4j:latest
+        env:
+          NEO4J_AUTH: neo4j/rootroot
+        ports:
+          - 7687:7687
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -21,15 +40,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Set up MySQL Database
-        run: docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql --default-authentication-plugin=mysql_native_password -h 127.0.0.1
-
-      - name: Set up Neo4J Database
-        run: docker run -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/rootroot -d neo4j
-
-      - name: Set up MongoDB Database
-        run: docker run -p 27017:27017 -d mongo
 
       - name: Extract tag name
         run: fullTagName=${{ github.ref }} && path='refs/tags/' && a='' && tagName=${fullTagName/$path/$a} && echo $tagName && echo "##[set-output name=tagName;]$tagName"
