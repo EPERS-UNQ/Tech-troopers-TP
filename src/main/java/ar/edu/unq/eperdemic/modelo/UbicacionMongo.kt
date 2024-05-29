@@ -7,6 +7,6 @@ import javax.persistence.Id
 class UbicacionMongo() {
 
     @Id
-    private var id: Long? = null
+    private var id: String? = null
 
 }
