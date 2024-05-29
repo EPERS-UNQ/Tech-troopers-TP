@@ -6,12 +6,14 @@ import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionNoAlcanzable
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -25,11 +27,13 @@ class UbicacionServiceImpl() : UbicacionService {
 
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
+    @Autowired private lateinit var ubicacionMongo: UbicacionMongoDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: UbicacionJpa) : UbicacionJpa {
         ubicacionJpaDAO.save(ubicacion)
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()!!))
+        ubicacionMongo.save(UbicacionMongo()) // ¿¿Lo persistimos con un constructor sin parámetros??
         return ubicacion
     }
 
