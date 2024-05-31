@@ -13,6 +13,7 @@ class Camino() {
     private var id: Long? = null
 
     var tipo: TipoDeCamino? = null
+    var largo: Int = 0
 
     @TargetNode
     var ubicacion: UbicacionJpa? = null

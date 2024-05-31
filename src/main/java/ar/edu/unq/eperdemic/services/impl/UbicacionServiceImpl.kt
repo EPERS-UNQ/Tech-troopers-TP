@@ -94,7 +94,7 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
+        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin, 100)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -120,8 +120,8 @@ class UbicacionServiceImpl() : UbicacionService {
 
     }
 
-    override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String) {
-        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
+    override fun conectar(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String, largo: Int) {
+        ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino, largo)
     }
 
     override fun conectados(nombreDeUbicacion: String): List<UbicacionJpa> {

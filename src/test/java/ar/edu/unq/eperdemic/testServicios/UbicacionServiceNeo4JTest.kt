@@ -120,27 +120,27 @@ class UbicacionServiceNeo4JTest {
         wolbachia = servicePatogeno.agregarEspecie(hongo.getId(), "Wolbachia", urg.getId()!!)
         bacillusThuringiensis = servicePatogeno.agregarEspecie(hongo.getId(), "Bacillus Thuringiensis", col.getId()!!)
 
-        serviceUbicacion.conectar(arg.getNombre()!!, vnz.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(arg.getNombre()!!, urg.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(urg.getNombre()!!, bol.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(urg.getNombre()!!, arg.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(chl.getNombre()!!, urg.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(chl.getNombre()!!, br.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(chl.getNombre()!!, per.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(per.getNombre()!!, bol.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(per.getNombre()!!, vnz.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(per.getNombre()!!, bol.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(vnz.getNombre()!!, col.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(col.getNombre()!!, vnz.getNombre()!!, "Maritimo")
-        serviceUbicacion.conectar(col.getNombre()!!, bol.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(br.getNombre()!!, ecu.getNombre()!!, "Aereo")
-        serviceUbicacion.conectar(br.getNombre()!!, bol.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(par.getNombre()!!, br.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(bol.getNombre()!!, ecu.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(bol.getNombre()!!, br.getNombre()!!, "Terrestre")
-        serviceUbicacion.conectar(bol.getNombre()!!, urg.getNombre()!!, "Terrestre")
+        serviceUbicacion.conectar(arg.getNombre()!!, vnz.getNombre()!!, "Aereo", 10)
+        serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Terrestre", 20)
+        serviceUbicacion.conectar(arg.getNombre()!!, chl.getNombre()!!, "Maritimo", 30)
+        serviceUbicacion.conectar(arg.getNombre()!!, urg.getNombre()!!, "Maritimo", 50)
+        serviceUbicacion.conectar(urg.getNombre()!!, bol.getNombre()!!, "Aereo", 100)
+        serviceUbicacion.conectar(urg.getNombre()!!, arg.getNombre()!!, "Maritimo", 200)
+        serviceUbicacion.conectar(chl.getNombre()!!, urg.getNombre()!!, "Maritimo", 30)
+        serviceUbicacion.conectar(chl.getNombre()!!, br.getNombre()!!, "Maritimo", 45)
+        serviceUbicacion.conectar(chl.getNombre()!!, per.getNombre()!!, "Terrestre", 85)
+        serviceUbicacion.conectar(per.getNombre()!!, bol.getNombre()!!, "Aereo", 21)
+        serviceUbicacion.conectar(per.getNombre()!!, vnz.getNombre()!!, "Aereo", 38)
+        serviceUbicacion.conectar(per.getNombre()!!, bol.getNombre()!!, "Terrestre", 29)
+        serviceUbicacion.conectar(vnz.getNombre()!!, col.getNombre()!!, "Terrestre", 50)
+        serviceUbicacion.conectar(col.getNombre()!!, vnz.getNombre()!!, "Maritimo", 24)
+        serviceUbicacion.conectar(col.getNombre()!!, bol.getNombre()!!, "Aereo", 21)
+        serviceUbicacion.conectar(br.getNombre()!!, ecu.getNombre()!!, "Aereo", 74)
+        serviceUbicacion.conectar(br.getNombre()!!, bol.getNombre()!!, "Terrestre", 81)
+        serviceUbicacion.conectar(par.getNombre()!!, br.getNombre()!!, "Terrestre", 64)
+        serviceUbicacion.conectar(bol.getNombre()!!, ecu.getNombre()!!, "Terrestre", 18)
+        serviceUbicacion.conectar(bol.getNombre()!!, br.getNombre()!!, "Terrestre", 84)
+        serviceUbicacion.conectar(bol.getNombre()!!, urg.getNombre()!!, "Terrestre", 27)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -156,7 +156,7 @@ class UbicacionServiceNeo4JTest {
         val ubicacionesDe = serviceUbicacion.conectados(ecu.getNombre()!!)
         Assertions.assertTrue(ubicacionesDe.isEmpty())
 
-        serviceUbicacion.conectar(ecu.getNombre()!!, col.getNombre()!!, "Maritimo")
+        serviceUbicacion.conectar(ecu.getNombre()!!, col.getNombre()!!, "Maritimo", 34)
 
         val ubicacionesDeEcu = serviceUbicacion.conectados(ecu.getNombre()!!)
         Assertions.assertTrue(ubicacionesDeEcu.isNotEmpty())
@@ -171,7 +171,7 @@ class UbicacionServiceNeo4JTest {
 
         Assertions.assertEquals(0, ubicacionesDeHonduras.size)
 
-        serviceUbicacion.conectar(hn.getNombre()!!, chl.getNombre()!!, "Aereo")
+        serviceUbicacion.conectar(hn.getNombre()!!, chl.getNombre()!!, "Aereo", 106)
 
         val nuevasUbicacionesDeHonduras = serviceUbicacion.conectados(hn.getNombre()!!)
 
@@ -324,7 +324,7 @@ class UbicacionServiceNeo4JTest {
 
     @AfterEach
     fun tearDown() {
-        serviceUbicacion.deleteAll()
+        //serviceUbicacion.deleteAll()
         dataService.cleanAll()
     }
 

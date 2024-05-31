@@ -16,7 +16,7 @@ interface UbicacionService {
 
     fun expandir(ubicacionId: Long)
 
-    fun conectar(nombreDeUbicacion1:String, nombreDeUbicacion2:String, tipoCamino:String)
+    fun conectar(nombreDeUbicacion1:String, nombreDeUbicacion2:String, tipoCamino:String,largo: Int)
 
     fun conectados(nombreDeUbicacion:String): List<UbicacionJpa>
 

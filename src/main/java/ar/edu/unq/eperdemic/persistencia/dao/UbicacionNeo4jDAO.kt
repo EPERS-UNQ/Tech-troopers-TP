@@ -12,10 +12,10 @@ interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
         """
             MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion1})
             MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion2})
-            CREATE (u1) -[:Camino {tipo: ${'$'}tipoCamino}]-> (u2)
+            CREATE (u1) -[:Camino {tipo: ${'$'}tipoCamino, largo: ${'$'}largo}]-> (u2)
         """
     )
-    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String)
+    fun conectarCaminos(nombreDeUbicacion1: String, nombreDeUbicacion2: String, tipoCamino: String, largo: Int)
 
     @Query(
         """
@@ -30,10 +30,13 @@ interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
     @Query(
         """
             MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nomUbiInicio}), (u2:UbicacionNeo4j {nombre: ${'$'}nomUbiFin})
-            RETURN exists((u1)-[:Camino*]->(u2)) AS estan_conectados
+            MATCH path = (u1)-[:Camino*]->(u2)
+            WITH path, relationships(path) AS rels
+            WHERE ALL(rel IN rels WHERE reduce(s = 0, rel IN rels | s + rel.largo) <= ${'$'}distancia)
+            RETURN COUNT(path) > 0 AS existeCamino
         """
     )
-    fun esUbicacionCercana(nomUbiInicio: String, nomUbiFin: String): Boolean
+    fun esUbicacionCercana(nomUbiInicio: String, nomUbiFin: String, distancia: Int): Boolean
 
     @Query(
         """
