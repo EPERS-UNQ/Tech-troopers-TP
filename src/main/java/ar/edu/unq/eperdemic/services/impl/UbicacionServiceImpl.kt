@@ -89,7 +89,8 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
+        if((nomUbiInicio!=nomUbiFin) ||
+            !ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -98,9 +99,6 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
-            throw ErrorUbicacionMuyLejana()
-        }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
             throw ErrorUbicacionNoAlcanzable()
         }

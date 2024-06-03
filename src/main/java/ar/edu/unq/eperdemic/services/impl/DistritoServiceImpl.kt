@@ -4,8 +4,10 @@ import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.persistencia.dao.DistritoDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
-class DistritoServiceImpl : DistritoService{
+@Service
+class DistritoServiceImpl() : DistritoService{
 
     @Autowired private lateinit var distritoDAO: DistritoDAO
 

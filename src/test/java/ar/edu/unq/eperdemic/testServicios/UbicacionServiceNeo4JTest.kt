@@ -324,7 +324,7 @@ class UbicacionServiceNeo4JTest {
 
     @AfterEach
     fun tearDown() {
-        serviceUbicacion.deleteAll()
+        //serviceUbicacion.deleteAll()
         dataService.cleanAll()
     }
 
