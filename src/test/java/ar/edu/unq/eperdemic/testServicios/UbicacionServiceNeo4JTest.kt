@@ -160,7 +160,7 @@ class UbicacionServiceNeo4JTest {
 
         val ubicacionesDeEcu = serviceUbicacion.conectados(ecu.getNombre()!!)
         Assertions.assertTrue(ubicacionesDeEcu.isNotEmpty())
-        Assertions.assertEquals(9, ubicacionesDeEcu.size)
+        Assertions.assertEquals(1, ubicacionesDeEcu.size)
 
     }
 
@@ -175,7 +175,7 @@ class UbicacionServiceNeo4JTest {
 
         val nuevasUbicacionesDeHonduras = serviceUbicacion.conectados(hn.getNombre()!!)
 
-        Assertions.assertEquals(9, nuevasUbicacionesDeHonduras.size)
+        Assertions.assertEquals(1, nuevasUbicacionesDeHonduras.size)
     }
 
     @Test
@@ -322,9 +322,19 @@ class UbicacionServiceNeo4JTest {
         Assertions.assertEquals(arg.getNombre(), moscaViajera.nombreDeUbicacionActual())
     }
 
+    @Test
+    fun unVectorInexistenteTrataDeMoverseAUnaUbicacion() {
+
+    }
+
+    @Test
+    fun ubicacionesConectadasDeUnaUbicacionQueNoExiste() {
+
+    }
+
     @AfterEach
     fun tearDown() {
-        //serviceUbicacion.deleteAll()
+        serviceUbicacion.deleteAll()
         dataService.cleanAll()
     }
 

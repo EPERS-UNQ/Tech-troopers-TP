@@ -89,7 +89,7 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if((nomUbiInicio!=nomUbiFin) ||
+        if(
             !ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
