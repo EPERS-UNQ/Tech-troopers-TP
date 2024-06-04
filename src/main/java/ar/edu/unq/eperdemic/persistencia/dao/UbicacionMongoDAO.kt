@@ -11,6 +11,6 @@ interface UbicacionMongoDAO : MongoRepository<UbicacionMongo, String> {
     @Query("{nombre: '?0'}")
     fun findByNombre(nombre: String): UbicacionMongo
 
-    @Query("{nombre: '?0'}", fields = "{coordenada: 1}")
-    fun findCoordenadaByNombre(nombre: String): Coordenada?
+    //@Query("{nombre: '?0'}", fields = "{coordenada: 1}")
+    //fun findCoordenadaByNombre(nombre: String): Coordenada?
 }

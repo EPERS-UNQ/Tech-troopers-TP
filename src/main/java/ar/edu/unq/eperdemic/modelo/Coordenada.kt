@@ -33,5 +33,5 @@ class Coordenada(latitud: Double, longitud: Double) {
         if(!this.esCoordenadaValida(latitud, longitud)){
             throw ErrorCoordenadaInvalida()
         }
-    }s
+    }
 }
