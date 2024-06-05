@@ -42,7 +42,9 @@ class UbicacionGlobal() {
     }
 
     fun aJPA(): UbicacionJpa {
-        return UbicacionJpa(this.nombre!!)
+        val ubicacionJPA = UbicacionJpa(this.nombre!!)
+        ubicacionJPA.setId(this.id!!)
+        return ubicacionJPA
     }
 
 }

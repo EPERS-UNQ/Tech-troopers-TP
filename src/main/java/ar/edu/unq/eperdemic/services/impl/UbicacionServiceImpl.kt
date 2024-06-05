@@ -54,10 +54,10 @@ class UbicacionServiceImpl() : UbicacionService {
     override fun recuperar(id: Long): UbicacionGlobal {
 
         val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
-        val ubicacionNeo = ubicacionNeoDAO.findByIdOrNull(id)
+        val ubicacionNeo = ubicacionNeoDAO.findByNombre(ubicacionJpa?.getNombre()!!)
         val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa?.getNombre()!!)
 
-        if (ubicacionJpa == null || ubicacionNeo == null) {
+        if (ubicacionJpa == null || ubicacionNeo == null || ubicacionMongo == null) {
             throw NoExisteLaUbicacion()
         }
 

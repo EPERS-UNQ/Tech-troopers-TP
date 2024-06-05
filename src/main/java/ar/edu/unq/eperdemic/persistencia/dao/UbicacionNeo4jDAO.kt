@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
 
+    fun findByNombre(nombre: String) : UbicacionNeo4j?
+
     @Query(
         """
             MATCH (u1:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion1})
