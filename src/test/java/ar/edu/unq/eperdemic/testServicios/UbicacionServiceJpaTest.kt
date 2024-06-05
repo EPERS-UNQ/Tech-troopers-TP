@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteLaEntidad
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
@@ -13,15 +14,11 @@ import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
-
-
-
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -98,7 +95,7 @@ class UbicacionServiceJpaTest {
     }
 
     @Test
-    fun errorCuandoSeIntentaRecuperarUnVectorConUnIdQueNoExiste() {
+    fun errorCuandoSeIntentaRecuperarUnaUbicacionConUnIdQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaUbicacion::class.java){
             serviceUbicacion.recuperar(50)
@@ -111,7 +108,7 @@ class UbicacionServiceJpaTest {
         ubi1.setNombre("Estados Unidos")
         serviceUbicacion.updatear(ubi1)
 
-        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId()!!)
+        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId())
 
         Assertions.assertFalse(
                 ubi1Actualizada.getNombre() == "Argentina"
@@ -152,7 +149,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiNoHayUnVenctorInfectadoEnLaUbicacionNoHayCambios() {
         random.setNumeroGlobal(1)
-        serviceUbicacion.expandir(ubi1.getId()!!)
+        serviceUbicacion.expandir(ubi1.getId())
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi4.getId() }
 
@@ -180,18 +177,9 @@ class UbicacionServiceJpaTest {
 
         val ubicacion = UbicacionGlobal("Argentina", coordenada1)
 
-        Assertions.assertThrows(DataIntegrityViolationException::class.java){
+        Assertions.assertThrows(ErrorYaExisteLaEntidad::class.java){
             serviceUbicacion.crear(ubicacion)
         }
-    }
-
-    @Test
-    fun errorCuandoSeTrataDeRecuperarUnaUbicacionQueNoExiste() {
-
-        Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
-            serviceUbicacion.recuperar(15)
-        }
-
     }
 
     @AfterEach

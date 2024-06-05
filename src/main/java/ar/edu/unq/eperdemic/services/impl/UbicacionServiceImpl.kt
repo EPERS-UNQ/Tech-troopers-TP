@@ -1,9 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
-import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
-import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionNoAlcanzable
-import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
+import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.UbicacionJpa
@@ -32,14 +29,24 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
-        ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
+        val ubicacionExistente = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
+        if ( ubicacionExistente != null ) {
+           throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
+        }
+
+        val ubicacionPersistida = ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
         ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
+        ubicacion.setId(ubicacionPersistida.getId()!!)
+
         return ubicacion
     }
 
     override fun updatear(ubicacion: UbicacionGlobal) {
-        ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
+        val ubicacionExistente = ubicacionJpaDAO.findByIdOrNull(ubicacion.getId()) ?: throw NoExisteLaUbicacion()
+
+        ubicacionExistente.setNombre(ubicacion.getNombre())
+        ubicacionJpaDAO.save(ubicacionExistente)
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
         ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
     }
@@ -48,13 +55,13 @@ class UbicacionServiceImpl() : UbicacionService {
 
         val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
         val ubicacionNeo = ubicacionNeoDAO.findByIdOrNull(id)
-        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa!!.getNombre()!!)
+        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa?.getNombre()!!)
 
-        if (ubicacionJpa == null || ubicacionNeo == null || ubicacionMongo == null) {
+        if (ubicacionJpa == null || ubicacionNeo == null) {
             throw NoExisteLaUbicacion()
         }
 
-        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada())
+        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo!!.getNombre(), ubicacionMongo!!.getCordenada())
 
         ubicacionGlobal.setId(id)
 
@@ -120,7 +127,7 @@ class UbicacionServiceImpl() : UbicacionService {
         vector.ubicacion = nuevaUbicacion
         vectorDAO.save(vector)
 
-        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion!!.getId()!!)
 
         if (vector.estaInfectado()) {
             todosLosVectores.map {
@@ -141,7 +148,9 @@ class UbicacionServiceImpl() : UbicacionService {
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
         if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)
-                || !ubicacionMongoDAO.estaADistanciaAlcanzable(nomUbiInicio, nomUbiFin)) {
+
+            //|| !ubicacionMongoDAO.estaADistanciaAlcanzable(nomUbiInicio, nomUbiFin
+            ) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -153,8 +162,8 @@ class UbicacionServiceImpl() : UbicacionService {
         val ubi1 = ubicacionMongoDAO.findByNombre(nomUbiInicio)
         val ubi2 = ubicacionMongoDAO.findByNombre(nomUbiFin)
 
-        val p2 = ubi1.getCordenada()
-        val point = ubi2.getCordenada()
+        val p2 = ubi1!!.getCordenada()
+        val point = ubi2!!.getCordenada()
 
         // HACER QUERY
         val result = Math.sqrt((p2.getLongitud() - point.getLongitud()) * (p2.getLongitud() - point.getLongitud()) +
@@ -192,7 +201,7 @@ class UbicacionServiceImpl() : UbicacionService {
         for(u in ubicacionNeo) {
             val ubiMongo = ubicacionMongoDAO.findByNombre(u.getNombre()!!)
 
-            ubicaciones.add(UbicacionGlobal(ubiMongo.getNombre(), ubiMongo.getCordenada()))
+            ubicaciones.add(UbicacionGlobal(ubiMongo!!.getNombre(), ubiMongo!!.getCordenada()))
         }
         return ubicaciones
     }

@@ -30,7 +30,7 @@ class PruebaTest {
     @Test
     fun algo (){
         val ubi1 = ubicacionMongo.findByNombre("Argentina")
-        Assertions.assertEquals(ubi1.getNombre(), "Argentina")
+        Assertions.assertEquals(ubi1!!.getNombre(), "Argentina")
     }
 
     @Test

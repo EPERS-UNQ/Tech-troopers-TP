@@ -50,7 +50,7 @@ class PatogenoServiceTest {
         covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
         coordenada1 = Coordenada(45.00, 40.00)
-        coordenada1 = Coordenada(55.00, 50.00)
+        coordenada2 = Coordenada(55.00, 50.00)
         china = UbicacionGlobal("China", coordenada1)
         corea = UbicacionGlobal("Corea", coordenada2)
         pedro = Vector("Pedro", corea.aJPA(), TipoVector.HUMANO)
@@ -249,7 +249,6 @@ class PatogenoServiceTest {
 
         Assertions.assertThrows(NoHayVectorException::class.java) {
             servicioPatogeno.crear(salmonella)
-            servicioUbicacion.crear(corea)
             servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
         }
 
