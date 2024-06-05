@@ -36,8 +36,4 @@ open class UbicacionJpa() {
         this.nombre = nombre
     }
 
-    fun aDTO(): UbicacionDTO? {
-        return UbicacionDTO(this.getId(), this.nombre)
-    }
-
 }

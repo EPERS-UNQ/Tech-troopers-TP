@@ -1,9 +1,8 @@
 package ar.edu.unq.eperdemic.modelo
 
-import ar.edu.unq.eperdemic.controller.dto.CoordenadasDTO
+import ar.edu.unq.eperdemic.controller.dto.CoordenadaDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorCoordenadaInvalida
 import org.springframework.data.mongodb.core.mapping.Document
-import javax.persistence.Id
 
 @Document
 class Coordenada(latitud: Double, longitud: Double) {
@@ -11,8 +10,8 @@ class Coordenada(latitud: Double, longitud: Double) {
     private var latitud:  Double? = latitud
     private var longitud: Double? = longitud
 
-    fun aDTO(): CoordenadasDTO {
-        return CoordenadasDTO(this.latitud!!, this.longitud!!)
+    fun aDTO(): CoordenadaDTO {
+        return CoordenadaDTO(this.latitud!!, this.longitud!!)
     }
 
     private fun esCoordenadaValida(latitud: Double, longitud: Double): Boolean {

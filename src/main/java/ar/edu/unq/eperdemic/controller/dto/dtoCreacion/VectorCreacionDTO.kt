@@ -6,7 +6,7 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 
 class VectorCreacionDTO (val nombre: String?,
                          val ubicacionId: Long?,
-                         val tipo: String, ) {
+                         val tipo: String) {
 
     fun aModelo(ubicacion: UbicacionJpa): Vector {
         return Vector(this.nombre!!, ubicacion, enumValueOf<TipoVector>(this.tipo))

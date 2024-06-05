@@ -1,12 +1,12 @@
 package ar.edu.unq.eperdemic.controller.dto
 
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
 
-class UbicacionDTO ( val id: Long?,
+class UbicacionDTO ( val id: String?, // ¿Como le pasamos a modelo este id si es una UbicacionGlobal?
                      val nombre: String? ) {
 
-    fun aModelo(): UbicacionJpa {
-        val ubicacion = UbicacionJpa()
+    fun aModelo(): UbicacionGlobal {
+        val ubicacion = UbicacionGlobal()
         ubicacion.setId(this.id!!)
         ubicacion.setNombre(this.nombre!!)
         return ubicacion

@@ -28,45 +28,48 @@ class UbicacionServiceImpl() : UbicacionService {
 
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
-    @Autowired private lateinit var ubicacionMongo: UbicacionMongoDAO
+    @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
         ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
-        ubicacionMongo.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
+        ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
         return ubicacion
     }
 
     override fun updatear(ubicacion: UbicacionGlobal) {
         ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
-        ubicacionMongo.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
+        ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
     }
 
     override fun recuperar(id: Long): UbicacionGlobal {
 
         val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
+        val ubicacionNeo = ubicacionNeoDAO.findByIdOrNull(id)
+        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa!!.getNombre()!!)
 
-        if (ubicacionJpa == null) {
+        if (ubicacionJpa == null || ubicacionNeo == null || ubicacionMongo == null) {
             throw NoExisteLaUbicacion()
         }
 
-        var ubicacionMongo = ubicacionMongo.findByNombre(ubicacionJpa.getNombre()!!)
+        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada())
 
-        return UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada().getLatitud(),
-                                ubicacionMongo.getCordenada().getLongitud())
+        ubicacionGlobal.setId(ubicacionGlobal.getId())
+
+        return ubicacionGlobal
     }
 
     override fun recuperarTodos(): List<UbicacionGlobal> {
-        val listaUbicacionesGlobal: MutableList<UbicacionGlobal> = mutableListOf()
 
-        val listaUbicacionMongo = ubicacionMongo.findAll()
+        val listaUbicacionesGlobal: MutableList<UbicacionGlobal> = mutableListOf()
+        val listaUbicacionMongo = ubicacionMongoDAO.findAll()
 
         for (ubi in listaUbicacionMongo) {
             listaUbicacionesGlobal.add(
-                UbicacionGlobal(ubi.getNombre(), ubi.getCordenada().getLatitud(),
-                    ubi.getCordenada().getLongitud()))
+                UbicacionGlobal(ubi.getNombre(), ubi.getCordenada())
+            )
         }
 
         return listaUbicacionesGlobal
@@ -138,7 +141,7 @@ class UbicacionServiceImpl() : UbicacionService {
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
         if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)
-                || !this.estaADistanciaAlcanzable(nomUbiInicio, nomUbiFin, 100)) {
+                || !ubicacionMongoDAO.estaADistanciaAlcanzable(nomUbiInicio, nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -147,8 +150,8 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun estaADistanciaAlcanzable(nomUbiInicio: String, nomUbiFin: String, i: Int): Boolean {
-        val ubi1 = ubicacionMongo.findByNombre(nomUbiInicio)
-        val ubi2 = ubicacionMongo.findByNombre(nomUbiFin)
+        val ubi1 = ubicacionMongoDAO.findByNombre(nomUbiInicio)
+        val ubi2 = ubicacionMongoDAO.findByNombre(nomUbiFin)
 
         val p2 = ubi1.getCordenada()
         val point = ubi2.getCordenada()
@@ -187,17 +190,16 @@ class UbicacionServiceImpl() : UbicacionService {
         val ubicaciones: MutableList<UbicacionGlobal> = mutableListOf()
 
         for(u in ubicacionNeo) {
-            val ubiMongo = ubicacionMongo.findByNombre(u.getNombre()!!)
+            val ubiMongo = ubicacionMongoDAO.findByNombre(u.getNombre()!!)
 
-            ubicaciones.add(UbicacionGlobal(ubiMongo.getNombre(),
-                            ubiMongo.getCordenada().getLatitud(),ubiMongo.getCordenada().getLongitud()))
+            ubicaciones.add(UbicacionGlobal(ubiMongo.getNombre(), ubiMongo.getCordenada()))
         }
         return ubicaciones
     }
 
     override fun deleteAll() {
         ubicacionNeoDAO.detachDelete()
-        ubicacionMongo.deleteAll()
+        ubicacionMongoDAO.deleteAll()
     }
 
 }

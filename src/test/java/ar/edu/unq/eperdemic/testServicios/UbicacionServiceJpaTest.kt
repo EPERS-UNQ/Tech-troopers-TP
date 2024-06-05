@@ -70,7 +70,6 @@ class UbicacionServiceJpaTest {
         vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
         vector3 = serviceVector.crear(Vector("perrito", ubi1, TipoVector.ANIMAL))
 
-
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
         especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
         especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId()!!)
