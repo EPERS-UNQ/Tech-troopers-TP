@@ -77,17 +77,19 @@ class MutacionServiceImplTest {
         tailandia = UbicacionGlobal("Tailandia", coordenada3)
         indonesia = UbicacionGlobal("Indonesia", coordenada4)
         china = UbicacionGlobal("China", coordenada5)
-        john = Vector("John", corea.aJPA(), TipoVector.HUMANO)
-        viktor = Vector("Viktor", japon.aJPA(), TipoVector.HUMANO)
-        monoAndroide = Vector("Mono-17", china.aJPA(), TipoVector.ANIMAL)
-        supresionBiomecanica = SupresionBiomecanica(35)
-        bioalteracionGenetica = BioalteracionGenetica(TipoVector.ANIMAL)
 
         servicioUbicacion.crear(corea)
         servicioUbicacion.crear(indonesia)
         servicioUbicacion.crear(japon)
         servicioUbicacion.crear(tailandia)
         servicioUbicacion.crear(china)
+
+        john = Vector("John", corea.aJPA(), TipoVector.HUMANO)
+        viktor = Vector("Viktor", japon.aJPA(), TipoVector.HUMANO)
+        monoAndroide = Vector("Mono-17", china.aJPA(), TipoVector.ANIMAL)
+        supresionBiomecanica = SupresionBiomecanica(35)
+        bioalteracionGenetica = BioalteracionGenetica(TipoVector.ANIMAL)
+
         servicioPatogeno.crear(viruela)
         servicioPatogeno.crear(colera)
         servicioPatogeno.crear(rabia)
@@ -95,17 +97,17 @@ class MutacionServiceImplTest {
         servicioVector.crear(viktor)
         servicioVector.crear(monoAndroide)
 
-        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", corea.getId()!!)
-        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId()!!)
-        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
+        mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", corea.getId())
+        cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId())
+        roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId())
 
-        servicioUbicacion.conectar(corea.getNombre()!!, japon.getNombre()!!, "Terrestre")
-        servicioUbicacion.conectar(japon.getNombre()!!, china.getNombre()!!, "Terrestre")
-        servicioUbicacion.conectar(china.getNombre()!!, japon.getNombre()!!, "Terrestre")
-        servicioUbicacion.conectar(japon.getNombre()!!, tailandia.getNombre()!!, "Terrestre")
-        servicioUbicacion.conectar(indonesia.getNombre()!!, japon.getNombre()!!, "Aereo")
-        servicioUbicacion.conectar(japon.getNombre()!!, corea.getNombre()!!, "Terrestre")
-        servicioUbicacion.conectar(corea.getNombre()!!, china.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(corea.getNombre(), japon.getNombre(), "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre(), china.getNombre(), "Terrestre")
+        servicioUbicacion.conectar(china.getNombre(), japon.getNombre(), "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre(), tailandia.getNombre(), "Terrestre")
+        servicioUbicacion.conectar(indonesia.getNombre(), japon.getNombre(), "Aereo")
+        servicioUbicacion.conectar(japon.getNombre(), corea.getNombre(), "Terrestre")
+        servicioUbicacion.conectar(corea.getNombre(), china.getNombre(), "Terrestre")
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -164,7 +166,7 @@ class MutacionServiceImplTest {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
 
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
         val johnNoMutado = servicioVector.recuperar(john.getId())
@@ -185,7 +187,7 @@ class MutacionServiceImplTest {
 
         val mecaViruelaConMutacion = servicioEspecie.recuperar(mecaViruela.getId()!!)
 
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val johnNoMutado = servicioVector.recuperar(john.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
@@ -200,7 +202,7 @@ class MutacionServiceImplTest {
     fun unVectorMutaConExitoLuegoDeContagiarAOtroVector() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val johnMutado = servicioVector.recuperar(john.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
@@ -215,7 +217,7 @@ class MutacionServiceImplTest {
     fun unVectorHumanoMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorAnimal() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, bioalteracionGenetica)
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val johnMutado = servicioVector.recuperar(john.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
@@ -225,7 +227,7 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(johnMutado.estaMutado())
         Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionGenetica))
 
-        servicioUbicacion.mover(john.getId(),china.getId()!!)
+        servicioUbicacion.mover(john.getId(),china.getId())
 
         val monoAndroideContagiado = servicioVector.recuperar(monoAndroide.getId())
 
@@ -239,7 +241,7 @@ class MutacionServiceImplTest {
         val gatoAndroide = servicioVector.crear(Vector("Stray", tailandia.aJPA(), TipoVector.ANIMAL))
 
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica)
-        servicioUbicacion.mover(monoAndroide.getId(), japon.getId()!!)
+        servicioUbicacion.mover(monoAndroide.getId(), japon.getId())
 
         val monoMutado = servicioVector.recuperar(monoAndroide.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
@@ -249,7 +251,7 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(monoMutado.estaMutado())
         Assertions.assertTrue(monoMutado.estaMutadoCon(bioalteracionGenetica))
 
-        servicioUbicacion.mover(monoAndroide.getId(), tailandia.getId()!!)
+        servicioUbicacion.mover(monoAndroide.getId(), tailandia.getId())
 
         val gatoAndroideContagiado = servicioVector.recuperar(gatoAndroide.getId())
 
@@ -266,7 +268,7 @@ class MutacionServiceImplTest {
         servicioVector.infectar(bioMosquito.getId(), roboRabia.getId()!!)
 
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica2)
-        servicioUbicacion.mover(bioMosquito.getId(), japon.getId()!!)
+        servicioUbicacion.mover(bioMosquito.getId(), japon.getId())
 
         val bioMosquitoMutado = servicioVector.recuperar(bioMosquito.getId())
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
@@ -276,7 +278,7 @@ class MutacionServiceImplTest {
         Assertions.assertTrue(bioMosquitoMutado.estaInfectadoCon(roboRabia))
         Assertions.assertTrue(bioMosquitoMutado.estaMutadoCon(bioalteracionGenetica2))
 
-        servicioUbicacion.mover(bioMosquito.getId(), tailandia.getId()!!)
+        servicioUbicacion.mover(bioMosquito.getId(), tailandia.getId())
 
         val turboGrilloContagiado = servicioVector.recuperar(turboGrillo.getId())
 
@@ -298,7 +300,7 @@ class MutacionServiceImplTest {
         Assertions.assertEquals(3, johnContagiado.enfermedadesDelVector().size)
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val johnMutado = servicioVector.recuperar(john.getId())
 
@@ -314,7 +316,7 @@ class MutacionServiceImplTest {
     fun unVectorMutadoConSupresionBiomecanicaEliminaLasEspeciesDeBajaDefensaPeroNoLasMutacionesQueProvienenDeLasEspecies() {
 
         servicioMutacion.agregarMutacion(cromaColera.getId()!!, bioalteracionGenetica)
-        servicioUbicacion.mover(viktor.getId(),corea.getId()!!)
+        servicioUbicacion.mover(viktor.getId(),corea.getId())
 
         val viktorMutado = servicioVector.recuperar(viktor.getId())
         val johnContagiado = servicioVector.recuperar(john.getId())
@@ -325,7 +327,7 @@ class MutacionServiceImplTest {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
         servicioVector.infectar(viktor.getId(), mecaViruela.getId()!!)
-        servicioUbicacion.mover(viktor.getId(), china.getId()!!)
+        servicioUbicacion.mover(viktor.getId(), china.getId())
 
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
         val monoContagiado = servicioVector.recuperar(monoAndroide.getId())
@@ -342,14 +344,14 @@ class MutacionServiceImplTest {
     fun unVectorMutadoConBioalteracionGeneticaIntentaContagiarAOtroVectorConUnaEspecieQueNoLoHizoMutar() {
 
         servicioMutacion.agregarMutacion(cromaColera.getId()!!, bioalteracionGenetica)
-        servicioUbicacion.mover(viktor.getId(),corea.getId()!!)
+        servicioUbicacion.mover(viktor.getId(),corea.getId())
 
         val johnContagiado = servicioVector.recuperar(john.getId())
 
         Assertions.assertTrue(johnContagiado.estaInfectadoCon(cromaColera))
 
         servicioVector.infectar(viktor.getId(), mecaViruela.getId()!!)
-        servicioUbicacion.mover(viktor.getId(), china.getId()!!)
+        servicioUbicacion.mover(viktor.getId(), china.getId())
 
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
         val monoContagiado = servicioVector.recuperar(monoAndroide.getId())
@@ -365,7 +367,7 @@ class MutacionServiceImplTest {
     fun cuandoUnVectorMutaConSupresionBiomecanicaNoPuedeSerInfectadoConEspeciesDeBajaDefensa() {
 
         servicioMutacion.agregarMutacion(mecaViruela.getId()!!, supresionBiomecanica)
-        servicioUbicacion.mover(john.getId(),japon.getId()!!)
+        servicioUbicacion.mover(john.getId(),japon.getId())
 
         val johnMutado = servicioVector.recuperar(john.getId())
 

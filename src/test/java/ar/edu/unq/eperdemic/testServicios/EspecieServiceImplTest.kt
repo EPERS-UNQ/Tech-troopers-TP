@@ -54,6 +54,7 @@ class EspecieServiceImplTest {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         coordenada = Coordenada(45.00, 40.00)
         ubicacion = UbicacionGlobal("Argentina", coordenada)
+        serviceUbicacion.crear(ubicacion)
         humano    = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
 
         dataService = DataServiceImpl(HibernateDataDAO())
@@ -63,7 +64,6 @@ class EspecieServiceImplTest {
         random.setNumeroGlobal(1)
         random.setBooleanoGlobal(true)
 
-        serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
 
         servicePatogeno.crear(patogeno)

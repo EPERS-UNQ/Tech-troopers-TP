@@ -40,22 +40,24 @@ class VectorServiceTest {
     lateinit var random : RandomGenerator
 
     @BeforeEach
-    fun prepare() {
+    fun crearModelo() {
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
         coordenada = Coordenada(45.00, 40.00)
         ubicacion = UbicacionGlobal("Argentina", coordenada)
+
+        serviceUbicacion.crear(ubicacion)
+
         humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
         golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
-        serviceUbicacion.crear(ubicacion)
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
 
-        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
