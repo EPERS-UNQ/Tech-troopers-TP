@@ -2,7 +2,7 @@ package ar.edu.unq.eperdemic.controller.dto
 
 import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
 
-class UbicacionDTO ( val id: String?, // ¿Como le pasamos a modelo este id si es una UbicacionGlobal?
+class UbicacionDTO ( val id: Long?,
                      val nombre: String? ) {
 
     fun aModelo(): UbicacionGlobal {

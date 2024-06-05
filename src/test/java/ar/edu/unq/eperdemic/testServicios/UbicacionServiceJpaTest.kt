@@ -5,10 +5,8 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
@@ -37,12 +35,12 @@ class UbicacionServiceJpaTest {
     @Autowired lateinit var servicePatogeno: PatogenoService
 
 
-    lateinit var ubi1: UbicacionJpa
-    lateinit var ubi2: UbicacionJpa
-    lateinit var ubi3: UbicacionJpa
-    lateinit var ubi4: UbicacionJpa
+    lateinit var ubi1: UbicacionGlobal
+    lateinit var ubi2: UbicacionGlobal
+    lateinit var ubi3: UbicacionGlobal
+    lateinit var ubi4: UbicacionGlobal
 
-    lateinit var ubiPersistida1: UbicacionJpa
+    lateinit var ubiPersistida1: UbicacionGlobal
 
     lateinit var vector1: Vector
     lateinit var vector2: Vector
@@ -57,18 +55,26 @@ class UbicacionServiceJpaTest {
 
     lateinit var dataService: DataService
 
+    lateinit var coordenada1: Coordenada
+    lateinit var coordenada2: Coordenada
+    lateinit var coordenada3: Coordenada
+
     @BeforeEach
     fun crearModelo() {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubi1 = serviceUbicacion.crear(UbicacionJpa("Argentina"))
-        ubi2 = serviceUbicacion.crear(UbicacionJpa("Paraguay"))
-        ubi4 = serviceUbicacion.crear(UbicacionJpa("Chile"))
+        coordenada1 = Coordenada(45.00, 40.00)
+        coordenada2 = Coordenada(55.00, 50.00)
+        coordenada3 = Coordenada(65.00, 60.00)
 
-        vector1 = serviceVector.crear(Vector("Jose", ubi2, TipoVector.HUMANO))
-        vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
-        vector3 = serviceVector.crear(Vector("perrito", ubi1, TipoVector.ANIMAL))
+        ubi1 = serviceUbicacion.crear(UbicacionGlobal("Argentina", coordenada1))
+        ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
+        ubi4 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
+
+        vector1 = serviceVector.crear(Vector("Jose", ubi2.aJPA(), TipoVector.HUMANO))
+        vector2 = serviceVector.crear(Vector("araña", ubi2.aJPA(), TipoVector.INSECTO))
+        vector3 = serviceVector.crear(Vector("perrito", ubi1.aJPA(), TipoVector.ANIMAL))
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
         especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
@@ -82,9 +88,11 @@ class UbicacionServiceJpaTest {
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
-        ubi3 = serviceUbicacion.crear(UbicacionJpa("Uruguay"))
 
-        ubiPersistida1 = serviceUbicacion.recuperar(4)
+        val coordenada = Coordenada(35.00, 30.00)
+        ubi3 = serviceUbicacion.crear(UbicacionGlobal("Uruguay", coordenada))
+
+        ubiPersistida1 = serviceUbicacion.recuperar(ubi3.getId())
 
         Assertions.assertEquals(ubiPersistida1.getNombre(), "Uruguay")
     }
@@ -124,9 +132,9 @@ class UbicacionServiceJpaTest {
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
         random.setNumeroGlobal(2)
-        serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
-        serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
-        val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))
+        serviceVector.crear(Vector("Miguel", ubi1.aJPA(), TipoVector.HUMANO))
+        serviceVector.crear(Vector("Mariano", ubi1.aJPA(), TipoVector.HUMANO))
+        val vector4 = serviceVector.crear(Vector("Juan", ubi1.aJPA(), TipoVector.INSECTO))
 
         serviceVector.infectar(vector3.getId(), especie1.getId()!!)
         serviceVector.infectar(vector4.getId(), especie2.getId()!!)
@@ -170,7 +178,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun errorCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
-        val ubicacion = UbicacionJpa("Argentina")
+        val ubicacion = UbicacionGlobal("Argentina", coordenada1)
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
             serviceUbicacion.crear(ubicacion)

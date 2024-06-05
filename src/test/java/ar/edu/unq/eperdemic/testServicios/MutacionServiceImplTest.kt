@@ -4,11 +4,9 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.mutacion.BioalteracionGenetica
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
@@ -42,11 +40,16 @@ class MutacionServiceImplTest {
     lateinit var colera: Patogeno
     lateinit var viruela: Patogeno
     lateinit var rabia: Patogeno
-    lateinit var china: UbicacionJpa
-    lateinit var corea: UbicacionJpa
-    lateinit var tailandia: UbicacionJpa
-    lateinit var japon: UbicacionJpa
-    lateinit var indonesia: UbicacionJpa
+    lateinit var china: UbicacionGlobal
+    lateinit var corea: UbicacionGlobal
+    lateinit var tailandia: UbicacionGlobal
+    lateinit var japon: UbicacionGlobal
+    lateinit var indonesia: UbicacionGlobal
+    lateinit var coordenada1: Coordenada
+    lateinit var coordenada2: Coordenada
+    lateinit var coordenada3: Coordenada
+    lateinit var coordenada4: Coordenada
+    lateinit var coordenada5: Coordenada
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
@@ -64,14 +67,19 @@ class MutacionServiceImplTest {
         colera = Patogeno("Colera", 90, 5, 1, 30, 45)
         viruela = Patogeno("Viruela", 90, 80, 15, 15, 35)
         rabia = Patogeno("Rabia",1,1,1,35,10)
-        corea = UbicacionJpa("Corea")
-        japon = UbicacionJpa("Japon")
-        tailandia = UbicacionJpa("Tailandia")
-        indonesia = UbicacionJpa("Indonesia")
-        china = UbicacionJpa("China")
-        john = Vector("John", corea, TipoVector.HUMANO)
-        viktor = Vector("Viktor", japon, TipoVector.HUMANO)
-        monoAndroide = Vector("Mono-17", china, TipoVector.ANIMAL)
+        coordenada1 = Coordenada(45.00, 40.00)
+        coordenada2 = Coordenada(55.00, 50.00)
+        coordenada3 = Coordenada(65.00, 60.00)
+        coordenada4 = Coordenada(75.00, 70.00)
+        coordenada5 = Coordenada(85.00, 80.00)
+        corea = UbicacionGlobal("Corea", coordenada1)
+        japon = UbicacionGlobal("Japon", coordenada2)
+        tailandia = UbicacionGlobal("Tailandia", coordenada3)
+        indonesia = UbicacionGlobal("Indonesia", coordenada4)
+        china = UbicacionGlobal("China", coordenada5)
+        john = Vector("John", corea.aJPA(), TipoVector.HUMANO)
+        viktor = Vector("Viktor", japon.aJPA(), TipoVector.HUMANO)
+        monoAndroide = Vector("Mono-17", china.aJPA(), TipoVector.ANIMAL)
         supresionBiomecanica = SupresionBiomecanica(35)
         bioalteracionGenetica = BioalteracionGenetica(TipoVector.ANIMAL)
 
@@ -228,7 +236,7 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorAnimalMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorAnimal() {
 
-        val gatoAndroide = servicioVector.crear(Vector("Stray", tailandia, TipoVector.ANIMAL))
+        val gatoAndroide = servicioVector.crear(Vector("Stray", tailandia.aJPA(), TipoVector.ANIMAL))
 
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica)
         servicioUbicacion.mover(monoAndroide.getId(), japon.getId()!!)
@@ -252,8 +260,8 @@ class MutacionServiceImplTest {
     @Test
     fun unVectorInsectoMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorInsecto() {
 
-        val turboGrillo = servicioVector.crear(Vector("Pepe", tailandia, TipoVector.INSECTO))
-        val bioMosquito = servicioVector.crear(Vector("Raul", indonesia, TipoVector.INSECTO))
+        val turboGrillo = servicioVector.crear(Vector("Pepe", tailandia.aJPA(), TipoVector.INSECTO))
+        val bioMosquito = servicioVector.crear(Vector("Raul", indonesia.aJPA(), TipoVector.INSECTO))
         val bioalteracionGenetica2 = BioalteracionGenetica(TipoVector.INSECTO)
         servicioVector.infectar(bioMosquito.getId(), roboRabia.getId()!!)
 

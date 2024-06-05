@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 
 class UbicacionGlobal() {
 
-    private var id: String? = null
+    private var id: Long? = null
     private var nombre: String? = null
     private var coordenada: Coordenada? = null
 
@@ -25,7 +25,7 @@ class UbicacionGlobal() {
         return this.coordenada!!
     }
 
-    fun getId(): String{
+    fun getId(): Long{
         return this.id!!
     }
 
@@ -37,7 +37,12 @@ class UbicacionGlobal() {
         this.nombre = nombre
     }
 
-    fun setId(id: String) {
+    fun setId(id: Long) {
         this.id = id
     }
+
+    fun aJPA(): UbicacionJpa {
+        return UbicacionJpa(this.nombre!!)
+    }
+
 }

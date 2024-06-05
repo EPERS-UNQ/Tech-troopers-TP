@@ -6,11 +6,9 @@ import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -36,7 +34,8 @@ class VectorServiceTest {
 
     lateinit var humano: Vector
     lateinit var golondrina: Vector
-    lateinit var ubicacion: UbicacionJpa
+    lateinit var ubicacion: UbicacionGlobal
+    lateinit var coordenada: Coordenada
 
     lateinit var random : RandomGenerator
 
@@ -44,9 +43,10 @@ class VectorServiceTest {
     fun prepare() {
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubicacion = UbicacionJpa("Argentina")
-        humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
-        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+        coordenada = Coordenada(45.00, 40.00)
+        ubicacion = UbicacionGlobal("Argentina", coordenada)
+        humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
+        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 

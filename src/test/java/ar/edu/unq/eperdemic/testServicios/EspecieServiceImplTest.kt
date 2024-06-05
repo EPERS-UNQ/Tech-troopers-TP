@@ -44,15 +44,17 @@ class EspecieServiceImplTest {
 
     lateinit var humano     : Vector
     lateinit var golondrina : Vector
-    lateinit var ubicacion : UbicacionJpa
+    lateinit var ubicacion : UbicacionGlobal
+    lateinit var coordenada: Coordenada
 
     lateinit var random : RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
-        ubicacion = UbicacionJpa("Argentina")
-        humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
+        coordenada = Coordenada(45.00, 40.00)
+        ubicacion = UbicacionGlobal("Argentina", coordenada)
+        humano    = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -110,7 +112,7 @@ class EspecieServiceImplTest {
 
     @Test
     fun testVerificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
-        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
         serviceVector.crear(golondrina)
 
         serviceVector.infectar(golondrina.getId(), especiePersistida.getId()!!)

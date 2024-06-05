@@ -4,11 +4,9 @@ import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
 import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
@@ -32,32 +30,48 @@ class UbicacionServiceNeo4JTest {
     @Autowired lateinit var serviceMutacion:  MutacionService
     @Autowired lateinit var serviceEspecie:   EspecieService
 
-    lateinit var arg: UbicacionJpa
-    lateinit var chl: UbicacionJpa
-    lateinit var col: UbicacionJpa
-    lateinit var vnz: UbicacionJpa
-    lateinit var par: UbicacionJpa
-    lateinit var bol: UbicacionJpa
-    lateinit var urg: UbicacionJpa
-    lateinit var ecu: UbicacionJpa
-    lateinit var br:  UbicacionJpa
-    lateinit var per: UbicacionJpa
-    lateinit var hn:  UbicacionJpa
+    lateinit var coordenada1: Coordenada
+    lateinit var coordenada2: Coordenada
+    lateinit var coordenada3: Coordenada
+    lateinit var coordenada4: Coordenada
+    lateinit var coordenada5: Coordenada
+    lateinit var coordenada6: Coordenada
+    lateinit var coordenada7: Coordenada
+    lateinit var coordenada8: Coordenada
+    lateinit var coordenada9: Coordenada
+    lateinit var coordenada10: Coordenada
+    lateinit var coordenada11: Coordenada
+
+    lateinit var arg: UbicacionGlobal
+    lateinit var chl: UbicacionGlobal
+    lateinit var col: UbicacionGlobal
+    lateinit var vnz: UbicacionGlobal
+    lateinit var par: UbicacionGlobal
+    lateinit var bol: UbicacionGlobal
+    lateinit var urg: UbicacionGlobal
+    lateinit var ecu: UbicacionGlobal
+    lateinit var br:  UbicacionGlobal
+    lateinit var per: UbicacionGlobal
+    lateinit var hn:  UbicacionGlobal
+
     lateinit var hornerito: Vector
     lateinit var mosca: Vector
     lateinit var guanaco: Vector
     lateinit var abeja: Vector
     lateinit var joao: Vector
     lateinit var maria: Vector
+
     lateinit var virus: Patogeno
     lateinit var bacteria: Patogeno
     lateinit var hongo: Patogeno
+
     lateinit var granulosis: Especie
     lateinit var poliedrosisCitoplasmica: Especie
     lateinit var beauveriaBassiana: Especie
     lateinit var metarhiziumAnisopliae: Especie
     lateinit var wolbachia: Especie
     lateinit var bacillusThuringiensis: Especie
+
     lateinit var propulsionMotora: PropulsionMotora
     lateinit var electroBranqueas: ElectroBranqueas
 
@@ -69,23 +83,35 @@ class UbicacionServiceNeo4JTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        arg = UbicacionJpa("Argentina")
-        chl = UbicacionJpa("Chile")
-        col = UbicacionJpa("Colombia")
-        vnz = UbicacionJpa("Venezuela")
-        par = UbicacionJpa("Paraguay")
-        bol = UbicacionJpa("Bolivia")
-        urg = UbicacionJpa("Uruguay")
-        ecu = UbicacionJpa("Ecuador")
-        br  = UbicacionJpa("Brasil")
-        per = UbicacionJpa("Peru")
-        hn  = UbicacionJpa("Honduras")
-        hornerito = Vector("Hornerito", arg, TipoVector.ANIMAL)
-        guanaco = Vector("Guanaco", chl, TipoVector.ANIMAL)
-        mosca = Vector("Mosca", urg, TipoVector.INSECTO)
-        abeja = Vector("Abeja", col, TipoVector.INSECTO)
-        joao = Vector("Joao", br, TipoVector.HUMANO)
-        maria = Vector("Maria", vnz, TipoVector.HUMANO)
+        coordenada1 = Coordenada(40.00, 40.00)
+        coordenada2 = Coordenada(41.00, 40.00)
+        coordenada3 = Coordenada(42.00, 40.00)
+        coordenada4 = Coordenada(43.00, 40.00)
+        coordenada5 = Coordenada(44.00, 40.00)
+        coordenada6 = Coordenada(45.00, 40.00)
+        coordenada7 = Coordenada(46.00, 40.00)
+        coordenada8 = Coordenada(47.00, 40.00)
+        coordenada9 = Coordenada(48.00, 40.00)
+        coordenada10 = Coordenada(49.00, 40.00)
+        coordenada11 = Coordenada(50.00, 40.00)
+
+        arg = UbicacionGlobal("Argentina", coordenada1)
+        chl = UbicacionGlobal("Chile", coordenada2)
+        col = UbicacionGlobal("Colombia", coordenada3)
+        vnz = UbicacionGlobal("Venezuela", coordenada4)
+        par = UbicacionGlobal("Paraguay", coordenada5)
+        bol = UbicacionGlobal("Bolivia",coordenada6)
+        urg = UbicacionGlobal("Uruguay", coordenada7)
+        ecu = UbicacionGlobal("Ecuador", coordenada8)
+        br  = UbicacionGlobal("Brasil", coordenada9)
+        per = UbicacionGlobal("Peru", coordenada10)
+        hn  = UbicacionGlobal("Honduras", coordenada11)
+        hornerito = Vector("Hornerito", arg.aJPA(), TipoVector.ANIMAL)
+        guanaco = Vector("Guanaco", chl.aJPA(), TipoVector.ANIMAL)
+        mosca = Vector("Mosca", urg.aJPA(), TipoVector.INSECTO)
+        abeja = Vector("Abeja", col.aJPA(), TipoVector.INSECTO)
+        joao = Vector("Joao", br.aJPA(), TipoVector.HUMANO)
+        maria = Vector("Maria", vnz.aJPA(), TipoVector.HUMANO)
         virus = Patogeno("Virus", 13,14,53,30,10)
         bacteria = Patogeno("Bacteria", 5, 10, 32, 25, 50)
         hongo = Patogeno("Hongo", 65, 20, 30, 45, 15)
@@ -255,7 +281,7 @@ class UbicacionServiceNeo4JTest {
             serviceUbicacion.mover(joao.getId(), ecu.getId()!!)
         }
 
-        val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
+        val pepe = Vector("Pepe", bol.aJPA(), TipoVector.HUMANO)
         serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(beauveriaBassiana.getId()!!, propulsionMotora)
 
@@ -292,7 +318,7 @@ class UbicacionServiceNeo4JTest {
             serviceUbicacion.mover(mosca.getId(), arg.getId()!!)
         }
 
-        val pepe = Vector("Pepe", bol, TipoVector.HUMANO)
+        val pepe = Vector("Pepe", bol.aJPA(), TipoVector.HUMANO)
         serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(wolbachia.getId()!!, electroBranqueas)
 

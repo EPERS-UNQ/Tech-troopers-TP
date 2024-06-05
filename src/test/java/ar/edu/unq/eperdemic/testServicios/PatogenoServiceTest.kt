@@ -6,12 +6,9 @@ import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Direccion
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -39,10 +36,12 @@ class PatogenoServiceTest {
 
     lateinit var covid: Patogeno
     lateinit var salmonella: Patogeno
-    lateinit var china: UbicacionJpa
-    lateinit var corea: UbicacionJpa
+    lateinit var china: UbicacionGlobal
+    lateinit var corea: UbicacionGlobal
     lateinit var pepe: Vector
     lateinit var pedro: Vector
+    lateinit var coordenada1: Coordenada
+    lateinit var coordenada2: Coordenada
 
     @BeforeEach
     fun crearModelo() {
@@ -50,10 +49,12 @@ class PatogenoServiceTest {
         dataService = DataServiceImpl(HibernateDataDAO())
         covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
-        china = UbicacionJpa("China")
-        corea = UbicacionJpa("Corea")
-        pedro = Vector("Pedro", corea, TipoVector.HUMANO)
-        pepe = Vector("Pepe", china, TipoVector.HUMANO)
+        coordenada1 = Coordenada(45.00, 40.00)
+        coordenada1 = Coordenada(55.00, 50.00)
+        china = UbicacionGlobal("China", coordenada1)
+        corea = UbicacionGlobal("Corea", coordenada2)
+        pedro = Vector("Pedro", corea.aJPA(), TipoVector.HUMANO)
+        pepe = Vector("Pepe", china.aJPA(), TipoVector.HUMANO)
 
         servicioUbicacion.crear(corea)
         servicioUbicacion.crear(china)

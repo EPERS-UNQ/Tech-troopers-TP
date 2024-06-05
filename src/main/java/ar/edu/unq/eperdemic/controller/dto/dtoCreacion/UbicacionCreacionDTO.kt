@@ -7,7 +7,7 @@ class UbicacionCreacionDTO( val nombre: String,
                             val coordenadaDTO: CoordenadaDTO ) {
 
     fun aModelo(): UbicacionGlobal {
-        return UbicacionGlobal(this.nombre, coordenadaDTO.latitud, coordenadaDTO.longitud)
+        return UbicacionGlobal(this.nombre, coordenadaDTO.aModelo())
     }
 
 }

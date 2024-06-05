@@ -42,7 +42,8 @@ class EstadisticaServiceTest {
     lateinit var insecto    : Vector
     lateinit var insecto2   : Vector
 
-    lateinit var ubicacion: UbicacionJpa
+    lateinit var ubicacion: UbicacionGlobal
+    lateinit var coordenada: Coordenada
 
     lateinit var random : RandomGenerator
 
@@ -55,12 +56,13 @@ class EstadisticaServiceTest {
         random.setStrategy(NoAleatorioStrategy())
         random.setNumeroGlobal(1)
 
-        ubicacion = UbicacionJpa("Argentina")
+        coordenada = Coordenada(45.00, 40.00)
+        ubicacion = UbicacionGlobal("Argentina", coordenada)
         serviceUbicacion.crear(ubicacion)
 
-        humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
-        humano2    = Vector("Juan", ubicacion, TipoVector.HUMANO)
-        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+        humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
+        humano2    = Vector("Juan", ubicacion.aJPA(), TipoVector.HUMANO)
+        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
 
         serviceVector.crear(humano)
 
@@ -90,9 +92,9 @@ class EstadisticaServiceTest {
     fun testDeLosLideres() {
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId()!!)
         especie3 = servicePatogeno.agregarEspecie(patogeno.getId(), "Adenovirus", ubicacion.getId()!!)
-        humano3  = Vector("Bautista", ubicacion, TipoVector.HUMANO)
-        insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
-        insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+        humano3  = Vector("Bautista", ubicacion.aJPA(), TipoVector.HUMANO)
+        insecto  = Vector("Chinche", ubicacion.aJPA(), TipoVector.INSECTO)
+        insecto2  = Vector("Mosca", ubicacion.aJPA(), TipoVector.INSECTO)
         serviceVector.crear(golondrina)
         serviceVector.crear(humano2)
         serviceVector.crear(humano3)
@@ -152,8 +154,8 @@ class EstadisticaServiceTest {
     fun testReporteDeContagios() {
 
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId()!!)
-        insecto  = Vector("Chinche", ubicacion, TipoVector.INSECTO)
-        insecto2  = Vector("Mosca", ubicacion, TipoVector.INSECTO)
+        insecto  = Vector("Chinche", ubicacion.aJPA(), TipoVector.INSECTO)
+        insecto2  = Vector("Mosca", ubicacion.aJPA(), TipoVector.INSECTO)
         serviceVector.crear(insecto)
         serviceVector.crear(insecto2)
         serviceVector.crear(humano2)
@@ -193,7 +195,7 @@ class EstadisticaServiceTest {
 
     @Test
     fun testReporteDeContagiosDeUnaUbicacionVacia() {
-        val ubicacionVacia = UbicacionJpa("Vietnam")
+        val ubicacionVacia = UbicacionGlobal("Vietnam", Coordenada(46.00, 40.00))
         val ubicacionRecuperada = serviceUbicacion.crear(ubicacionVacia)
 
         val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacionRecuperada.getNombre()!!)

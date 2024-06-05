@@ -56,7 +56,7 @@ class UbicacionServiceImpl() : UbicacionService {
 
         val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada())
 
-        ubicacionGlobal.setId(ubicacionGlobal.getId())
+        ubicacionGlobal.setId(id)
 
         return ubicacionGlobal
     }
