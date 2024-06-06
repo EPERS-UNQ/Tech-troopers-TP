@@ -6,12 +6,9 @@ import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.*
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -27,17 +24,26 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var distritoDao: DistritoDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
+
         val ubicacionExistente = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
         if ( ubicacionExistente != null ) {
            throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
         }
 
         val ubicacionPersistida = ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
+        val ubicacionMongo = UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada())
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
-        ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada())) // Ver si la coordenada existe.
+        ubicacionMongoDAO.save(ubicacionMongo) // Ver si la coordenada existe.
         ubicacion.setId(ubicacionPersistida.getId()!!)
+
+        val distrito = distritoDao.distritoConUbicacion(ubicacionMongo.getLongitud(), ubicacionMongo.getLatitud())!!
+        distrito.agregarUbicacion(ubicacionMongo)
+
+        val servicioDistrito = DistritoServiceImpl()
+        servicioDistrito.actualizarDistrito(distrito) //ver como actualizar el distrito
 
         return ubicacion
     }

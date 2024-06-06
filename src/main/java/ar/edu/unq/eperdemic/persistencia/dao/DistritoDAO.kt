@@ -32,5 +32,7 @@ interface DistritoDAO : MongoRepository<Distrito, String> {
     )
     fun distritoMasInfectado(ubicaciones: List<String>): String?
 
+    @Query("{ forma: { \$geoIntersects: { \$geometry: { type: 'Point', coordenadas: [ ?0, ?1 ] } } } }")
+    fun distritoConUbicacion(longitud: Double, latitud: Double): Distrito?
 
 }

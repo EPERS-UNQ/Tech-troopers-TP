@@ -18,4 +18,9 @@ interface UbicacionMongoDAO : MongoRepository<UbicacionMongo, String> {
         ]
     )
     fun ubicacionesAMenosDe100Km(puntoSalida: GeoJsonPoint, nombreUbicacionDestino: String): List<UbicacionMongo>
+
+    @Aggregation("{ \$geoNear: { near: { type: 'Point', coordinates: [ ?0, ?1 ] }, distanceField: 'distancia', spherical: true, maxDistance: ?2 } }, { \$project: { distanciaKm: { \$divide: [ '\$distancia', 1000 ] } } }, { \$limit: 1 }")
+    fun distanciaAUbicacion(longitude: Double, latitude: Double, maxDistance: Int): UbicacionMongo
+
+
 }

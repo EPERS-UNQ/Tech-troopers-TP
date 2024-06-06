@@ -50,7 +50,7 @@ class UbicacionMongo() {
         return degrees * PI / 180.0
     }
 
-    fun calcularDistancia(otraUbicacion: UbicacionMongo): Double {
+    private fun calcularDistancia(otraUbicacion: UbicacionMongo): Double {
 
         val radioTierra = 6371 // Radio de la Tierra en kilómetros
 
@@ -72,6 +72,14 @@ class UbicacionMongo() {
 
     fun estaAMasDe100Km(ubicacionDestino: UbicacionMongo): Boolean {
         return calcularDistancia(ubicacionDestino) > 100
+    }
+
+    fun getLongitud(): Double {
+        return coordenada!!.y
+    }
+
+    fun getLatitud(): Double {
+        return coordenada!!.x
     }
 
 }
