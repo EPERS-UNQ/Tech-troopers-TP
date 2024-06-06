@@ -21,7 +21,7 @@ class VectorServiceImpl () : VectorService {
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
 
     override fun crear(vector: Vector): Vector {
-        val ubicacion = vector.ubicacion
+        /*val ubicacion = vector.ubicacion
         if ( ubicacion != null ) {
             val ubicacionPersistida = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre()!!)
             if ( ubicacionPersistida != null ) {
@@ -30,6 +30,7 @@ class VectorServiceImpl () : VectorService {
                 ubicacionJpaDAO.save(ubicacion)
             }
         }
+         */
         return vectorDAO.save(vector)
     }
 

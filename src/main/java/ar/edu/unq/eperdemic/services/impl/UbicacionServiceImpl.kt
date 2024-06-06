@@ -49,6 +49,7 @@ class UbicacionServiceImpl() : UbicacionService {
         ubicacionJpaDAO.save(ubicacionExistente)
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
         ubicacionMongoDAO.save(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
+
     }
 
 //    override fun recuperar(id: Long): UbicacionGlobal {
