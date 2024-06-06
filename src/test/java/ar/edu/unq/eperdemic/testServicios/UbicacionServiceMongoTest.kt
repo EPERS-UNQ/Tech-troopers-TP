@@ -1,8 +1,12 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
+import ar.edu.unq.eperdemic.helper.service.DataService
+import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.Distrito
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
-import ar.edu.unq.eperdemic.services.DistritoService
+import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -12,45 +16,37 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 @SpringBootTest
 class UbicacionServiceMongoTest {
 
-    @Autowired private lateinit var serviceDistrito: DistritoService
-    @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
+    @Autowired private lateinit var serviceUbicacion: UbicacionService
 
-    lateinit var distrito: Distrito
-    lateinit var coordenadas: List<GeoJsonPoint>
-    lateinit var coordenada2: GeoJsonPolygon
+    lateinit var dataService         : DataService
 
-    lateinit var forma: GeoJsonPolygon
+    lateinit var ubicacion: UbicacionGlobal
+    lateinit var ubicacionPersistida: UbicacionGlobal
+
 
     @BeforeEach
     fun crearModelo() {
+        dataService = DataServiceImpl(HibernateDataDAO())
 
-        coordenadas = listOf(
-            GeoJsonPoint(0.0, 0.0),
-            GeoJsonPoint(30.0, 60.0),
-            GeoJsonPoint(60.0, 10.0),
-            GeoJsonPoint(0.0, 0.0),
-        )
+        ubicacion = UbicacionGlobal("Argentina", GeoJsonPoint(20.00, 25.00))
 
-        forma = GeoJsonPolygon(coordenadas)
-
-        serviceDistrito.crear(Distrito("Peru", forma))
+        ubicacionPersistida = serviceUbicacion.crear(ubicacion)
 
     }
 
     @Test
-    fun chequearUbiPersistida () {
-        val ubi1 = serviceDistrito.recuperarPorNombre("Peru")
-        Assertions.assertEquals(ubi1.getNombre(), "Peru")
+    fun cuandoSeRecuperaUnaUbicacionMongoPersistidaSeObtienenObjetosSimilares () {
+        val ubicacionRecuperada = serviceUbicacion.recuperar(ubicacionPersistida.getId())
+
+        Assertions.assertEquals(ubicacionPersistida.getNombre(), ubicacionRecuperada.getNombre())
+        Assertions.assertEquals(ubicacionPersistida.getCoordenada().x, ubicacionRecuperada.getCoordenada().x)
+        Assertions.assertEquals(ubicacionPersistida.getCoordenada().y, ubicacionRecuperada.getCoordenada().y)
     }
 
-    @Test
-    /*fun chequearCoordenadasDeUbiPersistida (){
-        val coordenada2 = ubicacionMongo.findCoordenadaByNombre("Argentina")!!
-        Assertions.assertEquals(coordenada.getLongitud(), coordenada2.getLongitud())
-    }*/
 
     @AfterEach
     fun borrarRegistros() {
-        ubicacionMongoDAO.deleteAll()
+        serviceUbicacion.deleteAll()
+        dataService.cleanAll()
     }
 }
