@@ -1,39 +1,59 @@
 package ar.edu.unq.eperdemic.modelo
 
 import ar.edu.unq.eperdemic.controller.dto.DistritoDTO
+import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorCantidadDeCoordenadasMinimas
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 
 @Document
-class Distrito(nombre: String, coordenadas: HashSet<Coordenada>) {
+class Distrito(nombre: String?, forma: GeoJsonPolygon?) {
 
     @Id
     private var id: String? = null
 
     private var nombre: String? = nombre
-    private var coordenadas: HashSet<Coordenada> = coordenadas
-    var ubicaciones: MutableSet<UbicacionMongo> = HashSet()
+    private var forma: GeoJsonPolygon? = forma
+    private var ubicaciones: MutableSet<UbicacionMongo> = HashSet()
+
+    constructor() : this(null, null) {}
 
     fun aDTO() : DistritoDTO {
-        val coordenadasDTO = this.coordenadas.map { coordenada -> coordenada.aDTO() }.toMutableSet()
-        return DistritoDTO(this.id, this.nombre!!, coordenadasDTO)
+        val ubicacionesDTO = this.ubicaciones.map { ubicacion -> ubicacion.aDTO() }.toCollection(mutableSetOf())
+        return DistritoDTO(this.id, this.nombre!!, this.forma, ubicacionesDTO)
     }
 
     fun getNombre(): String {
         return nombre!!
     }
 
-    fun getCoordenadas(): HashSet<Coordenada> {
-        return coordenadas
+    fun getForma(): GeoJsonPolygon {
+        return this.forma!!
+    }
+
+    fun setId(id: String) {
+        this.id = id
+    }
+
+    fun setNombre(nombre: String) {
+        this.nombre = nombre
+    }
+
+    fun setForma(forma: GeoJsonPolygon) {
+        this.forma = forma
+    }
+
+    fun setUbicaciones(ubicaciones: MutableSet<UbicacionMongo>) {
+        this.ubicaciones = ubicaciones
     }
 
     init {
-        if(nombre.isBlank()){
+        if(nombre!!.isBlank()){
             throw ErrorNombre("El nombre del Distrito no puede ser vacio.")
         }
-        if(coordenadas.size < 3) {
+        if(forma != null && forma.points.size < 4) {
             throw ErrorCantidadDeCoordenadasMinimas()
         }
     }

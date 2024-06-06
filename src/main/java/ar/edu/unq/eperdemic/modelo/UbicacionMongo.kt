@@ -1,6 +1,9 @@
 package ar.edu.unq.eperdemic.modelo
 
+import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import javax.persistence.Id
@@ -11,12 +14,12 @@ class UbicacionMongo() {
     @Id
     private var id: String? = null
 
-    //@Indexed(unique = true)
     private var nombre: String? = null
 
-    private var coordenada: Coordenada? = null
+    @GeoSpatialIndexed
+    var coordenada: GeoJsonPoint? = null
 
-    constructor(nombre: String, coordenada: Coordenada) : this() {
+    constructor(nombre: String, coordenada: GeoJsonPoint) : this() {
         if(nombre.isBlank()){
             throw ErrorNombre("El nombre no puede ser vacio.")
         }
@@ -24,10 +27,22 @@ class UbicacionMongo() {
         this.coordenada = coordenada
     }
 
-    fun getCordenada() : Coordenada {
+    fun getCordenada() : GeoJsonPoint {
         return this.coordenada!!
     }
     fun getNombre() : String {
         return this.nombre!!
+    }
+
+    fun setId(id: String) {
+        this.id = id
+    }
+
+    fun setNombre(nombre: String) {
+        this.nombre = nombre
+    }
+
+    fun aDTO(): UbicacionDTO {
+        return UbicacionDTO(this.id!!.toLong(), this.nombre, this.coordenada)
     }
 }

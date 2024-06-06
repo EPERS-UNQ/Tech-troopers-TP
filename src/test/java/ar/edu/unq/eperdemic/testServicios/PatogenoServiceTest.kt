@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -41,9 +42,9 @@ class PatogenoServiceTest {
     lateinit var india: UbicacionGlobal
     lateinit var pepe: Vector
     lateinit var pedro: Vector
-    lateinit var coordenada1: Coordenada
-    lateinit var coordenada2: Coordenada
-    lateinit var coordenada3: Coordenada
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
 
     @BeforeEach
     fun crearModelo() {
@@ -51,9 +52,9 @@ class PatogenoServiceTest {
         dataService = DataServiceImpl(HibernateDataDAO())
         covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
-        coordenada1 = Coordenada(45.00, 40.00)
-        coordenada2 = Coordenada(55.00, 50.00)
-        coordenada3 = Coordenada(60.00, 65.00)
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(55.00, 50.00)
+        coordenada3 = GeoJsonPoint(60.00, 65.00)
         china = UbicacionGlobal("China", coordenada1)
         corea = UbicacionGlobal("Corea", coordenada2)
         india = UbicacionGlobal("India", coordenada3)
@@ -121,15 +122,6 @@ class PatogenoServiceTest {
         Assertions.assertEquals("Coronavirus", patogenos[1].toString())
 
     }
-
-//    @Test
-//    fun seTrataDeRecuperarTodosLosPatogenosPeroNoHay() {
-//
-//        val patogenos = servicioPatogeno.recuperarTodos()
-//
-//        Assertions.assertEquals(0, patogenos.size) --> Ahora no hay 0 porque puse el crearPatogeno en el BeforeEach y siempre hay uno
-//
-//    }
 
     @Test
     fun seAgregaUnaEspecieNueva() {

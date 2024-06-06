@@ -16,6 +16,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.util.Assert
 
@@ -30,17 +31,17 @@ class UbicacionServiceNeo4JTest {
     @Autowired lateinit var serviceMutacion:  MutacionService
     @Autowired lateinit var serviceEspecie:   EspecieService
 
-    lateinit var coordenada1: Coordenada
-    lateinit var coordenada2: Coordenada
-    lateinit var coordenada3: Coordenada
-    lateinit var coordenada4: Coordenada
-    lateinit var coordenada5: Coordenada
-    lateinit var coordenada6: Coordenada
-    lateinit var coordenada7: Coordenada
-    lateinit var coordenada8: Coordenada
-    lateinit var coordenada9: Coordenada
-    lateinit var coordenada10: Coordenada
-    lateinit var coordenada11: Coordenada
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
+    lateinit var coordenada4: GeoJsonPoint
+    lateinit var coordenada5: GeoJsonPoint
+    lateinit var coordenada6: GeoJsonPoint
+    lateinit var coordenada7: GeoJsonPoint
+    lateinit var coordenada8: GeoJsonPoint
+    lateinit var coordenada9: GeoJsonPoint
+    lateinit var coordenada10: GeoJsonPoint
+    lateinit var coordenada11: GeoJsonPoint
 
     lateinit var arg: UbicacionGlobal
     lateinit var chl: UbicacionGlobal
@@ -83,17 +84,17 @@ class UbicacionServiceNeo4JTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        coordenada1 = Coordenada(40.00, 40.00)
-        coordenada2 = Coordenada(41.00, 40.00)
-        coordenada3 = Coordenada(42.00, 40.00)
-        coordenada4 = Coordenada(43.00, 40.00)
-        coordenada5 = Coordenada(44.00, 40.00)
-        coordenada6 = Coordenada(45.00, 40.00)
-        coordenada7 = Coordenada(46.00, 40.00)
-        coordenada8 = Coordenada(47.00, 40.00)
-        coordenada9 = Coordenada(48.00, 40.00)
-        coordenada10 = Coordenada(49.00, 40.00)
-        coordenada11 = Coordenada(50.00, 40.00)
+        coordenada1 = GeoJsonPoint(40.00, 40.00)
+        coordenada2 = GeoJsonPoint(41.00, 40.00)
+        coordenada3 = GeoJsonPoint(42.00, 40.00)
+        coordenada4 = GeoJsonPoint(43.00, 40.00)
+        coordenada5 = GeoJsonPoint(44.00, 40.00)
+        coordenada6 = GeoJsonPoint(45.00, 40.00)
+        coordenada7 = GeoJsonPoint(46.00, 40.00)
+        coordenada8 = GeoJsonPoint(47.00, 40.00)
+        coordenada9 = GeoJsonPoint(48.00, 40.00)
+        coordenada10 = GeoJsonPoint(49.00, 40.00)
+        coordenada11 = GeoJsonPoint(50.00, 40.00)
 
         arg = UbicacionGlobal("Argentina", coordenada1)
         chl = UbicacionGlobal("Chile", coordenada2)

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -45,11 +46,11 @@ class MutacionServiceImplTest {
     lateinit var tailandia: UbicacionGlobal
     lateinit var japon: UbicacionGlobal
     lateinit var indonesia: UbicacionGlobal
-    lateinit var coordenada1: Coordenada
-    lateinit var coordenada2: Coordenada
-    lateinit var coordenada3: Coordenada
-    lateinit var coordenada4: Coordenada
-    lateinit var coordenada5: Coordenada
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
+    lateinit var coordenada4: GeoJsonPoint
+    lateinit var coordenada5: GeoJsonPoint
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
@@ -67,11 +68,11 @@ class MutacionServiceImplTest {
         colera = Patogeno("Colera", 90, 5, 1, 30, 45)
         viruela = Patogeno("Viruela", 90, 80, 15, 15, 35)
         rabia = Patogeno("Rabia",1,1,1,35,10)
-        coordenada1 = Coordenada(45.00, 40.00)
-        coordenada2 = Coordenada(55.00, 50.00)
-        coordenada3 = Coordenada(65.00, 60.00)
-        coordenada4 = Coordenada(75.00, 70.00)
-        coordenada5 = Coordenada(85.00, 80.00)
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(55.00, 50.00)
+        coordenada3 = GeoJsonPoint(65.00, 60.00)
+        coordenada4 = GeoJsonPoint(75.00, 70.00)
+        coordenada5 = GeoJsonPoint(85.00, 80.00)
         corea = UbicacionGlobal("Corea", coordenada1)
         japon = UbicacionGlobal("Japon", coordenada2)
         tailandia = UbicacionGlobal("Tailandia", coordenada3)

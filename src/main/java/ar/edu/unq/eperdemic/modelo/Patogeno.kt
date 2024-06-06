@@ -69,7 +69,7 @@ class Patogeno() {
     }
 
     fun crearEspecie(nombreEspecie: String, paisDeOrigen: String): Especie {
-        var nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
+        val nuevaEspecie = Especie(nombreEspecie, this, paisDeOrigen)
         cantidadDeEspecies++
         return nuevaEspecie
     }

@@ -1,34 +1,44 @@
 package ar.edu.unq.eperdemic.testServicios
 
-import ar.edu.unq.eperdemic.modelo.Coordenada
-import ar.edu.unq.eperdemic.modelo.UbicacionMongo
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.modelo.Distrito
+import ar.edu.unq.eperdemic.services.DistritoService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
+import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 
 @SpringBootTest
 class UbicacionServiceMongoTest {
 
-    @Autowired private lateinit var ubicacionMongo : UbicacionMongoDAO // Cambiar a service...
+    @Autowired private lateinit var serviceDistrito: DistritoService
 
-    lateinit var ubi1: UbicacionMongo
-    lateinit var coordenada: Coordenada
-    lateinit var coordenada2: Coordenada
+    lateinit var distrito: Distrito
+    lateinit var coordenadas: List<GeoJsonPoint>
+    lateinit var coordenada2: GeoJsonPolygon
+
+    lateinit var forma: GeoJsonPolygon
 
     @BeforeEach
     fun crearModelo() {
 
-        coordenada = Coordenada(10.00, 10.00)
+        coordenadas = listOf(
+            GeoJsonPoint(0.0, 0.0),
+            GeoJsonPoint(30.0, 60.0),
+            GeoJsonPoint(60.0, 10.0),
+            GeoJsonPoint(0.0, 0.0),
+        )
 
-        ubicacionMongo.save(UbicacionMongo("Peru", coordenada))
+        forma = GeoJsonPolygon(coordenadas)
+
+        serviceDistrito.crear(Distrito("Peru", forma))
 
     }
 
     @Test
     fun chequearUbiPersistida () {
-        val ubi1 = ubicacionMongo.findByNombre("Peru")
-        Assertions.assertEquals(ubi1!!.getNombre(), "Peru")
+        val ubi1 = serviceDistrito.encontrarPorNombre("Peru")
+        Assertions.assertEquals(ubi1.getNombre(), "Peru")
     }
 
     @Test

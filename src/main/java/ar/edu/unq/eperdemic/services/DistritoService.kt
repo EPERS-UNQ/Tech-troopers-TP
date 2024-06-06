@@ -8,4 +8,6 @@ interface DistritoService {
 
     fun distritoMasEnfermo() : Distrito
 
+    fun encontrarPorNombre(nombreDistrito: String): Distrito // REVISAR...
+
 }

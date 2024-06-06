@@ -19,6 +19,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -52,18 +53,18 @@ class UbicacionServiceJpaTest {
 
     lateinit var dataService: DataService
 
-    lateinit var coordenada1: Coordenada
-    lateinit var coordenada2: Coordenada
-    lateinit var coordenada3: Coordenada
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
 
     @BeforeEach
     fun crearModelo() {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        coordenada1 = Coordenada(45.00, 40.00)
-        coordenada2 = Coordenada(55.00, 50.00)
-        coordenada3 = Coordenada(65.00, 60.00)
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(55.00, 50.00)
+        coordenada3 = GeoJsonPoint(65.00, 60.00)
 
         ubi1 = serviceUbicacion.crear(UbicacionGlobal("Argentina", coordenada1))
         ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
@@ -74,8 +75,8 @@ class UbicacionServiceJpaTest {
         vector3 = serviceVector.crear(Vector("perrito", ubi1.aJPA(), TipoVector.ANIMAL))
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId()!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId())
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId())
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -86,7 +87,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
 
-        val coordenada = Coordenada(35.00, 30.00)
+        val coordenada = GeoJsonPoint(35.00, 30.00)
         ubi3 = serviceUbicacion.crear(UbicacionGlobal("Uruguay", coordenada))
 
         ubiPersistida1 = serviceUbicacion.recuperar(ubi3.getId())
@@ -135,7 +136,7 @@ class UbicacionServiceJpaTest {
 
         serviceVector.infectar(vector3.getId(), especie1.getId()!!)
         serviceVector.infectar(vector4.getId(), especie2.getId()!!)
-        serviceUbicacion.expandir(ubi1.getId()!!)
+        serviceUbicacion.expandir(ubi1.getId())
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
 
@@ -168,7 +169,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun errorCuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
-            serviceUbicacion.mover(35, ubi1.getId()!!)
+            serviceUbicacion.mover(35, ubi1.getId())
         }
     }
 

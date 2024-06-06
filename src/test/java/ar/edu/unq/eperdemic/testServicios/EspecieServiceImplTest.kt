@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -45,14 +46,14 @@ class EspecieServiceImplTest {
     lateinit var humano     : Vector
     lateinit var golondrina : Vector
     lateinit var ubicacion : UbicacionGlobal
-    lateinit var coordenada: Coordenada
+    lateinit var coordenada: GeoJsonPoint
 
     lateinit var random : RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
-        coordenada = Coordenada(45.00, 40.00)
+        coordenada = GeoJsonPoint(45.00, 40.00)
         ubicacion = UbicacionGlobal("Argentina", coordenada)
         serviceUbicacion.crear(ubicacion)
         humano    = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)

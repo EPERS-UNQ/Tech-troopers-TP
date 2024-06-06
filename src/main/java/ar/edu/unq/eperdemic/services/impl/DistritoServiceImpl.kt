@@ -21,5 +21,8 @@ class DistritoServiceImpl : DistritoService {
         TODO("Not yet implemented")
     }
 
+    override fun encontrarPorNombre(nombreDistrito: String): Distrito {
+        return distritoDAO.findByNombre(nombreDistrito)!!
+    }
 
 }

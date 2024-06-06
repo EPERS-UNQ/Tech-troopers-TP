@@ -177,19 +177,19 @@ class UbicacionServiceImpl() : UbicacionService {
         }
     }
 
-    private fun estaADistanciaAlcanzable(nomUbiInicio: String, nomUbiFin: String, i: Int): Boolean {
-        val ubi1 = ubicacionMongoDAO.findByNombre(nomUbiInicio)
-        val ubi2 = ubicacionMongoDAO.findByNombre(nomUbiFin)
-
-        val p2 = ubi1!!.getCordenada()
-        val point = ubi2!!.getCordenada()
-
-        // HACER QUERY
-        val result = Math.sqrt((p2.getLongitud() - point.getLongitud()) * (p2.getLongitud() - point.getLongitud()) +
-                (p2.getLatitud() - point.getLatitud()) * (p2.getLatitud() - point.getLatitud()))
-
-        return result <= i
-    }
+//    private fun estaADistanciaAlcanzable(nomUbiInicio: String, nomUbiFin: String, i: Int): Boolean {
+//        val ubi1 = ubicacionMongoDAO.findByNombre(nomUbiInicio)
+//        val ubi2 = ubicacionMongoDAO.findByNombre(nomUbiFin)
+//
+//        val p2 = ubi1!!.getCordenada()
+//        val point = ubi2!!.getCordenada()
+//
+//        // HACER QUERY
+//        val result = Math.sqrt((p2.getLongitud() - point.getLongitud()) * (p2.getLongitud() - point.getLongitud()) +
+//                (p2.getLatitud() - point.getLatitud()) * (p2.getLatitud() - point.getLatitud()))
+//
+//        return result <= i
+//    }
 
     override fun expandir( ubicacionId: Long) {
 
@@ -220,7 +220,7 @@ class UbicacionServiceImpl() : UbicacionService {
         for(u in ubicacionNeo) {
             val ubiMongo = ubicacionMongoDAO.findByNombre(u.getNombre()!!)
 
-            ubicaciones.add(UbicacionGlobal(ubiMongo!!.getNombre(), ubiMongo!!.getCordenada()))
+            ubicaciones.add(UbicacionGlobal(ubiMongo!!.getNombre(), ubiMongo.getCordenada()))
         }
         return ubicaciones
     }
