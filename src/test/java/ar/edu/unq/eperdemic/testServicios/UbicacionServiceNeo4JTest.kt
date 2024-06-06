@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
 import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.*
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.util.Assert
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -51,9 +51,9 @@ class UbicacionServiceNeo4JTest {
     lateinit var bol: UbicacionGlobal
     lateinit var urg: UbicacionGlobal
     lateinit var ecu: UbicacionGlobal
-    lateinit var br:  UbicacionGlobal
+    lateinit var br: UbicacionGlobal
     lateinit var per: UbicacionGlobal
-    lateinit var hn:  UbicacionGlobal
+    lateinit var hn: UbicacionGlobal
 
     lateinit var hornerito: Vector
     lateinit var mosca: Vector

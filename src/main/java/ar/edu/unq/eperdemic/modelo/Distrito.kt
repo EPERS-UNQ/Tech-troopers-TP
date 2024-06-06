@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.controller.dto.DistritoDTO
 import ar.edu.unq.eperdemic.exceptions.DistritoAbiertoException
 import ar.edu.unq.eperdemic.exceptions.ErrorCantidadDeCoordenadasMinimas
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon

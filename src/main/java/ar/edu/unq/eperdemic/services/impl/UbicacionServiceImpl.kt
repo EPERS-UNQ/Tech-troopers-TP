@@ -2,14 +2,14 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
-import ar.edu.unq.eperdemic.modelo.UbicacionMongo
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
-import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -157,7 +157,10 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
+        val ubicacionOrigen = ubicacionMongoDAO.findByNombre(nomUbiInicio)!!
+        val ubicacionDestino = ubicacionMongoDAO.findByNombre(nomUbiFin)!!
+        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)
+            && ubicacionOrigen.estaAMasDe100Km(ubicacionDestino)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {

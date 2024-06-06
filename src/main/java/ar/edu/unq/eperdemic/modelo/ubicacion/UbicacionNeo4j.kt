@@ -1,7 +1,7 @@
-package ar.edu.unq.eperdemic.modelo.neo4j
+package ar.edu.unq.eperdemic.modelo.ubicacion
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
-import ar.edu.unq.eperdemic.modelo.neo4j.camino.Camino
+import ar.edu.unq.eperdemic.modelo.ubicacion.camino.Camino
 import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 import org.springframework.data.neo4j.core.schema.*
