@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Distrito
-import ar.edu.unq.eperdemic.modelo.UbicacionMongo
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 import org.springframework.data.mongodb.repository.Aggregation
@@ -33,5 +32,7 @@ interface DistritoDAO : MongoRepository<Distrito, String> {
     )
     fun distritoMasInfectado(ubicaciones: List<String>): String?
 
+    @Query("{ forma: { \$geoIntersects: { \$geometry: { type: 'Point', coordenadas: [ ?0, ?1 ] } } } }")
+    fun distritoConUbicacion(longitud: Double, latitud: Double): Distrito?
 
 }

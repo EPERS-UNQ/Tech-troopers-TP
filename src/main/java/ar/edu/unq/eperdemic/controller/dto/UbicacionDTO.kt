@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.controller.dto
 
-import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
-import ar.edu.unq.eperdemic.modelo.UbicacionMongo
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 
 class UbicacionDTO ( val id: Long?,

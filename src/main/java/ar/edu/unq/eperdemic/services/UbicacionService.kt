@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.services
 
-import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 
 interface UbicacionService {
 

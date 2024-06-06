@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionNeo4j
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository

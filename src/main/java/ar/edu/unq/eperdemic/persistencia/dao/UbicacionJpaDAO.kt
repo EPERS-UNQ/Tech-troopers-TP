@@ -1,6 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

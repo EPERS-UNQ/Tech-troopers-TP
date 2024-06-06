@@ -8,6 +8,9 @@ import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO

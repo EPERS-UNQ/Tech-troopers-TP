@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 
 @Entity
 open class Vector() {

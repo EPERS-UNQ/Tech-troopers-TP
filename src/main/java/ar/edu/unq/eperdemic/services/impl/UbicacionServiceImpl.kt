@@ -2,16 +2,13 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionGlobal
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
-import ar.edu.unq.eperdemic.modelo.UbicacionMongo
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
-import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionNeo4j
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.*
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -27,11 +24,12 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var distritoDao: DistritoDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
         val ubicacionExistente = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
         if ( ubicacionExistente != null ) {
-           throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
+            throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
         }
 
         val ubicacionPersistida = ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
@@ -158,7 +156,10 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
+        val ubicacionOrigen = ubicacionMongoDAO.findByNombre(nomUbiInicio)!!
+        val ubicacionDestino = ubicacionMongoDAO.findByNombre(nomUbiFin)!!
+        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)
+            && ubicacionOrigen.estaAMasDe100Km(ubicacionDestino)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {

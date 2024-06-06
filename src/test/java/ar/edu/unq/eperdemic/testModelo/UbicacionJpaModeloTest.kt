@@ -1,7 +1,7 @@
 package ar.edu.unq.eperdemic.testModelo
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
