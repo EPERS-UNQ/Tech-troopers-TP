@@ -18,4 +18,12 @@ interface UbicacionJpaDAO : JpaRepository<UbicacionJpa, Long> {
     @Query("select u from UbicacionJpa u where u.nombre = ?1")
     fun recuperarPorNombreReal(ubicacion: String): UbicacionJpa?
 
+    @Query("""
+         SELECT DISTINCT u.nombre
+         FROM UbicacionJpa u
+        JOIN Vector v ON u.id = v.ubicacion.id
+         WHERE v.estaInfectado = TRUE
+        """)
+    fun ubicacionesInfectadas(): List<String>
+
 }

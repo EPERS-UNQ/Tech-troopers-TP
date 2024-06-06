@@ -37,7 +37,7 @@ class UbicacionServiceMongoTest {
 
     @Test
     fun chequearUbiPersistida () {
-        val ubi1 = serviceDistrito.encontrarPorNombre("Peru")
+        val ubi1 = serviceDistrito.recuperarPorNombre("Peru")
         Assertions.assertEquals(ubi1.getNombre(), "Peru")
     }
 

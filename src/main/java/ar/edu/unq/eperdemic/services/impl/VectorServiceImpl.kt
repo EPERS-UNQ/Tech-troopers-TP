@@ -54,6 +54,9 @@ class VectorServiceImpl () : VectorService {
     override fun infectar(vectorId: Long, especieId: Long) {
         val especie = especieDAO.findById(especieId).orElse(null)
         val vector  = vectorDAO.findById(vectorId).orElse(null) //Tirar error si no encuentra?
+        if(especie == null || vector == null) {
+            error("Pensar un error")
+        }
         vector.infectar(especie)
         vectorDAO.save(vector)
         especieDAO.save(especie)

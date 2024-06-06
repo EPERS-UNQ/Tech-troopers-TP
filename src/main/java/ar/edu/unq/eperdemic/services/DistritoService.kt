@@ -5,9 +5,8 @@ import ar.edu.unq.eperdemic.modelo.Distrito
 interface DistritoService {
 
     fun crear(distrito : Distrito) : Distrito
-
     fun distritoMasEnfermo() : Distrito
-
-    fun encontrarPorNombre(nombreDistrito: String): Distrito // REVISAR...
-
+    fun recuperarPorNombre(nombreDistrito: String): Distrito // REVISAR...
+    fun actualizarDistrito(distrito: Distrito)
+    fun deleteAll()
 }

@@ -47,5 +47,4 @@ class UbicacionGlobal() {
         ubicacionJPA.setId(this.id!!)
         return ubicacionJPA
     }
-
 }

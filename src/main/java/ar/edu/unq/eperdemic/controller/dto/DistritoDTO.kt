@@ -13,7 +13,7 @@ class DistritoDTO(  val id: String?,
         distrito.setId(this.id!!)
         distrito.setNombre(this.nombre)
         distrito.setForma(this.forma!!)
-        distrito.setUbicaciones(this.ubicaciones.map { it.aModeloMongo() }.toCollection(mutableSetOf()))
+        distrito.setUbicaciones(this.ubicaciones.map { it.aModeloMongo() }.toCollection(mutableListOf()))
         return distrito
     }
 

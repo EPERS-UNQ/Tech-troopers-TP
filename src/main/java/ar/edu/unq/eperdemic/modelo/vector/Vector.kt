@@ -26,6 +26,8 @@ open class Vector() {
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var especies: MutableSet<Especie> = HashSet()
 
+    var estaInfectado = false
+
     @ManyToOne
     var ubicacion: UbicacionJpa? = null
 
@@ -57,12 +59,13 @@ open class Vector() {
     }
 
     fun estaInfectado(): Boolean{
-        return this.especies.isNotEmpty()
+        return this.estaInfectado
     }
 
     open fun infectar(especie: Especie) {
         if (!this.defiendeContra(especie)){
             this.especies.add(especie)
+            this.estaInfectado = true
             especie.agregarVector(this)
         }
     }
