@@ -12,6 +12,8 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
@@ -32,6 +34,8 @@ class UbicacionServiceJpaTest {
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
+    @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
+    @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO
 
 
     lateinit var ubi1: UbicacionGlobal
@@ -188,6 +192,8 @@ class UbicacionServiceJpaTest {
     fun borrarRegistros() {
         serviceUbicacion.deleteAll()
         dataService.cleanAll()
+        ubicacionNeo4jDAO.detachDelete()
+        ubicacionMongoDBDAO.deleteAll()
     }
 
 }

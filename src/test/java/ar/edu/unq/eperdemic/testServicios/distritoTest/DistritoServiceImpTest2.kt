@@ -66,6 +66,7 @@ class DistritoServiceImpTest2 {
     private lateinit var ubicacionMcDonals: UbicacionJpa
     private lateinit var patogenoVirus: Patogeno
     private lateinit var especieCovid: Especie
+
     @BeforeEach
     fun setUp(){
 
@@ -117,12 +118,12 @@ class DistritoServiceImpTest2 {
 
         // OBTENEMOS LA UBICACIONJPA Y LA AGREGAMOS AL VECTOR RECIEN CREADO
         val ubi1 =  ubicacionServiceImpl.crear(UbicacionGlobal("ubiPrueba", GeoJsonPoint(13.0, 16.0)))
-        ubicacionSubway = ubicacionJpaDAO.recuperarPorNombreReal(ubi1.getNombre())!!
-        val vectorMartine = Vector("Martin", ubicacionSubway, TipoVector.HUMANO)
+        //ubicacionSubway = ubicacionJpaDAO.recuperarPorNombreReal(ubi1.getNombre())!!
+        val vectorMartine = Vector("Martin", ubi1.aJPA(), TipoVector.HUMANO)
         vectorMartin = vectorService.crear(vectorMartine)
 
         // CREAMOS UNA ESPECIE E INFECTAMOS AL VECTOR CON ELLA
-        especieCovid = patogenoService.agregarEspecie(patogenoVirus.id!!, "COVID", ubicacionSubway.getId()!!)
+        especieCovid = patogenoService.agregarEspecie(patogenoVirus.id!!, "COVID",ubi1.getId()!!)
         vectorService.infectar(vectorMartin.getId(), especieCovid.getId()!!)
 
 

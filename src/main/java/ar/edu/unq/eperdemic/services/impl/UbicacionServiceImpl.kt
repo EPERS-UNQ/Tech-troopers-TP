@@ -50,29 +50,12 @@ class UbicacionServiceImpl() : UbicacionService {
 
     }
 
-//    override fun recuperar(id: Long): UbicacionGlobal {
-//
-//        val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
-//        val ubicacionNeo = ubicacionNeoDAO.findByNombre(ubicacionJpa?.getNombre()!!)
-//        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa.getNombre()!!)
-//
-//        if (ubicacionJpa == null || ubicacionNeo == null || ubicacionMongo == null) {
-//            throw NoExisteLaUbicacion()
-//        }
-//
-//        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo!!.getNombre(), ubicacionMongo!!.getCordenada())
-//
-//        ubicacionGlobal.setId(id)
-//
-//        return ubicacionGlobal
-//    }
-
     override fun recuperar(id: Long): UbicacionGlobal {
 
         val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
             ?: throw NoExisteLaUbicacion()
 
-        val ubicacionNeo = ubicacionNeoDAO.findByNombre(ubicacionJpa.getNombre()!!)
+        ubicacionNeoDAO.findByNombre(ubicacionJpa.getNombre()!!)
             ?: throw NoExisteLaUbicacion()
 
         val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa.getNombre()!!)

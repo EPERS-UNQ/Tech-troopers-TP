@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.modelo.Distrito
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 class UbicacionServiceMongoTest {
 
     @Autowired private lateinit var serviceDistrito: DistritoService
+    @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
 
     lateinit var distrito: Distrito
     lateinit var coordenadas: List<GeoJsonPoint>
@@ -49,7 +51,6 @@ class UbicacionServiceMongoTest {
 
     @AfterEach
     fun borrarRegistros() {
-
-
+        ubicacionMongoDAO.deleteAll()
     }
 }

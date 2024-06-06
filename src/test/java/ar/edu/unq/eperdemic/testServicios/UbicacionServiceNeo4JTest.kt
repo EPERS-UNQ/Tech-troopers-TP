@@ -12,6 +12,8 @@ import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,6 +32,8 @@ class UbicacionServiceNeo4JTest {
     @Autowired lateinit var servicePatogeno:  PatogenoService
     @Autowired lateinit var serviceMutacion:  MutacionService
     @Autowired lateinit var serviceEspecie:   EspecieService
+    @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
+    @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO
 
     lateinit var coordenada1: GeoJsonPoint
     lateinit var coordenada2: GeoJsonPoint
@@ -355,6 +359,8 @@ class UbicacionServiceNeo4JTest {
     fun tearDown() {
         serviceUbicacion.deleteAll()
         dataService.cleanAll()
+        ubicacionNeo4jDAO.detachDelete()
+        ubicacionMongoDBDAO.deleteAll()
     }
 
 }
