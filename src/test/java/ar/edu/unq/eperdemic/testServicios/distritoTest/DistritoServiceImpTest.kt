@@ -57,13 +57,8 @@ class DistritoServiceImpTest {
     private lateinit var ubicacionBurgerKing: UbicacionJpa
     private lateinit var ubicacionSubway: UbicacionJpa
     private lateinit var ubicacionMostaza: UbicacionJpa
-    private lateinit var vectorMartin: Vector
-    private lateinit var vectorTomas: Vector
-    private lateinit var vectorBullo: Vector
-    private lateinit var vectorFirulais: Vector
     private lateinit var ubicacionMcDonals: UbicacionJpa
     private lateinit var patogenoVirus: Patogeno
-    private lateinit var especieCovid: Especie
 
     @BeforeEach
     fun setUp(){
@@ -137,8 +132,6 @@ class DistritoServiceImpTest {
 
         Assertions.assertEquals(distritoBernal.getForma(), distritoRecuperado.getForma())
 
-        // CORREGIR
-        //Assertions.assertEquals(distritoBernal.getUbicaiones(), distritoRecuperado.getUbicaiones())
         Assertions.assertEquals(distritoBernal.getNombre()!!, distritoRecuperado.getNombre()!!)
     }
 
@@ -156,9 +149,6 @@ class DistritoServiceImpTest {
         distritoRecuperado = distritoService.recuperarPorNombre(distritoBernal.getNombre()!!)
 
         Assertions.assertEquals(1, distritoRecuperado.getUbicaciones().size)
-
-        // CORREGIR !!
-        //Assertions.assertTrue(distritoRecuperado.getUbicaiones().contains(ubicacionElPiave))
     }
     @Test
     fun testAlCrearUnDistritoConMismoNombreSeLanzaException() {
