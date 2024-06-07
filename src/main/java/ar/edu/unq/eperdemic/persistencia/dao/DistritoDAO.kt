@@ -19,9 +19,6 @@ interface DistritoDAO : MongoRepository<Distrito, String> {
     )
     fun findSeIntersectanCon(forma: GeoJsonPolygon): List<Distrito>
 
-    @Query("{'forma': { '\$geoIntersects': { '\$geometry': ?0 } } }")
-    fun findDistritoIdConPunto(punto: GeoJsonPoint): Distrito?
-
     @Aggregation(
         pipeline = [
             "{\$project: {_id: 1, distrito: '\$nombre', ubicacionesContagiadas: {\$size: {\$setIntersection: ['\$ubicaciones.nombre', ?0]}}}}",
@@ -31,8 +28,5 @@ interface DistritoDAO : MongoRepository<Distrito, String> {
         ]
     )
     fun distritoMasInfectado(ubicaciones: List<String>): String?
-
-    @Query("{ forma: { \$geoIntersects: { \$geometry: { type: 'Point', coordenadas: [ ?0, ?1 ] } } } }")
-    fun distritoConUbicacion(longitud: Double, latitud: Double): Distrito?
 
 }
