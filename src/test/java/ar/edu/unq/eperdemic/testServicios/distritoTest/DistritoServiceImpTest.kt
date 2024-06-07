@@ -10,11 +10,14 @@ import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
+import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.VectorService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,8 +32,10 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 class DistritoServiceImpTest {
 
     @Autowired private lateinit var distritoService: DistritoService
-    @Autowired private lateinit var ubicacionService: UbicacionService
+    @Autowired private lateinit var ubicacionServiceImpl: UbicacionService
+    @Autowired private lateinit var vectorService: VectorService
 
+    @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
     @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO
     @Autowired private lateinit var patogenoService: PatogenoService
@@ -52,8 +57,13 @@ class DistritoServiceImpTest {
     private lateinit var ubicacionBurgerKing: UbicacionJpa
     private lateinit var ubicacionSubway: UbicacionJpa
     private lateinit var ubicacionMostaza: UbicacionJpa
+    private lateinit var vectorMartin: Vector
+    private lateinit var vectorTomas: Vector
+    private lateinit var vectorBullo: Vector
+    private lateinit var vectorFirulais: Vector
     private lateinit var ubicacionMcDonals: UbicacionJpa
     private lateinit var patogenoVirus: Patogeno
+    private lateinit var especieCovid: Especie
 
     @BeforeEach
     fun setUp(){
