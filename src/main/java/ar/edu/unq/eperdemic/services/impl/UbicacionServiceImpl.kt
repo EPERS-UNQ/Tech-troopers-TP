@@ -152,6 +152,10 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
+        if (vector.ubicacion!!.getNombre()!! == nuevaUbicacion.getNombre()!!) {
+            return
+        }
+
         if (vector.ubicacion!!.getNombre()!! != nuevaUbicacion.getNombre()!!) {
             this.comprobarViabilidadUbi(
                 vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
