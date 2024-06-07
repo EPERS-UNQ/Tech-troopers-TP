@@ -1,8 +1,5 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
-import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
-import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
-
 enum class TipoVector() {
     HUMANO,
     ANIMAL,

@@ -23,7 +23,7 @@ interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
         """
             MATCH (u1:UbicacionNeo4j)
             MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion})
-            MATCH (u2)-[:Camino*]->(u1)
+            MATCH (u2)-[:Camino]->(u1)
             RETURN DISTINCT u1
         """
     )

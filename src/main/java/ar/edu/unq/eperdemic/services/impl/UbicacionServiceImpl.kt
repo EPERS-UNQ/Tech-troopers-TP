@@ -61,7 +61,7 @@ class UbicacionServiceImpl() : UbicacionService {
         val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa.getNombre()!!)
             ?: throw NoExisteLaUbicacion()
 
-        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre()!!, ubicacionMongo.getCordenada()!!)
+        val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada())
 
         ubicacionGlobal.setId(id)
 
@@ -92,6 +92,10 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
+        if (vector.ubicacion!!.getNombre()!! == nuevaUbicacion.getNombre()!!) {
+            return
+        }
+
         this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
             TipoVector.puedeCruzar(vector))
 
@@ -114,21 +118,23 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
-        this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector))
-
+        if (vector.ubicacion!!.getNombre()!! != nuevaUbicacion.getNombre()!!) {
+            this.verificarSiPuedeMoverA(
+                vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,TipoVector.puedeCruzar(vector)
+            )
+        }
         this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
     }
 
     private fun moverHasta(vector: Vector, nombreUbi: String) {
 
-        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)
+        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)!!
 
         vector.ubicacion = nuevaUbicacion
         vectorDAO.save(vector)
 
-        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion!!.getId()!!)
+        val todosLosVectores = vectorDAO.recuperarTodosDeUbicacion(nuevaUbicacion.getId()!!)
 
         if (vector.estaInfectado()) {
             todosLosVectores.map {
@@ -152,9 +158,6 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
-            throw ErrorUbicacionMuyLejana()
-        }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
             throw ErrorUbicacionNoAlcanzable()
         }
@@ -182,7 +185,14 @@ class UbicacionServiceImpl() : UbicacionService {
         ubicacionNeoDAO.conectarCaminos(nombreDeUbicacion1, nombreDeUbicacion2, tipoCamino)
     }
 
+
     override fun conectados(nombreDeUbicacion: String): List<UbicacionGlobal> {
+
+        val ubicacionJpa = ubicacionJpaDAO.recuperarPorNombreReal(nombreDeUbicacion)
+        if (ubicacionJpa == null) {
+            throw NoExisteLaUbicacion()
+        }
+
         val ubicacionNeo = ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
         val ubicaciones: MutableList<UbicacionGlobal> = mutableListOf()
 

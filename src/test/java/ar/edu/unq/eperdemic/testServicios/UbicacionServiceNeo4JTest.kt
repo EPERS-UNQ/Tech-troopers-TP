@@ -193,7 +193,7 @@ class UbicacionServiceNeo4JTest {
 
         val ubicacionesDeEcu = serviceUbicacion.conectados(ecu.getNombre())
         Assertions.assertTrue(ubicacionesDeEcu.isNotEmpty())
-        Assertions.assertEquals(9, ubicacionesDeEcu.size)
+        Assertions.assertEquals(1, ubicacionesDeEcu.size)
 
     }
 
@@ -208,7 +208,7 @@ class UbicacionServiceNeo4JTest {
 
         val nuevasUbicacionesDeHonduras = serviceUbicacion.conectados(hn.getNombre())
 
-        Assertions.assertEquals(9, nuevasUbicacionesDeHonduras.size)
+        Assertions.assertEquals(1, nuevasUbicacionesDeHonduras.size)
     }
 
     @Test
@@ -353,6 +353,44 @@ class UbicacionServiceNeo4JTest {
         val moscaViajera = serviceVector.recuperar(mosca.getId())
 
         Assertions.assertEquals(arg.getNombre(), moscaViajera.nombreDeUbicacionActual())
+    }
+
+    @Test
+    fun unVectorInexistenteTrataDeMoverseAUnaUbicacion() {
+
+        Assertions.assertThrows(ErrorDeMovimiento::class.java){
+            serviceUbicacion.moverPorCaminoMasCorto(1500, "Argentina")
+        }
+
+    }
+
+    @Test
+    fun ubicacionesConectadasDeUnaUbicacionQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java){
+            serviceUbicacion.conectados("Belgica")
+        }
+
+    }
+
+    @Test
+    fun unVectorTrataDeMoverseALaUbicacionQueYaEsta() {
+
+        serviceUbicacion.mover(hornerito.getId(), arg.getId())
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
+
+        Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
+
+    }
+
+    @Test
+    fun unVectorTrataDeMoversePorElCaminoMasCortoALaUbicacionQueYaEsta() {
+
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), arg.getNombre())
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
+
+        Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
+
     }
 
     @AfterEach
