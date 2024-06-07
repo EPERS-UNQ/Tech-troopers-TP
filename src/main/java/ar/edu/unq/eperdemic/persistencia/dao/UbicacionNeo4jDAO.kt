@@ -1,12 +1,14 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
-import ar.edu.unq.eperdemic.modelo.neo4j.UbicacionNeo4j
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionNeo4j
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
 
 @Repository
 interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
+
+    fun findByNombre(nombre: String) : UbicacionNeo4j?
 
     @Query(
         """
@@ -21,7 +23,7 @@ interface UbicacionNeo4jDAO : Neo4jRepository<UbicacionNeo4j, Long> {
         """
             MATCH (u1:UbicacionNeo4j)
             MATCH (u2:UbicacionNeo4j {nombre: ${'$'}nombreDeUbicacion})
-            MATCH (u2)-[:Camino*]->(u1)
+            MATCH (u2)-[:Camino]->(u1)
             RETURN DISTINCT u1
         """
     )

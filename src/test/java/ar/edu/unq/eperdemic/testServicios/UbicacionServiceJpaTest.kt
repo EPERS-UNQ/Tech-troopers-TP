@@ -1,29 +1,29 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
+import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteLaEntidad
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.vector.Vector
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
-
-
-
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 
@@ -35,14 +35,16 @@ class UbicacionServiceJpaTest {
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
+    @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
+    @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO
 
 
-    lateinit var ubi1: UbicacionJpa
-    lateinit var ubi2: UbicacionJpa
-    lateinit var ubi3: UbicacionJpa
-    lateinit var ubi4: UbicacionJpa
+    lateinit var ubi1: UbicacionGlobal
+    lateinit var ubi2: UbicacionGlobal
+    lateinit var ubi3: UbicacionGlobal
+    lateinit var ubi4: UbicacionGlobal
 
-    lateinit var ubiPersistida1: UbicacionJpa
+    lateinit var ubiPersistida1: UbicacionGlobal
 
     lateinit var vector1: Vector
     lateinit var vector2: Vector
@@ -57,23 +59,30 @@ class UbicacionServiceJpaTest {
 
     lateinit var dataService: DataService
 
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
+
     @BeforeEach
     fun crearModelo() {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubi1 = serviceUbicacion.crear(UbicacionJpa("Argentina"))
-        ubi2 = serviceUbicacion.crear(UbicacionJpa("Paraguay"))
-        ubi4 = serviceUbicacion.crear(UbicacionJpa("Chile"))
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(46.00, 40.00)
+        coordenada3 = GeoJsonPoint(47.00, 40.00)
 
-        vector1 = serviceVector.crear(Vector("Jose", ubi2, TipoVector.HUMANO))
-        vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
-        vector3 = serviceVector.crear(Vector("perrito", ubi1, TipoVector.ANIMAL))
+        ubi1 = serviceUbicacion.crear(UbicacionGlobal("Argentina", coordenada1))
+        ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
+        ubi4 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
 
+        vector1 = serviceVector.crear(Vector("Jose", ubi2.aJPA(), TipoVector.HUMANO))
+        vector2 = serviceVector.crear(Vector("araña", ubi2.aJPA(), TipoVector.INSECTO))
+        vector3 = serviceVector.crear(Vector("perrito", ubi1.aJPA(), TipoVector.ANIMAL))
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId()!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId())
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId())
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -83,15 +92,17 @@ class UbicacionServiceJpaTest {
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
-        ubi3 = serviceUbicacion.crear(UbicacionJpa("Uruguay"))
 
-        ubiPersistida1 = serviceUbicacion.recuperar(4)
+        val coordenada = GeoJsonPoint(35.00, 30.00)
+        ubi3 = serviceUbicacion.crear(UbicacionGlobal("Uruguay", coordenada))
+
+        ubiPersistida1 = serviceUbicacion.recuperar(ubi3.getId())
 
         Assertions.assertEquals(ubiPersistida1.getNombre(), "Uruguay")
     }
 
     @Test
-    fun errorCuandoSeIntentaRecuperarUnVectorConUnIdQueNoExiste() {
+    fun errorCuandoSeIntentaRecuperarUnaUbicacionConUnIdQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaUbicacion::class.java){
             serviceUbicacion.recuperar(50)
@@ -104,7 +115,7 @@ class UbicacionServiceJpaTest {
         ubi1.setNombre("Estados Unidos")
         serviceUbicacion.updatear(ubi1)
 
-        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId()!!)
+        val ubi1Actualizada = serviceUbicacion.recuperar(ubi1.getId())
 
         Assertions.assertFalse(
                 ubi1Actualizada.getNombre() == "Argentina"
@@ -125,13 +136,13 @@ class UbicacionServiceJpaTest {
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
         random.setNumeroGlobal(2)
-        serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
-        serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
-        val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))
+        serviceVector.crear(Vector("Miguel", ubi1.aJPA(), TipoVector.HUMANO))
+        serviceVector.crear(Vector("Mariano", ubi1.aJPA(), TipoVector.HUMANO))
+        val vector4 = serviceVector.crear(Vector("Juan", ubi1.aJPA(), TipoVector.INSECTO))
 
         serviceVector.infectar(vector3.getId(), especie1.getId()!!)
         serviceVector.infectar(vector4.getId(), especie2.getId()!!)
-        serviceUbicacion.expandir(ubi1.getId()!!)
+        serviceUbicacion.expandir(ubi1.getId())
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
 
@@ -145,7 +156,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiNoHayUnVenctorInfectadoEnLaUbicacionNoHayCambios() {
         random.setNumeroGlobal(1)
-        serviceUbicacion.expandir(ubi1.getId()!!)
+        serviceUbicacion.expandir(ubi1.getId())
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi4.getId() }
 
@@ -164,33 +175,45 @@ class UbicacionServiceJpaTest {
     @Test
     fun errorCuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
-            serviceUbicacion.mover(35, ubi1.getId()!!)
+            serviceUbicacion.mover(35, ubi1.getId())
+        }
+    }
+
+    @Test
+    fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionAMasDe100KM(){
+        var ubicacionLaBoca = UbicacionGlobal("La Boca", GeoJsonPoint(0.0, 0.0))
+        var ubicacionCordillera = UbicacionGlobal("Coordillera de los Andes", GeoJsonPoint(5.0, 5.0))
+
+        ubicacionLaBoca = serviceUbicacion.crear(ubicacionLaBoca)
+        ubicacionCordillera = serviceUbicacion.crear(ubicacionCordillera)
+
+        var vectorGaviota = Vector("Gaviota", ubicacionLaBoca.aJPA(), TipoVector.ANIMAL)
+
+        serviceUbicacion.conectar(ubicacionLaBoca.getNombre(), ubicacionCordillera.getNombre(), "AEREO")
+
+        vectorGaviota = serviceVector.crear(vectorGaviota)
+
+        Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
+            serviceUbicacion.mover(vectorGaviota.id!!, ubicacionCordillera.getId())
         }
     }
 
     @Test
     fun errorCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
-        val ubicacion = UbicacionJpa("Argentina")
+        val ubicacion = UbicacionGlobal("Argentina", coordenada1)
 
-        Assertions.assertThrows(DataIntegrityViolationException::class.java){
+        Assertions.assertThrows(ErrorYaExisteLaEntidad::class.java){
             serviceUbicacion.crear(ubicacion)
         }
-    }
-
-    @Test
-    fun errorCuandoSeTrataDeRecuperarUnaUbicacionQueNoExiste() {
-
-        Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
-            serviceUbicacion.recuperar(15)
-        }
-
     }
 
     @AfterEach
     fun borrarRegistros() {
         serviceUbicacion.deleteAll()
         dataService.cleanAll()
+        ubicacionNeo4jDAO.detachDelete()
+        ubicacionMongoDBDAO.deleteAll()
     }
 
 }

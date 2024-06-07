@@ -6,12 +6,10 @@ import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Direccion
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.modelo.vector.Vector
@@ -23,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -39,10 +38,14 @@ class PatogenoServiceTest {
 
     lateinit var covid: Patogeno
     lateinit var salmonella: Patogeno
-    lateinit var china: UbicacionJpa
-    lateinit var corea: UbicacionJpa
+    lateinit var china: UbicacionGlobal
+    lateinit var corea: UbicacionGlobal
+    lateinit var india: UbicacionGlobal
     lateinit var pepe: Vector
     lateinit var pedro: Vector
+    lateinit var coordenada1: GeoJsonPoint
+    lateinit var coordenada2: GeoJsonPoint
+    lateinit var coordenada3: GeoJsonPoint
 
     @BeforeEach
     fun crearModelo() {
@@ -50,13 +53,23 @@ class PatogenoServiceTest {
         dataService = DataServiceImpl(HibernateDataDAO())
         covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
         salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
-        china = UbicacionJpa("China")
-        corea = UbicacionJpa("Corea")
-        pedro = Vector("Pedro", corea, TipoVector.HUMANO)
-        pepe = Vector("Pepe", china, TipoVector.HUMANO)
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(46.00, 40.00)
+        coordenada3 = GeoJsonPoint(47.00, 45.00)
+        china = UbicacionGlobal("China", coordenada1)
+        corea = UbicacionGlobal("Corea", coordenada2)
+        india = UbicacionGlobal("India", coordenada3)
 
         servicioUbicacion.crear(corea)
         servicioUbicacion.crear(china)
+        servicioUbicacion.crear(india)
+
+        pedro = Vector("Pedro", corea.aJPA(), TipoVector.HUMANO)
+        pepe = Vector("Pepe", china.aJPA(), TipoVector.HUMANO)
+
+        servicioPatogeno.crear(salmonella)
+        servicioVector.crear(pedro)
+        servicioVector.crear(pepe)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -71,7 +84,7 @@ class PatogenoServiceTest {
         val patogenoRecuperado = servicioPatogeno.recuperar(covid.getId())!!
 
         Assertions.assertEquals("Coronavirus", patogenoRecuperado.toString())
-        Assertions.assertEquals(1, patogenoRecuperado.getId())
+        Assertions.assertEquals(2, patogenoRecuperado.getId())
 
     }
 
@@ -95,7 +108,7 @@ class PatogenoServiceTest {
         servicioPatogeno.updatear(covid)
 
         Assertions.assertEquals(1, covid.cantidadDeEspecies)
-        Assertions.assertEquals(1, covid.getId())
+        Assertions.assertEquals(2, covid.getId())
 
     }
 
@@ -103,21 +116,11 @@ class PatogenoServiceTest {
     fun seRecuperanTodosLosPatogenos() {
 
         servicioPatogeno.crear(covid)
-        servicioPatogeno.crear(salmonella)
 
         val patogenos = servicioPatogeno.recuperarTodos()
 
         Assertions.assertEquals(2, patogenos.size)
-        Assertions.assertEquals("Coronavirus", patogenos[0].toString())
-
-    }
-
-    @Test
-    fun seTrataDeRecuperarTodosLosPatogenosPeroNoHay() {
-
-        val patogenos = servicioPatogeno.recuperarTodos()
-
-        Assertions.assertEquals(0, patogenos.size)
+        Assertions.assertEquals("Coronavirus", patogenos[1].toString())
 
     }
 
@@ -125,9 +128,8 @@ class PatogenoServiceTest {
     fun seAgregaUnaEspecieNueva() {
 
         servicioPatogeno.crear(covid)
-        servicioVector.crear(pedro)
 
-        val especie: Especie = servicioPatogeno.agregarEspecie(covid.getId(), "Virus", corea.getId()!!)
+        val especie: Especie = servicioPatogeno.agregarEspecie(covid.getId(), "Virus", corea.getId())
         val cantidadDeEspecies = servicioPatogeno.recuperar(covid.getId())!!.cantidadDeEspecies
 
         Assertions.assertEquals(1, cantidadDeEspecies)
@@ -138,15 +140,11 @@ class PatogenoServiceTest {
     @Test
     fun seRecuperanTodasLasEspeciesDelPatogenoDeManeraAscendente() {
 
-        servicioPatogeno.crear(salmonella)
-        servicioVector.crear(pedro)
-        servicioVector.crear(pepe)
-
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId())
 
         val especiesPagina1 = servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.ASCENDENTE, 1, 2)
         Assertions.assertTrue(
@@ -164,15 +162,11 @@ class PatogenoServiceTest {
     @Test
     fun seRecuperanTodasLasEspeciesDelPatogenoDeManeraDescendente() {
 
-        servicioPatogeno.crear(salmonella)
-        servicioVector.crear(pedro)
-        servicioVector.crear(pepe)
-
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId()!!)
-        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId()!!)
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", china.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Bongori", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Varicela", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Quetzal", corea.getId())
+        servicioPatogeno.agregarEspecie(salmonella.getId(), "Ahuehuete", corea.getId())
 
         val especiesPagina1 = servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.DESCENDENTE, 1, 2)
         Assertions.assertTrue(
@@ -189,18 +183,20 @@ class PatogenoServiceTest {
 
     @Test
     fun comprobacionDeErrorAlPedirUnaPaginaNegativaCuandoSeBuscanLasEspeciesDeUnPatogeno(){
-        servicioPatogeno.crear(salmonella)
+
         Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.ASCENDENTE, -2, 2)
         }
+
     }
 
     @Test
     fun comprobacionDeErrorAlPedirUnaCantidadDeElementosPorPaginaNegativaCuandoSeBuscanLasEspeciesDeUnPatogeno(){
-        servicioPatogeno.crear(salmonella)
+
         Assertions.assertThrows(ErrorValorDePaginacionIvalido::class.java) {
             servicioPatogeno.especiesDePatogeno(salmonella.getId(), Direccion.ASCENDENTE, 1, -5)
         }
+
     }
 
     @Test
@@ -216,10 +212,7 @@ class PatogenoServiceTest {
     @Test
     fun seSabeSiNoEsPandemia() {
 
-        servicioPatogeno.crear(salmonella)
-        servicioVector.crear(pedro)
-
-        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
+        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
         servicioVector.infectar(pedro.getId(),enterica.getId()!!)
 
@@ -230,11 +223,7 @@ class PatogenoServiceTest {
     @Test
     fun seSabeSiEsPandemia() {
 
-        servicioPatogeno.crear(salmonella)
-        servicioVector.crear(pepe)
-        servicioVector.crear(pedro)
-
-        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
+        val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
         servicioVector.infectar(pepe.getId(),enterica.getId()!!)
         servicioVector.infectar(pedro.getId(),enterica.getId()!!)
@@ -248,8 +237,7 @@ class PatogenoServiceTest {
 
         Assertions.assertThrows(NoHayVectorException::class.java) {
             servicioPatogeno.crear(salmonella)
-            servicioUbicacion.crear(corea)
-            servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId()!!)
+            servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", india.getId())
         }
 
     }

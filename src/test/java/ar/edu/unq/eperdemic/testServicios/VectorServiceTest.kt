@@ -1,16 +1,17 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Especie
-import ar.edu.unq.eperdemic.modelo.Patogeno
+import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.UbicacionJpa
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
@@ -36,26 +38,30 @@ class VectorServiceTest {
 
     lateinit var humano: Vector
     lateinit var golondrina: Vector
-    lateinit var ubicacion: UbicacionJpa
+    lateinit var ubicacion: UbicacionGlobal
+    lateinit var coordenada: GeoJsonPoint
 
     lateinit var random : RandomGenerator
 
     @BeforeEach
-    fun prepare() {
+    fun crearModelo() {
         this.dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubicacion = UbicacionJpa("Argentina")
-        humano     = Vector("Pedro", ubicacion, TipoVector.HUMANO)
-        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+        coordenada = GeoJsonPoint(45.00, 40.00)
+        ubicacion = UbicacionGlobal("Argentina", coordenada)
+
+        serviceUbicacion.crear(ubicacion)
+
+        humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
+        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
-        serviceUbicacion.crear(ubicacion)
         service.crear(humano)
 
         servicePatogeno.crear(patogeno)
 
-        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+        especie = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -139,6 +145,15 @@ class VectorServiceTest {
 
         Assertions.assertThrows(NoExisteElVector::class.java) {
             service.recuperar(15)
+        }
+
+    }
+
+    @Test
+    fun errorCuandoSeTrataDeCrearUnVectorEnUnaUbicacionQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
+            service.crear(Vector("Pepe", UbicacionJpa("Belgica"), TipoVector.HUMANO))
         }
 
     }

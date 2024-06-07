@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.testServicios
 
-
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -8,6 +7,7 @@ import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.EspecieService
@@ -23,12 +23,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EspecieServiceImplTest {
+class EspecieServiceTest {
 
     lateinit var dataService         : DataService
     @Autowired lateinit var service             : EspecieService
@@ -44,15 +45,18 @@ class EspecieServiceImplTest {
 
     lateinit var humano     : Vector
     lateinit var golondrina : Vector
-    lateinit var ubicacion : UbicacionJpa
+    lateinit var ubicacion : UbicacionGlobal
+    lateinit var coordenada: GeoJsonPoint
 
     lateinit var random : RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
-        ubicacion = UbicacionJpa("Argentina")
-        humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
+        coordenada = GeoJsonPoint(45.00, 40.00)
+        ubicacion = UbicacionGlobal("Argentina", coordenada)
+        serviceUbicacion.crear(ubicacion)
+        humano    = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -61,12 +65,11 @@ class EspecieServiceImplTest {
         random.setNumeroGlobal(1)
         random.setBooleanoGlobal(true)
 
-        serviceUbicacion.crear(ubicacion)
         serviceVector.crear(humano)
 
         servicePatogeno.crear(patogeno)
 
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
     }
 
@@ -96,7 +99,7 @@ class EspecieServiceImplTest {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
 
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId()!!)
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId())
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
@@ -110,7 +113,7 @@ class EspecieServiceImplTest {
 
     @Test
     fun testVerificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
-        golondrina = Vector("Pepita", ubicacion, TipoVector.ANIMAL)
+        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
         serviceVector.crear(golondrina)
 
         serviceVector.infectar(golondrina.getId(), especiePersistida.getId()!!)
@@ -132,7 +135,7 @@ class EspecieServiceImplTest {
     fun errorCuandoCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
-            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
         }
     }
 

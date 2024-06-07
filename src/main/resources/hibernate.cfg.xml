@@ -18,7 +18,7 @@
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
 
         <mapping class="ar.edu.unq.eperdemic.modelo.vector.Vector" />
-        <mapping class="ar.edu.unq.eperdemic.modelo.UbicacionJpa" />
+        <mapping class="ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Patogeno" />
         <mapping class="ar.edu.unq.eperdemic.modelo.Especie" />
         <mapping class="ar.edu.unq.eperdemic.modelo.mutacion.Mutacion" />

@@ -9,6 +9,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 
 @Entity
 open class Vector() {
@@ -25,6 +26,8 @@ open class Vector() {
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var especies: MutableSet<Especie> = HashSet()
+
+    var estaInfectado = false
 
     @ManyToOne
     var ubicacion: UbicacionJpa? = null
@@ -57,12 +60,13 @@ open class Vector() {
     }
 
     fun estaInfectado(): Boolean{
-        return this.especies.isNotEmpty()
+        return this.estaInfectado
     }
 
     open fun infectar(especie: Especie) {
         if (!this.defiendeContra(especie)){
             this.especies.add(especie)
+            this.estaInfectado = true
             especie.agregarVector(this)
         }
     }

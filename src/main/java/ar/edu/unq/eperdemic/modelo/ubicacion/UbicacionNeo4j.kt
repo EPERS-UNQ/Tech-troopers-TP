@@ -1,9 +1,7 @@
-package ar.edu.unq.eperdemic.modelo.neo4j
+package ar.edu.unq.eperdemic.modelo.ubicacion
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
-import ar.edu.unq.eperdemic.modelo.neo4j.camino.Camino
 import org.springframework.data.neo4j.core.schema.Node
-import org.springframework.data.neo4j.core.schema.Relationship
 import org.springframework.data.neo4j.core.schema.*
 
 @Node
@@ -21,9 +19,6 @@ class UbicacionNeo4j() {
         }
         this.nombre = nombre
     }
-
-    @Relationship(type = "CAMINO")
-    var camino: Camino? = null
 
     fun getNombre(): String? {
         return this.nombre

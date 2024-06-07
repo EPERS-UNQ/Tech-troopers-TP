@@ -1,4 +1,5 @@
-package ar.edu.unq.eperdemic.modelo.neo4j.camino
+
+package ar.edu.unq.eperdemic.modelo.ubicacion.camino
 
 enum class TipoDeCamino {
 
