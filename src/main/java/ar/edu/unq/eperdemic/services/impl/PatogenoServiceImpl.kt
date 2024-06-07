@@ -10,7 +10,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionDAO
+import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,7 @@ class PatogenoServiceImpl() : PatogenoService {
 
     @Autowired private lateinit var patogenoDAO: PatogenoDAO
     @Autowired private lateinit var especieDAO: EspecieDAO
-    @Autowired private lateinit var ubicacionDAO: UbicacionDAO
+    @Autowired private lateinit var ubicacionDAO: UbicacionJpaDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
@@ -76,7 +76,6 @@ class PatogenoServiceImpl() : PatogenoService {
         return especies
 
     }
-
 
     override fun esPandemia(especieId: Long): Boolean {
         return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countUbicaciones() / 2

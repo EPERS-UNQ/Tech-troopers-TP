@@ -12,4 +12,31 @@ enum class TipoVector() {
             INSECTO -> tipo == HUMANO || tipo == ANIMAL
         }
     }
+
+    companion object {
+        fun puedeCruzar(vector: Vector): List<String> {
+            if(vector.getTipo() == HUMANO && vector.tieneMutacionPropulsionMotora()){
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo", "Aereo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo")
+                }
+            }
+            else if (vector.getTipo() == INSECTO && vector.tieneMutacionElectroBranqueas()){
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo", "Maritimo")
+                }
+            }
+            else {
+                return when (vector.getTipo()) {
+                    HUMANO -> listOf("Terrestre", "Maritimo")
+                    ANIMAL -> listOf("Terrestre", "Maritimo", "Aereo")
+                    INSECTO -> listOf("Terrestre", "Aereo")
+                }
+            }
+
+        }
+    }
 }

@@ -44,14 +44,14 @@ class EspecieServiceImplTest {
 
     lateinit var humano     : Vector
     lateinit var golondrina : Vector
-    lateinit var ubicacion : Ubicacion
+    lateinit var ubicacion : UbicacionJpa
 
     lateinit var random : RandomGenerator
 
     @BeforeEach
     fun crearModelo() {
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
-        ubicacion = Ubicacion("Argentina")
+        ubicacion = UbicacionJpa("Argentina")
         humano    = Vector("Pedro", ubicacion, TipoVector.HUMANO)
 
         dataService = DataServiceImpl(HibernateDataDAO())

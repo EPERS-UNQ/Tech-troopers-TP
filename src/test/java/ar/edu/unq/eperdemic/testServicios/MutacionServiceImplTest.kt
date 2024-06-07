@@ -8,7 +8,7 @@ import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.mutacion.BioalteracionGenetica
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
@@ -42,11 +42,11 @@ class MutacionServiceImplTest {
     lateinit var colera: Patogeno
     lateinit var viruela: Patogeno
     lateinit var rabia: Patogeno
-    lateinit var china: Ubicacion
-    lateinit var corea: Ubicacion
-    lateinit var tailandia: Ubicacion
-    lateinit var japon: Ubicacion
-    lateinit var indonesia: Ubicacion
+    lateinit var china: UbicacionJpa
+    lateinit var corea: UbicacionJpa
+    lateinit var tailandia: UbicacionJpa
+    lateinit var japon: UbicacionJpa
+    lateinit var indonesia: UbicacionJpa
     lateinit var john: Vector
     lateinit var viktor: Vector
     lateinit var monoAndroide: Vector
@@ -64,11 +64,11 @@ class MutacionServiceImplTest {
         colera = Patogeno("Colera", 90, 5, 1, 30, 45)
         viruela = Patogeno("Viruela", 90, 80, 15, 15, 35)
         rabia = Patogeno("Rabia",1,1,1,35,10)
-        corea = Ubicacion("Corea")
-        japon = Ubicacion("Japon")
-        tailandia = Ubicacion("Tailandia")
-        indonesia = Ubicacion("Indonesia")
-        china = Ubicacion("China")
+        corea = UbicacionJpa("Corea")
+        japon = UbicacionJpa("Japon")
+        tailandia = UbicacionJpa("Tailandia")
+        indonesia = UbicacionJpa("Indonesia")
+        china = UbicacionJpa("China")
         john = Vector("John", corea, TipoVector.HUMANO)
         viktor = Vector("Viktor", japon, TipoVector.HUMANO)
         monoAndroide = Vector("Mono-17", china, TipoVector.ANIMAL)
@@ -90,6 +90,14 @@ class MutacionServiceImplTest {
         mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", corea.getId()!!)
         cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId()!!)
         roboRabia = servicioPatogeno.agregarEspecie(rabia.getId(), "Robo Rabia", china.getId()!!)
+
+        servicioUbicacion.conectar(corea.getNombre()!!, japon.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre()!!, china.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(china.getNombre()!!, japon.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(japon.getNombre()!!, tailandia.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(indonesia.getNombre()!!, japon.getNombre()!!, "Aereo")
+        servicioUbicacion.conectar(japon.getNombre()!!, corea.getNombre()!!, "Terrestre")
+        servicioUbicacion.conectar(corea.getNombre()!!, china.getNombre()!!, "Terrestre")
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -365,6 +373,7 @@ class MutacionServiceImplTest {
     @AfterEach
     fun tearDown() {
        dataService.cleanAll()
+       servicioUbicacion.deleteAll()
     }
 
 

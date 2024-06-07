@@ -6,7 +6,9 @@ import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
+import ar.edu.unq.eperdemic.modelo.mutacion.ElectroBranqueas
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
+import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
 
 @Entity
 open class Vector() {
@@ -25,12 +27,12 @@ open class Vector() {
     var especies: MutableSet<Especie> = HashSet()
 
     @ManyToOne
-    var ubicacion: Ubicacion? = null
+    var ubicacion: UbicacionJpa? = null
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var mutaciones: MutableSet<Mutacion> = HashSet()
 
-    constructor(nombre: String, ubicacion: Ubicacion, tipoVector: TipoVector):this() {
+    constructor(nombre: String, ubicacion: UbicacionJpa, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
             throw ErrorNombre("El nombre del vector no puede estar vacio.")
         }
@@ -144,6 +146,18 @@ open class Vector() {
 
     fun estaMutadoCon(unaMutacion : Mutacion): Boolean{
         return mutaciones.any { it.getId() == unaMutacion.getId() }
+    }
+
+    fun tieneMutacionPropulsionMotora(): Boolean {
+        return mutaciones.any { it is PropulsionMotora }
+    }
+
+    fun tieneMutacionElectroBranqueas(): Boolean {
+        return mutaciones.any { it is ElectroBranqueas }
+    }
+
+    fun nombreDeUbicacionActual(): String {
+        return ubicacion!!.getNombre()!!
     }
 
 }

@@ -5,7 +5,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Ubicacion
+import ar.edu.unq.eperdemic.modelo.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -30,19 +30,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(PER_CLASS)
-class UbicacionServiceTest {
+class UbicacionServiceJpaTest {
 
     @Autowired lateinit var serviceUbicacion: UbicacionService
     @Autowired lateinit var serviceVector: VectorService
     @Autowired lateinit var servicePatogeno: PatogenoService
 
 
-    lateinit var ubi1: Ubicacion
-    lateinit var ubi2: Ubicacion
-    lateinit var ubi3: Ubicacion
-    lateinit var ubi4: Ubicacion
+    lateinit var ubi1: UbicacionJpa
+    lateinit var ubi2: UbicacionJpa
+    lateinit var ubi3: UbicacionJpa
+    lateinit var ubi4: UbicacionJpa
 
-    lateinit var ubiPersistida1: Ubicacion
+    lateinit var ubiPersistida1: UbicacionJpa
 
     lateinit var vector1: Vector
     lateinit var vector2: Vector
@@ -62,9 +62,9 @@ class UbicacionServiceTest {
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubi1 = serviceUbicacion.crear(Ubicacion("Argentina"))
-        ubi2 = serviceUbicacion.crear(Ubicacion("paraguay"))
-        ubi4 = serviceUbicacion.crear(Ubicacion("Chiles"))
+        ubi1 = serviceUbicacion.crear(UbicacionJpa("Argentina"))
+        ubi2 = serviceUbicacion.crear(UbicacionJpa("Paraguay"))
+        ubi4 = serviceUbicacion.crear(UbicacionJpa("Chile"))
 
         vector1 = serviceVector.crear(Vector("Jose", ubi2, TipoVector.HUMANO))
         vector2 = serviceVector.crear(Vector("araña", ubi2, TipoVector.INSECTO))
@@ -72,8 +72,8 @@ class UbicacionServiceTest {
 
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
-        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "juanito", ubi2.getId()!!)
-        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId()!!, "corona2", ubi2.getId()!!)
+        especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId()!!)
+        especie2 = servicePatogeno.agregarEspecie(patogeno1.getId(), "corona2", ubi2.getId()!!)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -83,7 +83,7 @@ class UbicacionServiceTest {
 
     @Test
     fun alGuardarYLuegoRecuperarSeObtieneObjetosSimilares() {
-        ubi3 = serviceUbicacion.crear(Ubicacion("Uruguay"))
+        ubi3 = serviceUbicacion.crear(UbicacionJpa("Uruguay"))
 
         ubiPersistida1 = serviceUbicacion.recuperar(4)
 
@@ -123,42 +123,14 @@ class UbicacionServiceTest {
     }
 
     @Test
-    fun cuandoUnVectorCambiaSeMueveCambiaDeUbicacion() {
-        random.setNumeroGlobal(1)
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-
-        val vectorTemporal = serviceVector.recuperar(vector1.getId()!!)
-        val ubicacionNueva = vectorTemporal.ubicacion!!
-
-        Assertions.assertEquals(ubicacionNueva.getNombre(), ubi2.getNombre())
-    }
-
-    @Test
-    fun cuandoUnVectorCambiaDeUbicacionSiEstaInfectadoInfectaALosVectoresDeLANuevaUbicacion() {
-        random.setNumeroGlobal(1)
-        serviceUbicacion.mover(vector1.getId()!!, ubi2.getId()!!)
-
-        serviceVector.infectar(vector1.getId()!!, especie1.getId()!!)
-        serviceVector.infectar(vector1.getId()!!, especie2.getId()!!)
-
-        val vectoresDeNuevaUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi2.getId() }
-
-        Assertions.assertTrue(
-            vectoresDeNuevaUbicacion.all {
-                v -> v.enfermedadesDelVector().containsAll(vector1.enfermedadesDelVector())
-            }
-        )
-    }
-
-    @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
         random.setNumeroGlobal(2)
         serviceVector.crear(Vector("Miguel", ubi1, TipoVector.HUMANO))
         serviceVector.crear(Vector("Mariano", ubi1, TipoVector.HUMANO))
         val vector4 = serviceVector.crear(Vector("Juan", ubi1, TipoVector.INSECTO))
 
-        serviceVector.infectar(vector3.getId()!!, especie1.getId()!!)
-        serviceVector.infectar(vector4.getId()!!, especie2.getId()!!)
+        serviceVector.infectar(vector3.getId(), especie1.getId()!!)
+        serviceVector.infectar(vector4.getId(), especie2.getId()!!)
         serviceUbicacion.expandir(ubi1.getId()!!)
 
         val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi1.getId() }
@@ -185,7 +157,7 @@ class UbicacionServiceTest {
     @Test
     fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
-            serviceUbicacion.mover(vector1.getId()!!, 50)
+            serviceUbicacion.mover(vector1.getId(), 50)
         }
     }
 
@@ -199,7 +171,7 @@ class UbicacionServiceTest {
     @Test
     fun errorCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
-        val ubicacion = Ubicacion("Argentina")
+        val ubicacion = UbicacionJpa("Argentina")
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
             serviceUbicacion.crear(ubicacion)
@@ -217,6 +189,7 @@ class UbicacionServiceTest {
 
     @AfterEach
     fun borrarRegistros() {
+        serviceUbicacion.deleteAll()
         dataService.cleanAll()
     }
 
