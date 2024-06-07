@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.services.VectorService
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -10,6 +11,7 @@ import ar.edu.unq.eperdemic.modelo.*
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
@@ -143,6 +145,15 @@ class VectorServiceTest {
 
         Assertions.assertThrows(NoExisteElVector::class.java) {
             service.recuperar(15)
+        }
+
+    }
+
+    @Test
+    fun errorCuandoSeTrataDeCrearUnVectorEnUnaUbicacionQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
+            service.crear(Vector("Pepe", UbicacionJpa("Belgica"), TipoVector.HUMANO))
         }
 
     }

@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
@@ -28,7 +29,7 @@ class VectorServiceImpl () : VectorService {
             if ( ubicacionPersistida != null ) {
                 vector.ubicacion = ubicacionPersistida
             } else {
-                // throw ErrorNoExisteLaUbicacion()
+                throw NoExisteLaUbicacion()
             }
         }
         return vectorDAO.save(vector)
