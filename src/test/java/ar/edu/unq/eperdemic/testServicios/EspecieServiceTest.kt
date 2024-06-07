@@ -1,6 +1,5 @@
 package ar.edu.unq.eperdemic.testServicios
 
-
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
@@ -30,7 +29,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EspecieServiceImplTest {
+class EspecieServiceTest {
 
     lateinit var dataService         : DataService
     @Autowired lateinit var service             : EspecieService
@@ -70,7 +69,7 @@ class EspecieServiceImplTest {
 
         servicePatogeno.crear(patogeno)
 
-        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+        especiePersistida = servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
 
     }
 
@@ -100,7 +99,7 @@ class EspecieServiceImplTest {
         patogeno2 = Patogeno("Otaku", 78, 7, 7, 8, 12)
         servicePatogeno.crear(patogeno2)
 
-        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId()!!)
+        especiePersistida2 = servicePatogeno.agregarEspecie(patogeno2.getId(), "Virus", ubicacion.getId())
 
         val listaEspeciesRecuperadas : List<Especie> = service.recuperarTodos()
 
@@ -136,7 +135,7 @@ class EspecieServiceImplTest {
     fun errorCuandoCuandoSeIntentaCrearDosEspeciesConElMismoNombre(){
 
         Assertions.assertThrows(DataIntegrityViolationException::class.java){
-            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId()!!)
+            servicePatogeno.agregarEspecie(patogeno.getId(), "Bacteria", ubicacion.getId())
         }
     }
 

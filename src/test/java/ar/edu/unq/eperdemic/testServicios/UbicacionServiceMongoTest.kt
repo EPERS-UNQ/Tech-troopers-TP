@@ -1,19 +1,14 @@
 package ar.edu.unq.eperdemic.testServicios
 
-import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteLaEntidad
-import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteUnaUbicacionEnEsaCoordenada
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
-import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
-import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
-import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 
 @SpringBootTest
 class UbicacionServiceMongoTest {

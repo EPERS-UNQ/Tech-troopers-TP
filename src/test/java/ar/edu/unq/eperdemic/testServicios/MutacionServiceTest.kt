@@ -28,7 +28,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MutacionServiceImplTest {
+class MutacionServiceTest {
 
     @Autowired lateinit var servicioMutacion: MutacionService
     @Autowired lateinit var servicioPatogeno: PatogenoService
