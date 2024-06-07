@@ -46,40 +46,4 @@ class UbicacionMongo() {
         return UbicacionDTO(this.id!!.toLong(), this.nombre, this.coordenada)
     }
 
-    private fun degreesToRadians(degrees: Double): Double {
-        return degrees * PI / 180.0
-    }
-
-    private fun calcularDistancia(otraUbicacion: UbicacionMongo): Double {
-
-        val radioTierra = 6371 // Radio de la Tierra en kilómetros
-
-        val latitud1 = coordenada!!.y
-        val longitud1 = coordenada!!.x
-        val latitud2 = otraUbicacion.coordenada!!.y
-        val longitud2 = otraUbicacion.coordenada!!.x
-
-        val dLatitud = degreesToRadians(latitud2 - latitud1)
-        val dLongitud = degreesToRadians(longitud2 - longitud1)
-
-        val a = sin(dLatitud / 2) * sin(dLatitud / 2) +
-                cos(degreesToRadians(latitud1)) * cos(degreesToRadians(latitud2)) *
-                sin(dLongitud / 2) * sin(dLongitud / 2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return radioTierra * c
-    }
-
-    fun estaAMasDe100Km(ubicacionDestino: UbicacionMongo): Boolean {
-        return calcularDistancia(ubicacionDestino) > 100
-    }
-
-    fun getLongitud(): Double {
-        return coordenada!!.y
-    }
-
-    fun getLatitud(): Double {
-        return coordenada!!.x
-    }
-
 }
