@@ -325,10 +325,38 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorInexistenteTrataDeMoverseAUnaUbicacion() {
 
+        Assertions.assertThrows(ErrorDeMovimiento::class.java){
+            serviceUbicacion.moverPorCaminoMasCorto(1500, "Argentina")
+        }
+
     }
 
     @Test
     fun ubicacionesConectadasDeUnaUbicacionQueNoExiste() {
+
+        Assertions.assertThrows(NoExisteLaUbicacion::class.java){
+            serviceUbicacion.conectados("Noname")
+        }
+
+    }
+
+    @Test
+    fun unVectorTrataDeMoverseALaUbicacionQueYaEsta() {
+
+        serviceUbicacion.mover(hornerito.getId(), arg.getId()!!)
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
+
+        Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
+
+    }
+
+    @Test
+    fun unVectorTrataDeMoversePorElCaminoMasCortoALaUbicacionQueYaEsta() {
+
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), arg.getNombre()!!)
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
+
+        Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
 
     }
 

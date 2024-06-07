@@ -16,6 +16,6 @@ interface UbicacionJpaDAO : JpaRepository<UbicacionJpa, Long> {
     fun recuperarNombrePorID(ubicacionId: Long?): String
 
     @Query("select u from UbicacionJpa u where u.nombre = ?1")
-    fun recuperarPorNombreReal(ubicacion: String): UbicacionJpa
+    fun recuperarPorNombreReal(ubicacion: String): UbicacionJpa?
 
 }

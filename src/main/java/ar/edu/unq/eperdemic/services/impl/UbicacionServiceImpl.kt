@@ -64,16 +64,18 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
-        this.verificarSiPuedeMoverA(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector))
-
+        if (vector.ubicacion!!.getNombre()!! != nuevaUbicacion.getNombre()!!) {
+            this.verificarSiPuedeMoverA(
+                vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,TipoVector.puedeCruzar(vector)
+            )
+        }
         this.moverHasta(vector, nuevaUbicacion.getNombre()!!)
 
     }
 
     private fun moverHasta(vector: Vector, nombreUbi: String) {
 
-        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)
+        val nuevaUbicacion = ubicacionJpaDAO.recuperarPorNombreReal(nombreUbi)!!
 
         vector.ubicacion = nuevaUbicacion
         vectorDAO.save(vector)
@@ -89,8 +91,7 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(
-            !ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
+        if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -127,11 +128,17 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     override fun conectados(nombreDeUbicacion: String): List<UbicacionJpa> {
+
+        val ubicacionJpa = ubicacionJpaDAO.recuperarPorNombreReal(nombreDeUbicacion)
+        if (ubicacionJpa == null) {
+            throw NoExisteLaUbicacion()
+        }
+
         val ubicacionNeo = ubicacionNeoDAO.ubicacionesConectadas(nombreDeUbicacion)
         val ubicacion: MutableList<UbicacionJpa> = mutableListOf()
 
         for(u in ubicacionNeo) {
-            ubicacion.add(ubicacionJpaDAO.recuperarPorNombreReal(u.getNombre()!!))
+            ubicacion.add(ubicacionJpaDAO.recuperarPorNombreReal(u.getNombre()!!)!!)
         }
         return ubicacion
     }
@@ -145,8 +152,12 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorDeMovimiento()
         }
 
-        this.comprobarViabilidadUbi(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
-            TipoVector.puedeCruzar(vector))
+        if (vector.ubicacion!!.getNombre()!! != nuevaUbicacion.getNombre()!!) {
+            this.comprobarViabilidadUbi(
+                vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
+                TipoVector.puedeCruzar(vector)
+            )
+        }
 
         val nodosHastaDestino = ubicacionNeoDAO.caminoIdeal(vector.ubicacion!!.getNombre()!!, nuevaUbicacion.getNombre()!!,
             TipoVector.puedeCruzar(vector)).drop(0)
