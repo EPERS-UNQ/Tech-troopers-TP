@@ -14,6 +14,7 @@ import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import ar.edu.unq.eperdemic.services.PatogenoService
+import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,6 +29,7 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 class DistritoServiceImpTest {
 
     @Autowired private lateinit var distritoService: DistritoService
+    @Autowired private lateinit var ubicacionService: UbicacionService
 
     @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO

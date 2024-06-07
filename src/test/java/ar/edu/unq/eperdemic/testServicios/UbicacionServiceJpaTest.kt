@@ -1,6 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
 import ar.edu.unq.eperdemic.exceptions.ErrorDeMovimiento
+import ar.edu.unq.eperdemic.exceptions.ErrorUbicacionMuyLejana
 import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteLaEntidad
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
@@ -68,8 +69,8 @@ class UbicacionServiceJpaTest {
         dataService = DataServiceImpl(HibernateDataDAO())
 
         coordenada1 = GeoJsonPoint(45.00, 40.00)
-        coordenada2 = GeoJsonPoint(55.00, 50.00)
-        coordenada3 = GeoJsonPoint(65.00, 60.00)
+        coordenada2 = GeoJsonPoint(46.00, 40.00)
+        coordenada3 = GeoJsonPoint(47.00, 40.00)
 
         ubi1 = serviceUbicacion.crear(UbicacionGlobal("Argentina", coordenada1))
         ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
@@ -175,6 +176,25 @@ class UbicacionServiceJpaTest {
     fun errorCuandoSeIntentaMoverUnVectorIdQueNoExisteAUnaUbicacion(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
             serviceUbicacion.mover(35, ubi1.getId())
+        }
+    }
+
+    @Test
+    fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionAMasDe100KM(){
+        var ubicacionLaBoca = UbicacionGlobal("La Boca", GeoJsonPoint(0.0, 0.0))
+        var ubicacionCordillera = UbicacionGlobal("Coordillera de los Andes", GeoJsonPoint(5.0, 5.0))
+
+        ubicacionLaBoca = serviceUbicacion.crear(ubicacionLaBoca)
+        ubicacionCordillera = serviceUbicacion.crear(ubicacionCordillera)
+
+        var vectorGaviota = Vector("Gaviota", ubicacionLaBoca.aJPA(), TipoVector.ANIMAL)
+
+        serviceUbicacion.conectar(ubicacionLaBoca.getNombre(), ubicacionCordillera.getNombre(), "AEREO")
+
+        vectorGaviota = serviceVector.crear(vectorGaviota)
+
+        Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
+            serviceUbicacion.mover(vectorGaviota.id!!, ubicacionCordillera.getId())
         }
     }
 

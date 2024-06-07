@@ -146,9 +146,9 @@ class DistritoServiceImpTest2 {
 
         // CREAMOS UBICACIONES GLOBALES
         val ubi1 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionBurgerKing", GeoJsonPoint(2.0, 3.0)))
-        val ubi2 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionSubway", GeoJsonPoint(11.0, 12.0)))
-        val ubi3 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMcDonals", GeoJsonPoint(2.0,3.0)))
-        val ubi4 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMostaza", GeoJsonPoint(12.0, 13.0)))
+        val ubi2 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionSubway", GeoJsonPoint(3.0, 3.0)))
+        val ubi3 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMcDonals", GeoJsonPoint(4.0,3.0)))
+        val ubi4 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMostaza", GeoJsonPoint(5.0, 3.0)))
 
         // OBTENEMOS LAS UBICACIONESJPA
         ubicacionBurgerKing = ubicacionJpaDAO.recuperarPorNombreReal(ubi1.getNombre())!!
@@ -199,9 +199,9 @@ class DistritoServiceImpTest2 {
 
         // CREAMOS UBICACIONES GLOBALES
         val ubi1 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionBurgerKing", GeoJsonPoint(2.0, 3.0)))
-        val ubi2 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionSubway", GeoJsonPoint(11.0, 12.0)))
-        val ubi3 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMcDonals", GeoJsonPoint(2.0,3.0)))
-        val ubi4 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMostaza", GeoJsonPoint(12.0, 13.0)))
+        val ubi2 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionSubway", GeoJsonPoint(3.0, 3.0)))
+        val ubi3 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMcDonals", GeoJsonPoint(4.0,3.0)))
+        val ubi4 = ubicacionServiceImpl.crear(UbicacionGlobal("ubicacionMostaza", GeoJsonPoint(5.0, 3.0)))
 
         // OBTENEMOS LAS UBICACIONESJPA
         ubicacionBurgerKing = ubicacionJpaDAO.recuperarPorNombreReal(ubi1.getNombre())!!

@@ -141,8 +141,9 @@ class UbicacionServiceImpl() : UbicacionService {
     private fun verificarSiPuedeMoverA(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
         val ubicacionOrigen = ubicacionMongoDAO.findByNombre(nomUbiInicio)!!
         val ubicacionDestino = ubicacionMongoDAO.findByNombre(nomUbiFin)!!
+
         if(!ubicacionNeoDAO.esUbicacionLindante(nomUbiInicio,nomUbiFin)
-            && ubicacionOrigen.estaAMasDe100Km(ubicacionDestino)) {
+            || ubicacionMongoDAO.ubicacionesAMenosDe100Km(ubicacionOrigen.coordenada!!, ubicacionDestino.getNombre()).isEmpty()) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.hayCaminoCruzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
@@ -151,30 +152,13 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     private fun comprobarViabilidadUbi(nomUbiInicio: String, nomUbiFin: String, tiposPermitidos: List<String>) {
-        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)
-
-            //|| !ubicacionMongoDAO.estaADistanciaAlcanzable(nomUbiInicio, nomUbiFin
-            ) {
+        if(!ubicacionNeoDAO.esUbicacionCercana(nomUbiInicio,nomUbiFin)) {
             throw ErrorUbicacionMuyLejana()
         }
         if(!ubicacionNeoDAO.esUbicacionAlcanzable(nomUbiInicio, nomUbiFin, tiposPermitidos)) {
             throw ErrorUbicacionNoAlcanzable()
         }
     }
-
-//    private fun estaADistanciaAlcanzable(nomUbiInicio: String, nomUbiFin: String, i: Int): Boolean {
-//        val ubi1 = ubicacionMongoDAO.findByNombre(nomUbiInicio)
-//        val ubi2 = ubicacionMongoDAO.findByNombre(nomUbiFin)
-//
-//        val p2 = ubi1!!.getCordenada()
-//        val point = ubi2!!.getCordenada()
-//
-//        // HACER QUERY
-//        val result = Math.sqrt((p2.getLongitud() - point.getLongitud()) * (p2.getLongitud() - point.getLongitud()) +
-//                (p2.getLatitud() - point.getLatitud()) * (p2.getLatitud() - point.getLatitud()))
-//
-//        return result <= i
-//    }
 
     override fun expandir( ubicacionId: Long) {
 

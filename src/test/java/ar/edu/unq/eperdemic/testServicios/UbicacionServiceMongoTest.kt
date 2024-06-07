@@ -1,5 +1,7 @@
 package ar.edu.unq.eperdemic.testServicios
 
+import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteLaEntidad
+import ar.edu.unq.eperdemic.exceptions.ErrorYaExisteUnaUbicacionEnEsaCoordenada
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
