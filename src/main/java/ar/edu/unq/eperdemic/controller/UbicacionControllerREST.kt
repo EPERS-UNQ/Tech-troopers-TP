@@ -37,7 +37,7 @@ class UbicacionControllerREST( private val ubicacionService: UbicacionService ) 
     fun expandirUbicacion( @PathVariable ubicacionId: Long ) = ubicacionService.expandir(ubicacionId)
 
     @PostMapping("/conectar/{nombreUbicacion1}/{nombreUbicacion2}/{tipoCamino}")
-    fun conectarUbicaciones( @PathVariable nombreUbicacion1: String, @PathVariable nombreUbicacion2: String, @PathVariable tipoCamino: String ) = ubicacionService.conectar(nombreUbicacion1, nombreUbicacion2, enumValueOf<TipoDeCamino>(tipoCamino).toString())
+    fun conectarUbicaciones( @PathVariable nombreUbicacion1: String, @PathVariable nombreUbicacion2: String, @PathVariable tipoCamino: TipoDeCamino) = ubicacionService.conectar(nombreUbicacion1, nombreUbicacion2, tipoCamino.toString())
 
     @GetMapping("/conectados/{nombreUbicacion}")
     fun conectadosDeLaUbicacion( @PathVariable nombreUbicacion: String ) = ubicacionService.conectados(nombreUbicacion).map { ubicacion -> ubicacion.aDTO() }
