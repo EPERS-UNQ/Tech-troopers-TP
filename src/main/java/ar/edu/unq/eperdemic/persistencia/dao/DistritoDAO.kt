@@ -1,7 +1,6 @@
 package ar.edu.unq.eperdemic.persistencia.dao
 
 import ar.edu.unq.eperdemic.modelo.Distrito
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
 import org.springframework.data.mongodb.repository.Aggregation
 import org.springframework.data.mongodb.repository.MongoRepository

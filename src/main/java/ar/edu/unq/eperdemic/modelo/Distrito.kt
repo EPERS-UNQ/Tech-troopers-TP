@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.controller.dto.DistritoDTO
 import ar.edu.unq.eperdemic.exceptions.DistritoAbiertoException
 import ar.edu.unq.eperdemic.exceptions.ErrorCantidadDeCoordenadasMinimas
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.annotation.Id
@@ -54,14 +55,13 @@ class Distrito(nombre: String?, forma: GeoJsonPolygon?) {
         this.ubicaciones = ubicaciones
     }
 
-    fun setUbicacion(ubicacion: UbicacionMongo) {
-        this.ubicaciones.add(ubicacion)
+    fun setUbicacion(ubicacion: UbicacionGlobal) {
+        this.ubicaciones.add(UbicacionMongo(ubicacion.getNombre(), ubicacion.getCoordenada()))
     }
 
     fun getUbicaciones() : MutableList<UbicacionMongo> {
         return this.ubicaciones
     }
-
 
     init {
         if(nombre!!.isBlank()){

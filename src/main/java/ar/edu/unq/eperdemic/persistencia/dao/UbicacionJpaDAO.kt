@@ -22,8 +22,17 @@ interface UbicacionJpaDAO : JpaRepository<UbicacionJpa, Long> {
          SELECT DISTINCT u.nombre
          FROM UbicacionJpa u
          JOIN Vector v ON u.id = v.ubicacion.id
-         WHERE v.estaInfectado = TRUE
+         WHERE v.estaInfectado = true
         """)
     fun ubicacionesInfectadas(): List<String>
+
+    @Query("""
+        select case when count(u) > 0 
+        then true 
+        else false
+        end from UbicacionJpa u
+        
+    """)
+    fun hayUbicaciones(): Boolean
 
 }

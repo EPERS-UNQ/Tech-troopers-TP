@@ -1,9 +1,6 @@
 package ar.edu.unq.eperdemic.services.impl
 
-import ar.edu.unq.eperdemic.exceptions.CoordenadaDistritoIntersectionException
-import ar.edu.unq.eperdemic.exceptions.DistritoNoExistenteException
-import ar.edu.unq.eperdemic.exceptions.NoHayDistritoInfectado
-import ar.edu.unq.eperdemic.exceptions.NombreDeDistritoExistenteException
+import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.modelo.Distrito
 import ar.edu.unq.eperdemic.persistencia.dao.DistritoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
@@ -32,10 +29,13 @@ class DistritoServiceImpl : DistritoService {
     }
 
     override fun distritoMasEnfermo(): Distrito {
+
+        if (!ubicacionDAO.hayUbicaciones()){
+            throw NoHayUbicaciones()
+        }
         val ubicacionesInfectadas = ubicacionDAO.ubicacionesInfectadas()
 
-        val distritoMasInfectado = distritoDAO.distritoMasInfectado(ubicacionesInfectadas) ?:
-            throw NoHayDistritoInfectado()
+        val distritoMasInfectado = distritoDAO.distritoMasInfectado(ubicacionesInfectadas) ?: throw NoHayDistritoInfectado()
 
         return  distritoDAO.findByNombre(distritoMasInfectado)!!
     }

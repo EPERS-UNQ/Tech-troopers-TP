@@ -1,25 +1,28 @@
-package ar.edu.unq.eperdemic.testServicios.distritoTest
+package ar.edu.unq.eperdemic.testServicios
 
-import ar.edu.unq.eperdemic.exceptions.CoordenadaDistritoIntersectionException
-import ar.edu.unq.eperdemic.exceptions.DistritoNoExistenteException
-import ar.edu.unq.eperdemic.exceptions.NoHayDistritoInfectado
-import ar.edu.unq.eperdemic.exceptions.NombreDeDistritoExistenteException
+import ar.edu.unq.eperdemic.exceptions.*
 import ar.edu.unq.eperdemic.helper.dao.HibernateDataDAO
 import ar.edu.unq.eperdemic.helper.service.DataService
 import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.*
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
+import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.DistritoService
 import ar.edu.unq.eperdemic.services.PatogenoService
+import ar.edu.unq.eperdemic.services.UbicacionService
+import ar.edu.unq.eperdemic.services.VectorService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.mongodb.core.geo.GeoJsonPolygon
+import org.springframework.util.Assert
 
 
 @ExtendWith
@@ -29,9 +32,9 @@ class DistritoServiceTest {
 
     @Autowired private lateinit var distritoService: DistritoService
 
-    @Autowired private lateinit var ubicacionNeo4jDAO: UbicacionNeo4jDAO
-    @Autowired private lateinit var ubicacionMongoDBDAO: UbicacionMongoDAO
     @Autowired private lateinit var patogenoService: PatogenoService
+    @Autowired private lateinit var ubicacionService: UbicacionService
+    @Autowired private lateinit var vectorService: VectorService
 
     lateinit var dataService: DataService
 
@@ -44,19 +47,28 @@ class DistritoServiceTest {
     private lateinit var forma1: GeoJsonPolygon
     private lateinit var forma2: GeoJsonPolygon
     private lateinit var forma3: GeoJsonPolygon
-    private lateinit var ubicacionElPiave: UbicacionMongo
-    private lateinit var ubicacionBurgerKing: UbicacionJpa
-    private lateinit var ubicacionSubway: UbicacionJpa
-    private lateinit var ubicacionMostaza: UbicacionJpa
-    private lateinit var ubicacionMcDonals: UbicacionJpa
-    private lateinit var patogenoVirus: Patogeno
+    private lateinit var ubicacionElPiave: UbicacionGlobal
+    private lateinit var ubicacionBurgerKing: UbicacionGlobal
+    private lateinit var ubicacionSubway: UbicacionGlobal
+    private lateinit var ubicacionMostaza: UbicacionGlobal
+    private lateinit var ubicacionMcDonals: UbicacionGlobal
+    private lateinit var covid: Patogeno
+    private lateinit var salmonella: Patogeno
+    private lateinit var pepe: Vector
+    private lateinit var pedro: Vector
+    private lateinit var especie1: Especie
+    private lateinit var especie2: Especie
+    private lateinit var coordenada1: GeoJsonPoint
+    private lateinit var coordenada2: GeoJsonPoint
+    private lateinit var coordenada3: GeoJsonPoint
+    private lateinit var coordenada4: GeoJsonPoint
 
     @BeforeEach
     fun setUp(){
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
-        ubicacionElPiave = UbicacionMongo("Berazategui", GeoJsonPoint(2.0, 2.0))
+        ubicacionElPiave = UbicacionGlobal("Berazategui", GeoJsonPoint(2.0, 2.0))
 
         coordenadas = listOf(
             GeoJsonPoint(0.0, 0.0),
@@ -79,6 +91,11 @@ class DistritoServiceTest {
             GeoJsonPoint(20.0, 0.0)
         )
 
+        coordenada1 = GeoJsonPoint(45.00, 40.00)
+        coordenada2 = GeoJsonPoint(46.00, 40.00)
+        coordenada3 = GeoJsonPoint(47.00, 40.00)
+        coordenada4 = GeoJsonPoint(53.00, 40.00)
+
         forma1 = GeoJsonPolygon(coordenadas)
         forma2 = GeoJsonPolygon(coordenadas2)
         forma3 = GeoJsonPolygon(coordenadas3)
@@ -86,13 +103,17 @@ class DistritoServiceTest {
         distritoQuilmes = Distrito("Quilmes", forma2)
         distritoBerazategui = Distrito ("Berazategui", forma3)
 
-        ubicacionMcDonals = UbicacionJpa("McDonals")
-        ubicacionBurgerKing = UbicacionJpa("BurgerKing")
-        ubicacionSubway = UbicacionJpa("Subway")
-        ubicacionMostaza = UbicacionJpa("Mostaza")
+        covid = Patogeno("Coronavirus", 90, 5, 1, 60, 95)
+        salmonella = Patogeno("Salmonella", 70, 10, 15, 30, 66)
 
-        patogenoVirus = Patogeno("Virus", 6, 73, 52, 32, 33)
-        patogenoService.crear(patogenoVirus)
+        ubicacionMcDonals = UbicacionGlobal("McDonals", coordenada1)
+        ubicacionBurgerKing = UbicacionGlobal("BurgerKing", coordenada2)
+        ubicacionMostaza = UbicacionGlobal("Mostaza", coordenada2)
+        ubicacionSubway = UbicacionGlobal("Subway", coordenada3)
+
+        patogenoService.crear(covid)
+        patogenoService.crear(salmonella)
+
     }
 
     @Test
@@ -108,11 +129,64 @@ class DistritoServiceTest {
 
     @Test
     fun testCuandoPreguntoCualEsElDistritoMasEnfermoYNoHayInfectadosSeLanzaNoHayDistritosConUbicacionesInfectadasException(){
+
+        ubicacionService.crear(ubicacionMcDonals)
+
         distritoService.crear(distritoBernal)
         distritoService.crear(distritoQuilmes)
         distritoService.crear(distritoBerazategui)
 
         assertThrows<NoHayDistritoInfectado> { distritoService.distritoMasEnfermo() }
+    }
+
+    @Test
+    fun testSePuedeSaberCualEsElDistritoMasInfectado() {
+
+        ubicacionService.crear(ubicacionMcDonals)
+        pedro = Vector("Pedro", ubicacionMcDonals.aJPA(), TipoVector.HUMANO)
+        vectorService.crear(pedro)
+        especie1 = patogenoService.agregarEspecie(covid.getId(),"Especie1", ubicacionMcDonals.getId())
+
+        distritoService.crear(distritoBernal)
+
+        distritoBernal.setUbicacion(ubicacionMcDonals)
+
+        distritoService.actualizarDistrito(distritoBernal)
+
+        Assertions.assertEquals(distritoBernal.getNombre(), distritoService.distritoMasEnfermo().getNombre())
+
+    }
+
+    @Test
+    fun testSePuedeSaberCualEsElDistritoMasInfectadoCuandoTieneMismaCantidad() {
+
+        ubicacionService.crear(ubicacionMcDonals)
+        ubicacionService.crear(ubicacionBurgerKing)
+        pedro = Vector("Pedro", ubicacionMcDonals.aJPA(), TipoVector.HUMANO)
+        pepe = Vector("Pepe", ubicacionBurgerKing.aJPA(), TipoVector.HUMANO)
+        vectorService.crear(pedro)
+        vectorService.crear(pepe)
+        especie1 = patogenoService.agregarEspecie(covid.getId(),"Especie1", ubicacionMcDonals.getId())
+        especie2 = patogenoService.agregarEspecie(covid.getId(),"Especie2", ubicacionBurgerKing.getId())
+
+        distritoService.crear(distritoBernal)
+        distritoService.crear(distritoQuilmes)
+
+        distritoBernal.setUbicacion(ubicacionMcDonals)
+        distritoQuilmes.setUbicacion(ubicacionSubway)
+
+        distritoService.actualizarDistrito(distritoBernal)
+        distritoService.actualizarDistrito(distritoQuilmes)
+
+        Assertions.assertEquals(distritoBernal.getNombre(), distritoService.distritoMasEnfermo().getNombre())
+
+    }
+
+    @Test
+    fun testSetrataDeSaberCualEsElDistritoConMasInfectadoCuandoNoHayUbicaciones() {
+
+        assertThrows<NoHayUbicaciones> { distritoService.distritoMasEnfermo() }
+
     }
 
     @Test
@@ -191,7 +265,6 @@ class DistritoServiceTest {
     fun tearDown() {
         distritoService.deleteAll()
         dataService.cleanAll()
-        ubicacionNeo4jDAO.detachDelete()
-        ubicacionMongoDBDAO.deleteAll()
+        ubicacionService.deleteAll()
     }
 }
