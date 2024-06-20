@@ -208,6 +208,17 @@ class UbicacionServiceJpaTest {
         }
     }
 
+    @Test
+    fun seTrataDeUpdatearUnaUbicacionConNombreYaEnUso() {
+
+        serviceUbicacion.crear(UbicacionGlobal("Peru", GeoJsonPoint(25.00, 30.00)))
+        ubiPersistida1.setNombre("Peru")
+
+        val ubicacionRecuperada = serviceUbicacion.recuperar(ubiPersistida1.getId())
+
+        assertThrows<ErrorYaExisteLaEntidad> { serviceUbicacion.updatear(ubicacionRecuperada) }
+    }
+
     @AfterEach
     fun borrarRegistros() {
         serviceUbicacion.deleteAll()

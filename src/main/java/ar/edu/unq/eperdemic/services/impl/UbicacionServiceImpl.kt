@@ -27,10 +27,8 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var distritoDao: DistritoDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
-        val ubicacionExistente = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
-        if ( ubicacionExistente != null ) {
-            throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
-        }
+
+        validarDatosEnUso(ubicacion)
 
         val ubicacionPersistida = ubicacionJpaDAO.save(UbicacionJpa(ubicacion.getNombre()))
         ubicacionNeoDAO.save(UbicacionNeo4j(ubicacion.getNombre()))
@@ -41,7 +39,9 @@ class UbicacionServiceImpl() : UbicacionService {
     }
 
     override fun updatear(ubicacion: UbicacionGlobal) {
+
         val ubicacionExistente = ubicacionJpaDAO.findByIdOrNull(ubicacion.getId()) ?: throw NoExisteLaUbicacion()
+        validarDatosEnUso(ubicacion)
 
         ubicacionExistente.setNombre(ubicacion.getNombre())
         ubicacionJpaDAO.save(ubicacionExistente)
@@ -50,16 +50,24 @@ class UbicacionServiceImpl() : UbicacionService {
 
     }
 
+    private fun validarDatosEnUso(ubicacion: UbicacionGlobal) {
+        val ubicacionExistente = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
+        if (ubicacionExistente != null) {
+            throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
+        }
+        val coordenadasDeUbicaciones = ubicacionMongoDAO.findByCoordenada(ubicacion.getCoordenada())
+        if (coordenadasDeUbicaciones!!.getCordenada() == ubicacion.getCoordenada()) {
+            throw ErrorCoordenadaInvalida()
+        }
+    }
+
     override fun recuperar(id: Long): UbicacionGlobal {
 
-        val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)
-            ?: throw NoExisteLaUbicacion()
+        val ubicacionJpa = ubicacionJpaDAO.findByIdOrNull(id)?: throw NoExisteLaUbicacion()
 
-        ubicacionNeoDAO.findByNombre(ubicacionJpa.getNombre()!!)
-            ?: throw NoExisteLaUbicacion()
+        ubicacionNeoDAO.findByNombre(ubicacionJpa.getNombre()!!)?: throw NoExisteLaUbicacion()
 
-        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa.getNombre()!!)
-            ?: throw NoExisteLaUbicacion()
+        val ubicacionMongo = ubicacionMongoDAO.findByNombre(ubicacionJpa.getNombre()!!)?: throw NoExisteLaUbicacion()
 
         val ubicacionGlobal = UbicacionGlobal(ubicacionMongo.getNombre(), ubicacionMongo.getCordenada())
 

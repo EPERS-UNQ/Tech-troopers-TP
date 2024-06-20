@@ -42,9 +42,14 @@ class UbicacionGlobal() {
         this.id = id
     }
 
+    fun setCoordenada(nuevaCoordenada: GeoJsonPoint) {
+        this.coordenada = nuevaCoordenada
+    }
+
     fun aJPA(): UbicacionJpa {
         val ubicacionJPA = UbicacionJpa(this.nombre!!)
         ubicacionJPA.setId(this.id!!)
         return ubicacionJPA
     }
+
 }

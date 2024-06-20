@@ -19,4 +19,7 @@ interface UbicacionMongoDAO : MongoRepository<UbicacionMongo, String> {
     )
     fun ubicacionesAMenosDe100Km(puntoSalida: GeoJsonPoint, nombreUbicacionDestino: String): List<UbicacionMongo>
 
+    @Query("{coordenada: '?0'}")
+    fun findByCoordenada(coordenada: GeoJsonPoint): UbicacionMongo?
+
 }
