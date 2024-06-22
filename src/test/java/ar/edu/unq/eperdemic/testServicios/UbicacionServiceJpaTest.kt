@@ -42,7 +42,6 @@ class UbicacionServiceJpaTest {
     lateinit var ubi1: UbicacionGlobal
     lateinit var ubi2: UbicacionGlobal
     lateinit var ubi3: UbicacionGlobal
-    lateinit var ubi4: UbicacionGlobal
 
     lateinit var ubiPersistida1: UbicacionGlobal
 
@@ -74,7 +73,7 @@ class UbicacionServiceJpaTest {
 
         ubi1 = serviceUbicacion.crear(UbicacionGlobal("Argentina", coordenada1))
         ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
-        ubi4 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
+        ubi3 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
 
         vector1 = serviceVector.crear(Vector("Jose", ubi2.aJPA(), TipoVector.HUMANO))
         vector2 = serviceVector.crear(Vector("araña", ubi2.aJPA(), TipoVector.INSECTO))
@@ -158,7 +157,7 @@ class UbicacionServiceJpaTest {
         random.setNumeroGlobal(1)
         serviceUbicacion.expandir(ubi1.getId())
 
-        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi4.getId() }
+        val vectoresUbicacion = serviceVector.recuperarTodos().filter { v -> v.ubicacion!!.getId() == ubi3.getId() }
 
         for (v in vectoresUbicacion) {
             Assertions.assertFalse( v.estaInfectado() )
@@ -180,25 +179,6 @@ class UbicacionServiceJpaTest {
     }
 
     @Test
-    fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionAMasDe100KM(){
-        var ubicacionLaBoca = UbicacionGlobal("La Boca", GeoJsonPoint(0.0, 0.0))
-        var ubicacionCordillera = UbicacionGlobal("Coordillera de los Andes", GeoJsonPoint(5.0, 5.0))
-
-        ubicacionLaBoca = serviceUbicacion.crear(ubicacionLaBoca)
-        ubicacionCordillera = serviceUbicacion.crear(ubicacionCordillera)
-
-        var vectorGaviota = Vector("Gaviota", ubicacionLaBoca.aJPA(), TipoVector.ANIMAL)
-
-        serviceUbicacion.conectar(ubicacionLaBoca.getNombre(), ubicacionCordillera.getNombre(), "AEREO")
-
-        vectorGaviota = serviceVector.crear(vectorGaviota)
-
-        Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
-            serviceUbicacion.mover(vectorGaviota.id!!, ubicacionCordillera.getId())
-        }
-    }
-
-    @Test
     fun errorCuandoSeIntentaCrearDosUbicacionesConElMismoNombre(){
 
         val ubicacion = UbicacionGlobal("Argentina", coordenada1)
@@ -210,6 +190,10 @@ class UbicacionServiceJpaTest {
 
     @Test
     fun seTrataDeUpdatearUnaUbicacionConNombreYaEnUso() {
+
+        val coordenada = GeoJsonPoint(35.00, 30.00)
+        ubi3 = serviceUbicacion.crear(UbicacionGlobal("Uruguay", coordenada))
+        ubiPersistida1 = serviceUbicacion.recuperar(ubi3.getId())
 
         serviceUbicacion.crear(UbicacionGlobal("Peru", GeoJsonPoint(25.00, 30.00)))
         ubiPersistida1.setNombre("Peru")

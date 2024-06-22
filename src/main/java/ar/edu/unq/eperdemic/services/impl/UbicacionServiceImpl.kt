@@ -11,6 +11,7 @@ import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.persistencia.dao.*
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -56,7 +57,7 @@ class UbicacionServiceImpl() : UbicacionService {
             throw ErrorYaExisteLaEntidad("La ubicación con ese nombre ya existe.")
         }
         val coordenadasDeUbicaciones = ubicacionMongoDAO.findByCoordenada(ubicacion.getCoordenada())
-        if (coordenadasDeUbicaciones!!.getCordenada() == ubicacion.getCoordenada()) {
+        if (coordenadasDeUbicaciones != null) {
             throw ErrorCoordenadaInvalida()
         }
     }
