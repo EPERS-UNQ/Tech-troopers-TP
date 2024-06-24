@@ -59,6 +59,14 @@ open class Vector() {
         this.tipo = nuevoTipo
     }
 
+    fun getNombre(): String {
+        return this.nombre!!
+    }
+
+    fun getUbicacion(): UbicacionJpa {
+        return this.ubicacion!!
+    }
+
     fun estaInfectado(): Boolean{
         return this.estaInfectado
     }
