@@ -38,6 +38,10 @@ class UbicacionMongo() {
         this.id = id
     }
 
+    fun getId(): String {
+        return this.id!!
+    }
+
     fun setNombre(nombre: String) {
         this.nombre = nombre
     }

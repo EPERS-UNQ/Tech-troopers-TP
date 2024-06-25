@@ -1,5 +1,6 @@
 package ar.edu.unq.eperdemic.modelo.ubicacion
 
+import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import javax.persistence.*
 
@@ -33,6 +34,10 @@ open class UbicacionJpa() {
 
     fun setNombre(nombre: String) {
         this.nombre = nombre
+    }
+
+    fun aDTO() : UbicacionDTO {
+        return UbicacionDTO(this.id!!, this.getNombre()!!, null)
     }
 
 }

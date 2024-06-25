@@ -5,9 +5,11 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorElastic
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorElasticDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -21,6 +23,7 @@ class VectorServiceImpl () : VectorService {
     @Autowired private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var vectorDAO: VectorDAO
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
+    @Autowired private lateinit var vectorElasticDAO: VectorElasticDAO
 
     override fun crear(vector: Vector): Vector {
         val ubicacion = vector.ubicacion
@@ -32,6 +35,8 @@ class VectorServiceImpl () : VectorService {
                 throw NoExisteLaUbicacion()
             }
         }
+        val vectorElastic = VectorElastic(vector.nombre!!, vector.ubicacion!!, vector.getTipo())
+        vectorElasticDAO.save(vectorElastic)
         return vectorDAO.save(vector)
     }
 
@@ -51,6 +56,10 @@ class VectorServiceImpl () : VectorService {
 
     override fun recuperarTodos(): List<Vector> {
         return vectorDAO.findAll().toList()
+    }
+
+    override fun recuperarTodosElastic(): List<VectorElastic> {
+        return vectorElasticDAO.findAll().toList()
     }
 
     override fun infectar(vectorId: Long, especieId: Long) {

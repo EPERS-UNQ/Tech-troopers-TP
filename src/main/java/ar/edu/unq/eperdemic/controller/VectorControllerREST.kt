@@ -31,6 +31,9 @@ class VectorControllerREST( private val vectorService: VectorService, private va
     @GetMapping("/todosLosVectores")
     fun recuperarTodasLasVectores() = vectorService.recuperarTodos().map { vector -> vector.aDTO() }
 
+    @GetMapping("/todosLosVectoresElastic")
+    fun recuperarTodosLosVectoresElastic() = vectorService.recuperarTodosElastic().map { vector -> vector.aDTO() }
+
     @PutMapping("/infectar/{vectorId}/{especieId}")
     fun infectarVector( @PathVariable vectorId: Long, @PathVariable especieId: Long) = vectorService.infectar(vectorId, especieId)
 
