@@ -11,7 +11,7 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.PatogenoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorJpaDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -27,7 +27,7 @@ class PatogenoServiceImpl() : PatogenoService {
     @Autowired private lateinit var patogenoDAO: PatogenoDAO
     @Autowired private lateinit var especieDAO: EspecieDAO
     @Autowired private lateinit var ubicacionDAO: UbicacionJpaDAO
-    @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var vectorDAO: VectorJpaDAO
 
     override fun crear(patogeno: Patogeno): Patogeno {
         return patogenoDAO.save(patogeno)
@@ -54,6 +54,7 @@ class PatogenoServiceImpl() : PatogenoService {
     override fun agregarEspecie(idDePatogeno: Long, nombreEspecie: String, ubicacionId: Long): Especie {
 
             val patogeno: Patogeno = patogenoDAO.findByIdOrNull(idDePatogeno)!!
+            // ver si es el evolucionado (podria ser otro objeto de especie)
             val especie = patogeno.crearEspecie(nombreEspecie, ubicacionDAO.recuperarNombrePorID(ubicacionId))
             val vectoresEnUbicacion: List<Vector> = vectorDAO.recuperarTodosDeUbicacion(ubicacionId)
             if (vectoresEnUbicacion.isEmpty()) {
@@ -79,5 +80,9 @@ class PatogenoServiceImpl() : PatogenoService {
 
     override fun esPandemia(especieId: Long): Boolean {
         return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countUbicaciones() / 2
+    }
+
+    override fun evolucionar(patogeno: Patogeno): Patogeno {
+        TODO("Not yet implemented")
     }
 }

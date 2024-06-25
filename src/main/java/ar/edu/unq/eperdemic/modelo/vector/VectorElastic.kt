@@ -4,7 +4,6 @@ import ar.edu.unq.eperdemic.controller.dto.VectorElasticDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
-import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document
@@ -21,7 +20,6 @@ open class VectorElastic() {
     var estaInfectado: Boolean = false
     var ubicaciones: MutableList<UbicacionJpa> = mutableListOf() // REVISAR EL TIPO DE UBICACION KIBANA
     var mutaciones: MutableSet<Mutacion> = HashSet()
-
 
     constructor(nombre: String, ubicacion: UbicacionJpa, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){

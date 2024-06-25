@@ -23,7 +23,7 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
-    @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var vectorDAO: VectorJpaDAO
     @Autowired private lateinit var distritoDao: DistritoDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {

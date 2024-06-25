@@ -8,8 +8,8 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.VectorElastic
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorElasticDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorJpaDAO
 import ar.edu.unq.eperdemic.services.VectorService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -21,9 +21,9 @@ import org.springframework.transaction.annotation.Transactional
 class VectorServiceImpl () : VectorService {
 
     @Autowired private lateinit var especieDAO: EspecieDAO
-    @Autowired private lateinit var vectorDAO: VectorDAO
-    @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
+    @Autowired private lateinit var vectorJpaDAO: VectorJpaDAO
     @Autowired private lateinit var vectorElasticDAO: VectorElasticDAO
+    @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
 
     override fun crear(vector: Vector): Vector {
         val ubicacion = vector.ubicacion
@@ -35,18 +35,24 @@ class VectorServiceImpl () : VectorService {
                 throw NoExisteLaUbicacion()
             }
         }
+
         val vectorElastic = VectorElastic(vector.nombre!!, vector.ubicacion!!, vector.getTipo())
         vectorElasticDAO.save(vectorElastic)
-        return vectorDAO.save(vector)
+        return vectorJpaDAO.save(vector)
+        // en teoria se crea pero queda a la espera de que se infecte con el superPatogeno
+        // y ahi empezar a tener registro de sus movimientos
+
     }
 
     override fun updatear(vector: Vector) {
-        vectorDAO.save(vector)
+        vectorJpaDAO.save(vector)
+        // ver si hay que actualizar el vectorElastic ya que solo importa el historial de ubicaciones
+        // y ese se guarda cada vez que se mueve
     }
 
     override fun recuperar(idVector: Long): Vector {
 
-        val vector = vectorDAO.findByIdOrNull(idVector)
+        val vector = vectorJpaDAO.findByIdOrNull(idVector)
         if (vector == null) {
             throw NoExisteElVector()
 
@@ -55,7 +61,7 @@ class VectorServiceImpl () : VectorService {
     }
 
     override fun recuperarTodos(): List<Vector> {
-        return vectorDAO.findAll().toList()
+        return vectorJpaDAO.findAll().toList()
     }
 
     override fun recuperarTodosElastic(): List<VectorElastic> {
@@ -64,16 +70,19 @@ class VectorServiceImpl () : VectorService {
 
     override fun infectar(vectorId: Long, especieId: Long) {
         val especie = especieDAO.findById(especieId).orElse(null)
-        val vector  = vectorDAO.findById(vectorId).orElse(null)
+        val vector  = vectorJpaDAO.findById(vectorId).orElse(null)
         if      ( especie == null ) { NoExisteLaEspecie() }
         else if ( vector == null )  { NoExisteElVector()  }
         vector.infectar(especie)
-        vectorDAO.save(vector)
+        vectorJpaDAO.save(vector)
         especieDAO.save(especie)
+
+        // la logica de si es la especie nueva
+
     }
 
     override fun enfermedades(vectorId: Long): List<Especie> {
-        return (vectorDAO.findByIdOrNull(vectorId)!!).enfermedadesDelVector()
+        return (vectorJpaDAO.findByIdOrNull(vectorId)!!).enfermedadesDelVector()
     }
 
 }
