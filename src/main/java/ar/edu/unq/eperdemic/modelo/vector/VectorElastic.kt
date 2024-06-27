@@ -32,7 +32,7 @@ open class VectorElastic() {
 
     fun aDTO(): VectorElasticDTO {
         val ubicacionesDTO = this.ubicaciones.map { ubicacion -> ubicacion.aDTO() }
-        val especiesDTO = this.especies.map { especie -> especie.aDTO() }
+        val especiesDTO = this.especies.map { especie -> especie.aDTO() } // No se usa ver que hacer
         return VectorElasticDTO(this.id, this.nombre, ubicacionesDTO.toMutableList(), this.tipo.toString(), null)
     }
 

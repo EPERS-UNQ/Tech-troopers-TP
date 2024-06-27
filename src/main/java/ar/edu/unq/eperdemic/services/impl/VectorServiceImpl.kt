@@ -85,4 +85,8 @@ class VectorServiceImpl () : VectorService {
         return (vectorJpaDAO.findByIdOrNull(vectorId)!!).enfermedadesDelVector()
     }
 
+    override fun deleteAll() {
+        vectorElasticDAO.deleteAll()
+    }
+
 }

@@ -19,4 +19,6 @@ interface VectorService {
     fun infectar(vectorId: Long, especieId: Long)
 
     fun enfermedades(vectorId: Long): List<Especie>
+
+    fun deleteAll()
 }
