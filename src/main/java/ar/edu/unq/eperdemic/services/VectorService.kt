@@ -3,10 +3,11 @@ package ar.edu.unq.eperdemic.services
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.VectorElastic
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 
 interface VectorService {
 
-    fun crear(vector: Vector): Vector
+    fun crear(vectorGlobal: VectorGlobal): Vector
 
     fun updatear(vector: Vector)
 

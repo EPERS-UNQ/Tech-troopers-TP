@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.VectorElastic
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionJpaDAO
 import ar.edu.unq.eperdemic.persistencia.dao.VectorElasticDAO
@@ -25,23 +26,20 @@ class VectorServiceImpl () : VectorService {
     @Autowired private lateinit var vectorElasticDAO: VectorElasticDAO
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
 
-    override fun crear(vector: Vector): Vector {
-        val ubicacion = vector.ubicacion
+    override fun crear(vectorGlobal: VectorGlobal): Vector {
+        val ubicacion = vectorGlobal.ubicacion
+        val vectorJpa = vectorGlobal.aJPA()
+
         if ( ubicacion != null ) {
-            val ubicacionPersistida = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre()!!)
+            val ubicacionPersistida = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
             if ( ubicacionPersistida != null ) {
-                vector.ubicacion = ubicacionPersistida
+                vectorJpa.ubicacion = ubicacionPersistida
             } else {
                 throw NoExisteLaUbicacion()
             }
         }
-
-        val vectorElastic = VectorElastic(vector.nombre!!, vector.ubicacion!!, vector.getTipo())
-        vectorElasticDAO.save(vectorElastic)
-        return vectorJpaDAO.save(vector)
-        // en teoria se crea pero queda a la espera de que se infecte con el superPatogeno
-        // y ahi empezar a tener registro de sus movimientos
-
+        vectorElasticDAO.save(vectorGlobal.aElastic())
+        return vectorJpaDAO.save(vectorJpa)
     }
 
     override fun updatear(vector: Vector) {
