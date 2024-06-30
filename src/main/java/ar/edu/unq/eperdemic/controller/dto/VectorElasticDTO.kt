@@ -4,5 +4,7 @@ class VectorElasticDTO ( val id: String?,
                          val nombre: String?,
                          val ubicaciones: MutableList<UbicacionDTO>,
                          val tipo: String,
-                         val especies: MutableSet<EspecieDTO>? ) {
+                         val especies: MutableSet<EspecieDTO>?)
+                         //val ubicacionActual: UbicacionDTO)
+ {
 }
