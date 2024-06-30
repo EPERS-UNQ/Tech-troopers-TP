@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.services.impl
 
 import ar.edu.unq.eperdemic.exceptions.ErrorValorDePaginacionIvalido
 import ar.edu.unq.eperdemic.exceptions.NoExisteElPatogeno
+import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.exceptions.NoHayVectorException
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.Patogeno
@@ -82,7 +83,15 @@ class PatogenoServiceImpl() : PatogenoService {
         return vectorDAO.cantidadDeUbicacionesDeVectoresConEspecieId(especieId) > ubicacionDAO.countUbicaciones() / 2
     }
 
-    override fun evolucionar(patogeno: Patogeno): Patogeno {
-        TODO("Not yet implemented")
+    override fun evolucionar(patogeno: Patogeno): Especie {
+
+        val patogenoAEvolucionar: Patogeno = patogenoDAO.findByTipo(patogeno.getTipo()) ?: throw NoExisteElPatogeno()
+        val pageable: Pageable = PageRequest.of(0, 1)
+        val especieConMasInfectados: Especie = especieDAO.especieConMasInfectados(patogenoAEvolucionar.getId(), pageable)
+            ?.get(0)
+            ?: throw NoExisteLaEspecie()
+        val superEspecie = patogenoAEvolucionar.crearSuperEspecie(especieConMasInfectados.getNombre(), especieConMasInfectados.getUbicacion())
+        patogenoDAO.save(patogenoAEvolucionar)
+        return especieDAO.save(superEspecie)
     }
 }

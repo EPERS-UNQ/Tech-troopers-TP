@@ -17,4 +17,14 @@ interface EspecieDAO : CrudRepository<Especie, Long> {
     )
     fun especiesDelPatogenoId(patogenoId: Long, direccion: String, pageable: Pageable): List<Especie>
 
+    @Query(
+        """
+            select e 
+            from Especie e
+            where e.patogeno.id = ?1
+            order by SIZE(e.vectores) DESC
+        """
+    )
+    fun especieConMasInfectados(id: Long, pageable: Pageable): List<Especie>?
+
 }

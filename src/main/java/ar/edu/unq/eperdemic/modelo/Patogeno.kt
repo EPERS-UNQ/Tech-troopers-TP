@@ -3,11 +3,10 @@ package ar.edu.unq.eperdemic.modelo
 import ar.edu.unq.eperdemic.controller.dto.PatogenoDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
 import ar.edu.unq.eperdemic.exceptions.LimiteDeCampoErroneo
-import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import javax.persistence.*
 
 @Entity
-class Patogeno() {
+open class Patogeno() {
     constructor(
         tipo: String, contagioHumanos: Int,
         contagioAnimales: Int, contagioInsectos: Int,
@@ -82,6 +81,17 @@ class Patogeno() {
     fun aDTO(): PatogenoDTO? {
         return PatogenoDTO(this.getId(), this.tipo, this.cap_contagio_humano, this.cap_contagio_animal,
                            this.cap_contagio_insecto, this.defensa, this.cap_de_biomecanizacion)
+    }
+
+    fun getTipo(): String {
+        return this.tipo!!
+    }
+
+    fun crearSuperEspecie(nombre: String, ubicacion: String): Especie {
+        val nuevaSuperEspecie = Especie("Super $nombre", this, ubicacion)
+        cantidadDeEspecies++
+        nuevaSuperEspecie.hacerSuper()
+        return nuevaSuperEspecie
     }
 
 }

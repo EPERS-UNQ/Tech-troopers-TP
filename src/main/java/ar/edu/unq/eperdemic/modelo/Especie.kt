@@ -6,11 +6,10 @@ import ar.edu.unq.eperdemic.modelo.mutacion.Mutacion
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 
 @Entity
-class Especie() {
+open class Especie() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long? = null
@@ -29,6 +28,7 @@ class Especie() {
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     var posibles_mutaciones: MutableSet<Mutacion> = HashSet()
 
+    var esSuper: Boolean = false
 
     constructor( nombre: String, patogeno: Patogeno, paisDeOrigen: String ) : this() {
         if (nombre.isBlank()){
@@ -54,6 +54,9 @@ class Especie() {
     }
 
     fun capacidadDeContagioPara(tipoDeVector: TipoVector): Int{
+        if (this.esSuper) {
+            return 100
+        }
         return when (tipoDeVector) {
             TipoVector.HUMANO -> patogeno!!.cap_contagio_humano
             TipoVector.ANIMAL -> patogeno!!.cap_contagio_animal
@@ -70,10 +73,16 @@ class Especie() {
     }
 
     fun defensaDeEspecie(): Int {
+        if (this.esSuper) {
+            return 100
+        }
         return patogeno!!.defensa
     }
 
     fun capacidadDeBiomecanizacion(): Int {
+        if (this.esSuper) {
+            return 100
+        }
         return patogeno!!.cap_de_biomecanizacion
     }
 
@@ -89,6 +98,18 @@ class Especie() {
         val id = mutacion.getId()
         val resultado = posibles_mutaciones.any { it.getId() == id }
         return resultado
+    }
+
+    fun getNombre(): String {
+        return this.nombre!!
+    }
+
+    fun getUbicacion(): String {
+        return this.paisDeOrigen!!
+    }
+
+    fun hacerSuper() {
+        this.esSuper = true
     }
 
 }
