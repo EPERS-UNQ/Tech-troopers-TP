@@ -15,14 +15,14 @@ class VectorControllerREST( private val vectorService: VectorService, private va
     fun crearVector( @RequestBody vectorDTO: VectorCreacionDTO) : VectorDTO {
         val ubicacion = ubicacionService.recuperar(vectorDTO.ubicacionId!!)
 
-        return vectorService.crear(vectorDTO.aModelo(ubicacion.aJPA())).aDTO()!!
+        return vectorService.crear(vectorDTO.aModelo(ubicacion)).aDTO()!!
     }
 
     @PutMapping("/actualizarVector")
     fun actualizarVector( @RequestBody vectorDTO: VectorDTO ) {
         val ubicacion = ubicacionService.recuperar(vectorDTO.ubicacionId)
 
-        vectorService.crear(vectorDTO.aModelo(ubicacion.aJPA())).aDTO()!!
+        vectorService.crear(vectorDTO.aModelo(ubicacion)).aDTO()!!
     }
 
     @GetMapping("/{vectorId}")

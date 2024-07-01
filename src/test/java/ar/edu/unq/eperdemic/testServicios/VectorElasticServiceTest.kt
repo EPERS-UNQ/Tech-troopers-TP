@@ -6,6 +6,7 @@ import ar.edu.unq.eperdemic.helper.service.DataServiceImpl
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
 import org.junit.jupiter.api.AfterEach
@@ -30,7 +31,9 @@ class VectorElasticServiceTest {
 
     lateinit var dataService: DataService
 
-    lateinit var vector: Vector
+    lateinit var vector: VectorGlobal
+    lateinit var vectorPersistido: Vector
+
     lateinit var ubicacion: UbicacionGlobal
 
     @BeforeEach
@@ -38,8 +41,8 @@ class VectorElasticServiceTest {
         ubicacion = UbicacionGlobal("McDonalds", GeoJsonPoint(20.00, 20.00))
         serviceUbicacion.crear(ubicacion)
 
-        vector = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
-        service.crear(vector)
+        vector = VectorGlobal("Pedro", ubicacion, TipoVector.HUMANO)
+        vectorPersistido = service.crear(vector)
 
         dataService = DataServiceImpl(HibernateDataDAO())
     }

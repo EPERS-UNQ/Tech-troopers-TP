@@ -1,14 +1,17 @@
 package ar.edu.unq.eperdemic.modelo.vector
 
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 
 class VectorGlobal() {
 
+    var id: Long? = null
     private lateinit var tipo: TipoVector
     var nombre: String? = null
     var ubicacion: UbicacionGlobal? = null
+    var especies: HashSet<Especie> = HashSet()
 
     constructor(nombre: String, ubicacion: UbicacionGlobal, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
@@ -25,6 +28,14 @@ class VectorGlobal() {
 
     fun aElastic(): VectorElastic {
         return VectorElastic(this.nombre!!, this.ubicacion!!.aElastic(), this.tipo)
+    }
+
+    fun setId(id: Long) {
+        this.id = id
+    }
+
+    fun setTipo(nuevoTipo: TipoVector) {
+        this.tipo = nuevoTipo
     }
 
 }

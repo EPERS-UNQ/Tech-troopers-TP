@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.*
@@ -37,12 +38,14 @@ class EstadisticaServiceTest {
     lateinit var especie3  : Especie
     lateinit var patogeno  : Patogeno
 
-    lateinit var humano     : Vector
-    lateinit var humano2    : Vector
-    lateinit var humano3    : Vector
-    lateinit var golondrina : Vector
-    lateinit var insecto    : Vector
-    lateinit var insecto2   : Vector
+    lateinit var humano     : VectorGlobal
+    lateinit var humano2    : VectorGlobal
+    lateinit var humano3    : VectorGlobal
+    lateinit var golondrina : VectorGlobal
+    lateinit var insecto    : VectorGlobal
+    lateinit var insecto2   : VectorGlobal
+
+    lateinit var humanoPersistido : Vector
 
     lateinit var ubicacion: UbicacionGlobal
     lateinit var coordenada: GeoJsonPoint
@@ -62,11 +65,11 @@ class EstadisticaServiceTest {
         ubicacion = UbicacionGlobal("Argentina", coordenada)
         serviceUbicacion.crear(ubicacion)
 
-        humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
-        humano2    = Vector("Juan", ubicacion.aJPA(), TipoVector.HUMANO)
-        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
+        humano     = VectorGlobal("Pedro", ubicacion, TipoVector.HUMANO)
+        humano2    = VectorGlobal("Juan", ubicacion,TipoVector.HUMANO)
+        golondrina = VectorGlobal("Pepita", ubicacion, TipoVector.ANIMAL)
 
-        serviceVector.crear(humano)
+        humanoPersistido = serviceVector.crear(humano)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         servicePatogeno.crear(patogeno)
@@ -80,11 +83,11 @@ class EstadisticaServiceTest {
 
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
 
-        serviceVector.crear(humano2)
-        serviceVector.crear(golondrina)
+        val humano2Persistido    = serviceVector.crear(humano2)
+        val golondrinaPersistida = serviceVector.crear(golondrina)
 
-        serviceVector.infectar(humano2.getId(), especie.getId()!!)
-        serviceVector.infectar(golondrina.getId(), especie.getId()!!)
+        serviceVector.infectar(humano2Persistido.getId(), especie.getId()!!)
+        serviceVector.infectar(golondrinaPersistida.getId(), especie.getId()!!)
 
         Assertions.assertEquals(especie.getId(), service.especieLider().getId())
         Assertions.assertFalse(especie2.getId()!! == service.especieLider().getId())
@@ -94,24 +97,24 @@ class EstadisticaServiceTest {
     fun testDeLosLideres() {
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
         especie3 = servicePatogeno.agregarEspecie(patogeno.getId(), "Adenovirus", ubicacion.getId())
-        humano3  = Vector("Bautista", ubicacion.aJPA(), TipoVector.HUMANO)
-        insecto  = Vector("Chinche", ubicacion.aJPA(), TipoVector.INSECTO)
-        insecto2  = Vector("Mosca", ubicacion.aJPA(), TipoVector.INSECTO)
-        serviceVector.crear(golondrina)
-        serviceVector.crear(humano2)
-        serviceVector.crear(humano3)
-        serviceVector.crear(insecto)
-        serviceVector.crear(insecto2)
+        humano3   = VectorGlobal("Bautista", ubicacion, TipoVector.HUMANO)
+        insecto   = VectorGlobal("Chinche", ubicacion, TipoVector.INSECTO)
+        insecto2  = VectorGlobal("Mosca", ubicacion, TipoVector.INSECTO)
+        val golondrinaPersistida = serviceVector.crear(golondrina)
+        val humano2Persistido    = serviceVector.crear(humano2)
+        val humano3Persistido    = serviceVector.crear(humano3)
+        val insectoPersistido    = serviceVector.crear(insecto)
+        val insecto2Persistido   = serviceVector.crear(insecto2)
 
-        serviceVector.infectar(humano2.getId(), especie.getId()!!)
-        serviceVector.infectar(insecto.getId(), especie.getId()!!)
-        serviceVector.infectar(insecto2.getId(), especie.getId()!!)
+        serviceVector.infectar(humano2Persistido.getId(), especie.getId()!!)
+        serviceVector.infectar(insectoPersistido.getId(), especie.getId()!!)
+        serviceVector.infectar(insecto2Persistido.getId(), especie.getId()!!)
 
 
-        serviceVector.infectar(humano3.getId(), especie2.getId()!!)
-        serviceVector.infectar(golondrina.getId(), especie2.getId()!!)
+        serviceVector.infectar(humano3Persistido.getId(), especie2.getId()!!)
+        serviceVector.infectar(golondrinaPersistida.getId(), especie2.getId()!!)
 
-        serviceVector.infectar(humano.getId(), especie3.getId()!!)
+        serviceVector.infectar(humanoPersistido.getId(), especie3.getId()!!)
 
         // especie2 -> Infectó dos humanos y un animal. Es mas lider esta.
         // especie  -> Infectó dos humanos y dos insecto.
@@ -156,16 +159,16 @@ class EstadisticaServiceTest {
     fun testReporteDeContagios() {
 
         especie2 = servicePatogeno.agregarEspecie(patogeno.getId(), "Virus", ubicacion.getId())
-        insecto  = Vector("Chinche", ubicacion.aJPA(), TipoVector.INSECTO)
-        insecto2  = Vector("Mosca", ubicacion.aJPA(), TipoVector.INSECTO)
-        serviceVector.crear(insecto)
-        serviceVector.crear(insecto2)
-        serviceVector.crear(humano2)
-        serviceVector.crear(golondrina)
+        insecto  = VectorGlobal("Chinche", ubicacion, TipoVector.INSECTO)
+        insecto2  = VectorGlobal("Mosca", ubicacion, TipoVector.INSECTO)
+        val insectoPersistido    = serviceVector.crear(insecto)
+        val insecto2Persistido   = serviceVector.crear(insecto2)
+        val humano2Persistido    = serviceVector.crear(humano2)
+        val golondrinaPersistida = serviceVector.crear(golondrina)
 
-        serviceVector.infectar(humano2.getId(), especie.getId()!!)
-        serviceVector.infectar(insecto.getId(), especie.getId()!!)
-        serviceVector.infectar(golondrina.getId(), especie2.getId()!!)
+        serviceVector.infectar(humano2Persistido.getId(), especie.getId()!!)
+        serviceVector.infectar(insectoPersistido.getId(), especie.getId()!!)
+        serviceVector.infectar(golondrinaPersistida.getId(), especie2.getId()!!)
 
         val reporte : ReporteDeContagios = service.reporteDeContagios(ubicacion.getNombre())
 

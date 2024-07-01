@@ -10,6 +10,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.EspecieService
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.VectorService
@@ -43,8 +44,8 @@ class EspecieServiceTest {
     lateinit var patogeno  : Patogeno
     lateinit var patogeno2 : Patogeno
 
-    lateinit var humano     : Vector
-    lateinit var golondrina : Vector
+    lateinit var humano     : VectorGlobal
+    lateinit var golondrina : VectorGlobal
     lateinit var ubicacion : UbicacionGlobal
     lateinit var coordenada: GeoJsonPoint
 
@@ -56,7 +57,7 @@ class EspecieServiceTest {
         coordenada = GeoJsonPoint(45.00, 40.00)
         ubicacion = UbicacionGlobal("Argentina", coordenada)
         serviceUbicacion.crear(ubicacion)
-        humano    = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
+        humano    = VectorGlobal("Pedro", ubicacion, TipoVector.HUMANO)
 
         dataService = DataServiceImpl(HibernateDataDAO())
 
@@ -113,10 +114,10 @@ class EspecieServiceTest {
 
     @Test
     fun testVerificacionDeCantidadDeVectoresInfectadosPorUnaEspecieParticular() {
-        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
-        serviceVector.crear(golondrina)
+        golondrina = VectorGlobal("Pepita", ubicacion, TipoVector.ANIMAL)
+        val golondrinaPersistida = serviceVector.crear(golondrina)
 
-        serviceVector.infectar(golondrina.getId(), especiePersistida.getId()!!)
+        serviceVector.infectar(golondrinaPersistida.getId(), especiePersistida.getId()!!)
 
         Assertions.assertEquals(2, service.cantidadDeInfectados(especiePersistida.getId()!!))
 

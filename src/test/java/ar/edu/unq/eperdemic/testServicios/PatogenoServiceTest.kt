@@ -13,6 +13,7 @@ import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.UbicacionService
 import ar.edu.unq.eperdemic.services.VectorService
 import org.junit.jupiter.api.*
@@ -41,11 +42,14 @@ class PatogenoServiceTest {
     lateinit var china: UbicacionGlobal
     lateinit var corea: UbicacionGlobal
     lateinit var india: UbicacionGlobal
-    lateinit var pepe: Vector
-    lateinit var pedro: Vector
+    lateinit var pepe: VectorGlobal
+    lateinit var pedro: VectorGlobal
     lateinit var coordenada1: GeoJsonPoint
     lateinit var coordenada2: GeoJsonPoint
     lateinit var coordenada3: GeoJsonPoint
+
+    lateinit var pepePersistido : Vector
+    lateinit var pedroPersistido: Vector
 
     @BeforeEach
     fun crearModelo() {
@@ -64,12 +68,13 @@ class PatogenoServiceTest {
         servicioUbicacion.crear(china)
         servicioUbicacion.crear(india)
 
-        pedro = Vector("Pedro", corea.aJPA(), TipoVector.HUMANO)
-        pepe = Vector("Pepe", china.aJPA(), TipoVector.HUMANO)
+        pedro = VectorGlobal("Pedro", corea, TipoVector.HUMANO)
+        pepe = VectorGlobal("Pepe", china, TipoVector.HUMANO)
 
         servicioPatogeno.crear(salmonella)
-        servicioVector.crear(pedro)
-        servicioVector.crear(pepe)
+
+        pedroPersistido = servicioVector.crear(pedro)
+        pepePersistido  = servicioVector.crear(pepe)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -214,7 +219,7 @@ class PatogenoServiceTest {
 
         val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
-        servicioVector.infectar(pedro.getId(),enterica.getId()!!)
+        servicioVector.infectar(pedroPersistido.getId(),enterica.getId()!!)
 
         Assertions.assertFalse(servicioPatogeno.esPandemia(enterica.getId()!!))
 
@@ -225,8 +230,8 @@ class PatogenoServiceTest {
 
         val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
-        servicioVector.infectar(pepe.getId(),enterica.getId()!!)
-        servicioVector.infectar(pedro.getId(),enterica.getId()!!)
+        servicioVector.infectar(pepePersistido.getId(),enterica.getId()!!)
+        servicioVector.infectar(pedroPersistido.getId(),enterica.getId()!!)
 
         Assertions.assertTrue(servicioPatogeno.esPandemia(enterica.getId()!!))
 
