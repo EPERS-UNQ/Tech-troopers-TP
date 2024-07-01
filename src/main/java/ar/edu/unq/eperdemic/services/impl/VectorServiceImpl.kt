@@ -4,6 +4,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteElVector
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.exceptions.NoExisteLaUbicacion
 import ar.edu.unq.eperdemic.modelo.Especie
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionMongo
 import ar.edu.unq.eperdemic.modelo.vector.Vector
 import ar.edu.unq.eperdemic.modelo.vector.VectorElastic
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
@@ -69,12 +70,14 @@ class VectorServiceImpl () : VectorService {
     }
 
     override fun infectar(vectorId: Long, especieId: Long) {
+
         val especie = especieDAO.findById(especieId).orElse(null)
         val vector  = vectorJpaDAO.findById(vectorId).orElse(null)
         if      ( especie == null ) { NoExisteLaEspecie() }
         else if ( vector == null )  { NoExisteElVector()  }
         vector.infectar(especie)
         vectorJpaDAO.save(vector)
+        vectorElasticDAO.save(vector)
         especieDAO.save(especie)
 
         // la logica de si es la especie nueva
@@ -83,6 +86,10 @@ class VectorServiceImpl () : VectorService {
 
     override fun enfermedades(vectorId: Long): List<Especie> {
         return (vectorJpaDAO.findByIdOrNull(vectorId)!!).enfermedadesDelVector()
+    }
+
+    override fun historialDelSuperVector(vectorId: Long): List<UbicacionMongo> {
+        TODO("Not yet implemented")
     }
 
     override fun deleteAll() {

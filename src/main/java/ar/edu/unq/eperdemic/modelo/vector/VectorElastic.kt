@@ -20,11 +20,11 @@ open class VectorElastic() {
     private lateinit var tipo: TipoVector
     var especies: MutableSet<Especie> = HashSet()
     var estaInfectado: Boolean = false
-    var ubicaciones: MutableList<UbicacionJpa> = mutableListOf() // REVISAR EL TIPO DE UBICACION KIBANA
+    var ubicaciones: MutableList<UbicacionMongo> = mutableListOf() // REVISAR EL TIPO DE UBICACION KIBANA
     var mutaciones: MutableSet<Mutacion> = HashSet()
     var ubicacionActual: UbicacionMongo = UbicacionMongo("Default", GeoJsonPoint( -58.277798, -34.740635))
 
-    constructor(nombre: String, ubicacion: UbicacionJpa, tipoVector: TipoVector):this() {
+    constructor(nombre: String, ubicacion: UbicacionMongo, tipoVector: TipoVector):this() {
         if(nombre.isBlank()){
             throw ErrorNombre("El nombre del vector no puede estar vacio.")
         }
