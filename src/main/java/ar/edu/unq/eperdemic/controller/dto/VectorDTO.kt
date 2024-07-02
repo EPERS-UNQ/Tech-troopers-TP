@@ -1,8 +1,8 @@
 package ar.edu.unq.eperdemic.controller.dto
 
-import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
-import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 
 class VectorDTO ( val id: Long?,
                   val nombre: String?,
@@ -10,8 +10,8 @@ class VectorDTO ( val id: Long?,
                   val tipo: String,
                   val especies: MutableSet<EspecieDTO> ) {
 
-    fun aModelo(ubicacion: UbicacionJpa): Vector {
-        val vector = Vector()
+    fun aModelo(ubicacion: UbicacionGlobal): VectorGlobal {
+        val vector = VectorGlobal()
         vector.setId(this.id!!)
         vector.nombre = this.nombre
         vector.ubicacion = ubicacion
