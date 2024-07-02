@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.exceptions.NoExisteLaEspecie
 import ar.edu.unq.eperdemic.modelo.Especie
 import ar.edu.unq.eperdemic.persistencia.dao.EspecieDAO
 
-import ar.edu.unq.eperdemic.persistencia.dao.VectorDAO
+import ar.edu.unq.eperdemic.persistencia.dao.VectorJpaDAO
 import ar.edu.unq.eperdemic.services.EspecieService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class EspecieServiceImpl () : EspecieService {
     @Autowired private lateinit var especieDAO : EspecieDAO
-    @Autowired private lateinit var vectorDAO : VectorDAO
+    @Autowired private lateinit var vectorDAO : VectorJpaDAO
 
     override fun updatear(especie: Especie) {
         especieDAO.save(especie)

@@ -15,14 +15,14 @@ class VectorControllerREST( private val vectorService: VectorService, private va
     fun crearVector( @RequestBody vectorDTO: VectorCreacionDTO) : VectorDTO {
         val ubicacion = ubicacionService.recuperar(vectorDTO.ubicacionId!!)
 
-        return vectorService.crear(vectorDTO.aModelo(ubicacion.aJPA())).aDTO()!!
+        return vectorService.crear(vectorDTO.aModelo(ubicacion)).aDTO()
     }
 
     @PutMapping("/actualizarVector")
     fun actualizarVector( @RequestBody vectorDTO: VectorDTO ) {
         val ubicacion = ubicacionService.recuperar(vectorDTO.ubicacionId)
 
-        vectorService.crear(vectorDTO.aModelo(ubicacion.aJPA())).aDTO()!!
+        vectorService.crear(vectorDTO.aModelo(ubicacion)).aDTO()
     }
 
     @GetMapping("/{vectorId}")
@@ -30,6 +30,9 @@ class VectorControllerREST( private val vectorService: VectorService, private va
 
     @GetMapping("/todosLosVectores")
     fun recuperarTodasLasVectores() = vectorService.recuperarTodos().map { vector -> vector.aDTO() }
+
+    @GetMapping("/todosLosVectoresElastic")
+    fun recuperarTodosLosVectoresElastic() = vectorService.recuperarTodosElastic().map { vector -> vector.aDTO() }
 
     @PutMapping("/infectar/{vectorId}/{especieId}")
     fun infectarVector( @PathVariable vectorId: Long, @PathVariable especieId: Long) = vectorService.infectar(vectorId, especieId)

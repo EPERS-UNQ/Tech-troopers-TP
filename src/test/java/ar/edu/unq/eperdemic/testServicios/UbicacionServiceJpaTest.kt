@@ -13,6 +13,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.NoAleatorioStrategy
 import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.PatogenoService
@@ -46,9 +47,9 @@ class UbicacionServiceJpaTest {
 
     lateinit var ubiPersistida1: UbicacionGlobal
 
-    lateinit var vector1: Vector
-    lateinit var vector2: Vector
-    lateinit var vector3: Vector
+    lateinit var vector1: VectorGlobal
+    lateinit var vector2: VectorGlobal
+    lateinit var vector3: VectorGlobal
 
     lateinit var patogeno1: Patogeno
 
@@ -76,9 +77,9 @@ class UbicacionServiceJpaTest {
         ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
         ubi4 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
 
-        vector1 = serviceVector.crear(Vector("Jose", ubi2.aJPA(), TipoVector.HUMANO))
-        vector2 = serviceVector.crear(Vector("araña", ubi2.aJPA(), TipoVector.INSECTO))
-        vector3 = serviceVector.crear(Vector("perrito", ubi1.aJPA(), TipoVector.ANIMAL))
+        vector1 = serviceVector.crear(VectorGlobal("Jose", ubi2, TipoVector.HUMANO))
+        vector2 = serviceVector.crear(VectorGlobal("araña", ubi2, TipoVector.INSECTO))
+        vector3 = serviceVector.crear(VectorGlobal("perrito", ubi1, TipoVector.ANIMAL))
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
         especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId())
@@ -136,9 +137,9 @@ class UbicacionServiceJpaTest {
     @Test
     fun cuandoSeEnviaElMensajeExpandirSiHayVectorInfectadoLaInfeccionDeEsteVectorSeExpandePorTodaLaUbicacion() {
         random.setNumeroGlobal(2)
-        serviceVector.crear(Vector("Miguel", ubi1.aJPA(), TipoVector.HUMANO))
-        serviceVector.crear(Vector("Mariano", ubi1.aJPA(), TipoVector.HUMANO))
-        val vector4 = serviceVector.crear(Vector("Juan", ubi1.aJPA(), TipoVector.INSECTO))
+        serviceVector.crear(VectorGlobal("Miguel", ubi1, TipoVector.HUMANO))
+        serviceVector.crear(VectorGlobal("Mariano", ubi1, TipoVector.HUMANO))
+        val vector4 = serviceVector.crear(VectorGlobal("Juan", ubi1, TipoVector.INSECTO))
 
         serviceVector.infectar(vector3.getId(), especie1.getId()!!)
         serviceVector.infectar(vector4.getId(), especie2.getId()!!)
@@ -187,14 +188,14 @@ class UbicacionServiceJpaTest {
         ubicacionLaBoca = serviceUbicacion.crear(ubicacionLaBoca)
         ubicacionCordillera = serviceUbicacion.crear(ubicacionCordillera)
 
-        var vectorGaviota = Vector("Gaviota", ubicacionLaBoca.aJPA(), TipoVector.ANIMAL)
+        val vectorGaviota = VectorGlobal("Gaviota", ubicacionLaBoca, TipoVector.ANIMAL)
 
         serviceUbicacion.conectar(ubicacionLaBoca.getNombre(), ubicacionCordillera.getNombre(), "AEREO")
 
-        vectorGaviota = serviceVector.crear(vectorGaviota)
+        val vectorGaviotaPersistida = serviceVector.crear(vectorGaviota)
 
         Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java) {
-            serviceUbicacion.mover(vectorGaviota.id!!, ubicacionCordillera.getId())
+            serviceUbicacion.mover(vectorGaviotaPersistida.id!!, ubicacionCordillera.getId())
         }
     }
 
@@ -214,6 +215,7 @@ class UbicacionServiceJpaTest {
         dataService.cleanAll()
         ubicacionNeo4jDAO.detachDelete()
         ubicacionMongoDBDAO.deleteAll()
+        serviceVector.deleteAll()
     }
 
 }

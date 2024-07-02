@@ -13,6 +13,7 @@ import ar.edu.unq.eperdemic.modelo.mutacion.SupresionBiomecanica
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -52,9 +53,9 @@ class MutacionServiceTest {
     lateinit var coordenada3: GeoJsonPoint
     lateinit var coordenada4: GeoJsonPoint
     lateinit var coordenada5: GeoJsonPoint
-    lateinit var john: Vector
-    lateinit var viktor: Vector
-    lateinit var monoAndroide: Vector
+    lateinit var john: VectorGlobal
+    lateinit var viktor: VectorGlobal
+    lateinit var monoAndroide: VectorGlobal
     lateinit var cromaColera: Especie
     lateinit var mecaViruela: Especie
     lateinit var roboRabia: Especie
@@ -86,18 +87,18 @@ class MutacionServiceTest {
         servicioUbicacion.crear(tailandia)
         servicioUbicacion.crear(china)
 
-        john = Vector("John", corea.aJPA(), TipoVector.HUMANO)
-        viktor = Vector("Viktor", japon.aJPA(), TipoVector.HUMANO)
-        monoAndroide = Vector("Mono-17", china.aJPA(), TipoVector.ANIMAL)
-        supresionBiomecanica = SupresionBiomecanica(35)
+        john         = VectorGlobal("John", corea, TipoVector.HUMANO)
+        viktor       = VectorGlobal("Viktor", japon, TipoVector.HUMANO)
+        monoAndroide = VectorGlobal("Mono-17", china, TipoVector.ANIMAL)
+        supresionBiomecanica  = SupresionBiomecanica(35)
         bioalteracionGenetica = BioalteracionGenetica(TipoVector.ANIMAL)
 
         servicioPatogeno.crear(viruela)
         servicioPatogeno.crear(colera)
         servicioPatogeno.crear(rabia)
-        servicioVector.crear(john)
-        servicioVector.crear(viktor)
-        servicioVector.crear(monoAndroide)
+        john         = servicioVector.crear(john)
+        viktor       = servicioVector.crear(viktor)
+        monoAndroide = servicioVector.crear(monoAndroide)
 
         mecaViruela = servicioPatogeno.agregarEspecie(viruela.getId(), "Meca-Viruela", corea.getId())
         cromaColera = servicioPatogeno.agregarEspecie(colera.getId(), "Croma Colera", japon.getId())
@@ -225,7 +226,7 @@ class MutacionServiceTest {
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(mecaViruela))
-        Assertions.assertFalse(monoAndroide.estaInfectadoCon(mecaViruela))
+        Assertions.assertFalse(monoAndroide.aJPA().estaInfectadoCon(mecaViruela))
         Assertions.assertTrue(johnMutado.estaMutado())
         Assertions.assertTrue(johnMutado.estaMutadoCon(bioalteracionGenetica))
 
@@ -240,7 +241,7 @@ class MutacionServiceTest {
     @Test
     fun unVectorAnimalMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorAnimal() {
 
-        val gatoAndroide = servicioVector.crear(Vector("Stray", tailandia.aJPA(), TipoVector.ANIMAL))
+        val gatoAndroide = servicioVector.crear(VectorGlobal("Stray", tailandia, TipoVector.ANIMAL))
 
         servicioMutacion.agregarMutacion(roboRabia.getId()!!, bioalteracionGenetica)
         servicioUbicacion.mover(monoAndroide.getId(), japon.getId())
@@ -249,7 +250,7 @@ class MutacionServiceTest {
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(roboRabia))
-        Assertions.assertFalse(gatoAndroide.estaInfectadoCon(roboRabia))
+        Assertions.assertFalse(gatoAndroide.aJPA().estaInfectadoCon(roboRabia))
         Assertions.assertTrue(monoMutado.estaMutado())
         Assertions.assertTrue(monoMutado.estaMutadoCon(bioalteracionGenetica))
 
@@ -264,8 +265,8 @@ class MutacionServiceTest {
     @Test
     fun unVectorInsectoMutadoConBioalteracionGeneticaHabilitaAContagiarAUnTipoDeVectorInsecto() {
 
-        val turboGrillo = servicioVector.crear(Vector("Pepe", tailandia.aJPA(), TipoVector.INSECTO))
-        val bioMosquito = servicioVector.crear(Vector("Raul", indonesia.aJPA(), TipoVector.INSECTO))
+        val turboGrillo = servicioVector.crear(VectorGlobal("Pepe", tailandia, TipoVector.INSECTO))
+        val bioMosquito = servicioVector.crear(VectorGlobal("Raul", indonesia, TipoVector.INSECTO))
         val bioalteracionGenetica2 = BioalteracionGenetica(TipoVector.INSECTO)
         servicioVector.infectar(bioMosquito.getId(), roboRabia.getId()!!)
 
@@ -276,7 +277,7 @@ class MutacionServiceTest {
         val viktorContagiado = servicioVector.recuperar(viktor.getId())
 
         Assertions.assertTrue(viktorContagiado.estaInfectadoCon(roboRabia))
-        Assertions.assertFalse(turboGrillo.estaInfectadoCon(roboRabia))
+        Assertions.assertFalse(turboGrillo.aJPA().estaInfectadoCon(roboRabia))
         Assertions.assertTrue(bioMosquitoMutado.estaInfectadoCon(roboRabia))
         Assertions.assertTrue(bioMosquitoMutado.estaMutadoCon(bioalteracionGenetica2))
 
@@ -320,7 +321,7 @@ class MutacionServiceTest {
         servicioMutacion.agregarMutacion(cromaColera.getId()!!, bioalteracionGenetica)
         servicioUbicacion.mover(viktor.getId(),corea.getId())
 
-        val viktorMutado = servicioVector.recuperar(viktor.getId())
+        val viktorMutado   = servicioVector.recuperar(viktor.getId())
         val johnContagiado = servicioVector.recuperar(john.getId())
 
         Assertions.assertTrue(johnContagiado.estaInfectadoCon(cromaColera))
@@ -378,7 +379,7 @@ class MutacionServiceTest {
 
         servicioVector.infectar(john.getId(),cromaColera.getId()!!)
 
-        Assertions.assertFalse(john.estaInfectadoCon(cromaColera))
+        Assertions.assertFalse(john.aJPA().estaInfectadoCon(cromaColera))
 
     }
 
@@ -386,6 +387,7 @@ class MutacionServiceTest {
     fun tearDown() {
        dataService.cleanAll()
        servicioUbicacion.deleteAll()
+        servicioVector.deleteAll()
     }
 
 

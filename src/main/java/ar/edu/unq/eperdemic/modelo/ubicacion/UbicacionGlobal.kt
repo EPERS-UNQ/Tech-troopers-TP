@@ -2,6 +2,7 @@ package ar.edu.unq.eperdemic.modelo.ubicacion
 
 import ar.edu.unq.eperdemic.controller.dto.UbicacionDTO
 import ar.edu.unq.eperdemic.exceptions.ErrorNombre
+import ar.edu.unq.eperdemic.modelo.Coordenada
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint
 
 class UbicacionGlobal() {
@@ -31,7 +32,7 @@ class UbicacionGlobal() {
     }
 
     fun aDTO(): UbicacionDTO? {
-        return UbicacionDTO(this.getId(), this.nombre, this.coordenada) // ¿Como obtenemos el id? ¿Por jpa? Lo necesito para el dto...
+        return UbicacionDTO(this.getId(), this.nombre, this.coordenada)
     }
 
     fun setNombre(nombre: String) {
@@ -46,5 +47,9 @@ class UbicacionGlobal() {
         val ubicacionJPA = UbicacionJpa(this.nombre!!)
         ubicacionJPA.setId(this.id!!)
         return ubicacionJPA
+    }
+
+    fun aElastic(): UbicacionElastic {
+        return UbicacionElastic(this.nombre!!, Coordenada(this.coordenada!!.y, this.coordenada!!.x))
     }
 }

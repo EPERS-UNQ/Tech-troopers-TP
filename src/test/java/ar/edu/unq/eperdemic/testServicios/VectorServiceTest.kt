@@ -13,6 +13,7 @@ import ar.edu.unq.eperdemic.modelo.RandomGenerator.RandomGenerator
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionJpa
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.services.PatogenoService
 import ar.edu.unq.eperdemic.services.UbicacionService
 import org.junit.jupiter.api.*
@@ -36,8 +37,9 @@ class VectorServiceTest {
     lateinit var especie   : Especie
     lateinit var patogeno  : Patogeno
 
-    lateinit var humano: Vector
-    lateinit var golondrina: Vector
+    lateinit var humano    : VectorGlobal
+    lateinit var golondrina: VectorGlobal
+
     lateinit var ubicacion: UbicacionGlobal
     lateinit var coordenada: GeoJsonPoint
 
@@ -52,12 +54,12 @@ class VectorServiceTest {
 
         serviceUbicacion.crear(ubicacion)
 
-        humano     = Vector("Pedro", ubicacion.aJPA(), TipoVector.HUMANO)
-        golondrina = Vector("Pepita", ubicacion.aJPA(), TipoVector.ANIMAL)
+        humano     = VectorGlobal("Pedro", ubicacion, TipoVector.HUMANO)
+        golondrina = VectorGlobal("Pepita", ubicacion, TipoVector.ANIMAL)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
-        service.crear(humano)
+        humano = service.crear(humano)
 
         servicePatogeno.crear(patogeno)
 
@@ -86,7 +88,9 @@ class VectorServiceTest {
         golondrina.nombre = "Marta"
         service.updatear(pepita)
 
-        Assertions.assertEquals("Marta", pepita.nombre)
+        val pepitaRecuperada = service.recuperar(pepita.getId())
+
+        Assertions.assertEquals("Marta", pepitaRecuperada.nombre)
     }
 
     @Test
@@ -114,7 +118,7 @@ class VectorServiceTest {
 
         val pepita = service.crear(golondrina)
 
-        Assertions.assertFalse(pepita.estaInfectado())
+        Assertions.assertFalse(pepita.aJPA().estaInfectado())
 
         service.infectar(pepita.getId(), especie.getId()!!)
 
@@ -153,7 +157,7 @@ class VectorServiceTest {
     fun errorCuandoSeTrataDeCrearUnVectorEnUnaUbicacionQueNoExiste() {
 
         Assertions.assertThrows(NoExisteLaUbicacion::class.java) {
-            service.crear(Vector("Pepe", UbicacionJpa("Belgica"), TipoVector.HUMANO))
+            service.crear(VectorGlobal("Pepe", UbicacionGlobal("Belgica", GeoJsonPoint(24.00, 34.00)), TipoVector.HUMANO))
         }
 
     }
@@ -161,6 +165,7 @@ class VectorServiceTest {
     @AfterEach
     fun cleanup() {
         dataService.cleanAll()
+        service.deleteAll()
     }
 
 }

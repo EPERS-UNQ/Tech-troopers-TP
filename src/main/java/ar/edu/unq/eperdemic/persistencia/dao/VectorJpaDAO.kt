@@ -4,7 +4,7 @@ import ar.edu.unq.eperdemic.modelo.vector.Vector
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
-interface VectorDAO : CrudRepository<Vector, Long> {
+interface VectorJpaDAO : CrudRepository<Vector, Long> {
 
     @Query("from Vector v where v.ubicacion.id = ?1")
     fun recuperarTodosDeUbicacion(ubicacionId: Long): List<Vector>

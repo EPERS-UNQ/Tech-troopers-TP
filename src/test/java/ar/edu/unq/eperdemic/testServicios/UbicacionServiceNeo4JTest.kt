@@ -12,6 +12,7 @@ import ar.edu.unq.eperdemic.modelo.mutacion.PropulsionMotora
 import ar.edu.unq.eperdemic.modelo.ubicacion.UbicacionGlobal
 import ar.edu.unq.eperdemic.modelo.vector.TipoVector
 import ar.edu.unq.eperdemic.modelo.vector.Vector
+import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionMongoDAO
 import ar.edu.unq.eperdemic.persistencia.dao.UbicacionNeo4jDAO
 import ar.edu.unq.eperdemic.services.*
@@ -59,12 +60,12 @@ class UbicacionServiceNeo4JTest {
     lateinit var per: UbicacionGlobal
     lateinit var hn: UbicacionGlobal
 
-    lateinit var hornerito: Vector
-    lateinit var mosca: Vector
-    lateinit var guanaco: Vector
-    lateinit var abeja: Vector
-    lateinit var joao: Vector
-    lateinit var maria: Vector
+    lateinit var hornerito: VectorGlobal
+    lateinit var mosca    : VectorGlobal
+    lateinit var guanaco  : VectorGlobal
+    lateinit var abeja    : VectorGlobal
+    lateinit var joao     : VectorGlobal
+    lateinit var maria    : VectorGlobal
 
     lateinit var virus: Patogeno
     lateinit var bacteria: Patogeno
@@ -124,24 +125,26 @@ class UbicacionServiceNeo4JTest {
         serviceUbicacion.crear(per)
         serviceUbicacion.crear(hn)
 
-        hornerito = Vector("Hornerito", arg.aJPA(), TipoVector.ANIMAL)
-        guanaco = Vector("Guanaco", chl.aJPA(), TipoVector.ANIMAL)
-        mosca = Vector("Mosca", urg.aJPA(), TipoVector.INSECTO)
-        abeja = Vector("Abeja", col.aJPA(), TipoVector.INSECTO)
-        joao = Vector("Joao", br.aJPA(), TipoVector.HUMANO)
-        maria = Vector("Maria", vnz.aJPA(), TipoVector.HUMANO)
+        hornerito = VectorGlobal("Hornerito", arg, TipoVector.ANIMAL)
+        guanaco   = VectorGlobal("Guanaco", chl, TipoVector.ANIMAL)
+        mosca     = VectorGlobal("Mosca", urg, TipoVector.INSECTO)
+        abeja     = VectorGlobal("Abeja", col, TipoVector.INSECTO)
+        joao      = VectorGlobal("Joao", br, TipoVector.HUMANO)
+        maria     = VectorGlobal("Maria", vnz, TipoVector.HUMANO)
+
         virus = Patogeno("Virus", 13,14,53,30,10)
         bacteria = Patogeno("Bacteria", 5, 10, 32, 25, 50)
         hongo = Patogeno("Hongo", 65, 20, 30, 45, 15)
         propulsionMotora = PropulsionMotora()
         electroBranqueas = ElectroBranqueas()
 
-        serviceVector.crear(hornerito)
-        serviceVector.crear(guanaco)
-        serviceVector.crear(mosca)
-        serviceVector.crear(abeja)
-        serviceVector.crear(joao)
-        serviceVector.crear(maria)
+        hornerito = serviceVector.crear(hornerito)
+        guanaco   = serviceVector.crear(guanaco)
+        mosca     = serviceVector.crear(mosca)
+        abeja     = serviceVector.crear(abeja)
+        joao      = serviceVector.crear(joao)
+        maria     = serviceVector.crear(maria)
+
         servicePatogeno.crear(virus)
         servicePatogeno.crear(bacteria)
         servicePatogeno.crear(hongo)
@@ -252,7 +255,7 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoCuandoSeMuevePorVariasUbicaciones() {
 
-        Assertions.assertEquals(arg.getNombre(), hornerito.nombreDeUbicacionActual())
+        Assertions.assertEquals(arg.getNombre(), hornerito.ubicacion!!.getNombre())
 
         serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), ecu.getNombre())
 
@@ -267,8 +270,8 @@ class UbicacionServiceNeo4JTest {
 
         val horneritoInfectado = serviceVector.recuperar(hornerito.getId())
 
-        Assertions.assertFalse(maria.estaInfectadoCon(granulosis))
-        Assertions.assertFalse(abeja.estaInfectadoCon(granulosis))
+        Assertions.assertFalse(maria.aJPA().estaInfectadoCon(granulosis))
+        Assertions.assertFalse(abeja.aJPA().estaInfectadoCon(granulosis))
         Assertions.assertTrue(horneritoInfectado.estaInfectadoCon(granulosis))
 
         serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),col.getNombre())
@@ -288,20 +291,20 @@ class UbicacionServiceNeo4JTest {
             serviceUbicacion.mover(joao.getId(), ecu.getId())
         }
 
-        val pepe = Vector("Pepe", bol.aJPA(), TipoVector.HUMANO)
-        serviceVector.crear(pepe)
+        val pepe = VectorGlobal("Pepe", bol, TipoVector.HUMANO)
+        val pepePersistido = serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(beauveriaBassiana.getId()!!, propulsionMotora)
 
         val beauveriaBassianaConMutacion = serviceEspecie.recuperar(beauveriaBassiana.getId()!!)
         val joaoInfectado = serviceVector.recuperar(joao.getId())
 
-        Assertions.assertFalse(pepe.estaInfectado())
+        Assertions.assertFalse(pepePersistido.aJPA().estaInfectado())
         Assertions.assertTrue(joaoInfectado.estaInfectado())
         Assertions.assertFalse(joaoInfectado.estaMutado())
 
         serviceUbicacion.mover(joao.getId(), bol.getId())
 
-        val pepeInfectado = serviceVector.recuperar(pepe.getId())
+        val pepeInfectado = serviceVector.recuperar(pepePersistido.getId())
 
         val joaoMutado = serviceVector.recuperar(joao.getId())
 
@@ -325,20 +328,20 @@ class UbicacionServiceNeo4JTest {
             serviceUbicacion.mover(mosca.getId(), arg.getId())
         }
 
-        val pepe = Vector("Pepe", bol.aJPA(), TipoVector.HUMANO)
-        serviceVector.crear(pepe)
+        val pepe = VectorGlobal("Pepe", bol, TipoVector.HUMANO)
+        val pepePersistido = serviceVector.crear(pepe)
         serviceMutacion.agregarMutacion(wolbachia.getId()!!, electroBranqueas)
 
         val wolbachiaConMutacion = serviceEspecie.recuperar(wolbachia.getId()!!)
         val moscaInfectada = serviceVector.recuperar(mosca.getId())
 
-        Assertions.assertFalse(pepe.estaInfectado())
+        Assertions.assertFalse(pepePersistido.aJPA().estaInfectado())
         Assertions.assertTrue(moscaInfectada.estaInfectado())
         Assertions.assertFalse(moscaInfectada.estaMutado())
 
         serviceUbicacion.mover(moscaInfectada.getId(), bol.getId())
 
-        val pepeInfectado = serviceVector.recuperar(pepe.getId())
+        val pepeInfectado = serviceVector.recuperar(pepePersistido.getId())
 
         val moscaMutada = serviceVector.recuperar(moscaInfectada.getId())
 
@@ -399,6 +402,7 @@ class UbicacionServiceNeo4JTest {
         dataService.cleanAll()
         ubicacionNeo4jDAO.detachDelete()
         ubicacionMongoDBDAO.deleteAll()
+        serviceVector.deleteAll()
     }
 
 }

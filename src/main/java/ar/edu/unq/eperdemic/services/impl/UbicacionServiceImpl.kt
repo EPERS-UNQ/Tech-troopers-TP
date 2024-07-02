@@ -23,7 +23,7 @@ class UbicacionServiceImpl() : UbicacionService {
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
     @Autowired private lateinit var ubicacionNeoDAO: UbicacionNeo4jDAO
     @Autowired private lateinit var ubicacionMongoDAO: UbicacionMongoDAO
-    @Autowired private lateinit var vectorDAO: VectorDAO
+    @Autowired private lateinit var vectorDAO: VectorJpaDAO
     @Autowired private lateinit var distritoDao: DistritoDAO
 
     override fun crear(ubicacion: UbicacionGlobal) : UbicacionGlobal {
@@ -75,9 +75,13 @@ class UbicacionServiceImpl() : UbicacionService {
         val listaUbicacionMongo = ubicacionMongoDAO.findAll()
 
         for (ubi in listaUbicacionMongo) {
-            listaUbicacionesGlobal.add(
-                UbicacionGlobal(ubi.getNombre(), ubi.getCordenada())
-            )
+            var ubicacionGlobal =  UbicacionGlobal(ubi.getNombre(), ubi.getCordenada())
+            var idFixeado = ubi.getId().replace(Regex("[^0-9]"), "")
+            if (idFixeado.length > 19) {
+                idFixeado.substring(0, 19)
+            }
+            ubicacionGlobal.setId(idFixeado.toLong())
+            listaUbicacionesGlobal.add(ubicacionGlobal)
         }
 
         return listaUbicacionesGlobal
