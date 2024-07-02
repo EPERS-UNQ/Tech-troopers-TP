@@ -142,9 +142,8 @@ class EspecieServiceTest {
 
     @AfterEach
     fun borrarRegistros() {
-
         dataService.cleanAll()
-
+        serviceVector.deleteAll()
     }
 
 }

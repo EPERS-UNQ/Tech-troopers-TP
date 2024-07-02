@@ -51,10 +51,6 @@ class UbicacionServiceJpaTest {
     lateinit var vector2: VectorGlobal
     lateinit var vector3: VectorGlobal
 
-    lateinit var vector1Persistido: Vector
-    lateinit var vector2Persistido: Vector
-    lateinit var vector3Persistido: Vector
-
     lateinit var patogeno1: Patogeno
 
     lateinit var especie1: Especie
@@ -81,9 +77,9 @@ class UbicacionServiceJpaTest {
         ubi2 = serviceUbicacion.crear(UbicacionGlobal("Paraguay", coordenada2))
         ubi4 = serviceUbicacion.crear(UbicacionGlobal("Chile", coordenada3))
 
-        vector1Persistido = serviceVector.crear(VectorGlobal("Jose", ubi2, TipoVector.HUMANO))
-        vector2Persistido = serviceVector.crear(VectorGlobal("araña", ubi2, TipoVector.INSECTO))
-        vector3Persistido = serviceVector.crear(VectorGlobal("perrito", ubi1, TipoVector.ANIMAL))
+        vector1 = serviceVector.crear(VectorGlobal("Jose", ubi2, TipoVector.HUMANO))
+        vector2 = serviceVector.crear(VectorGlobal("araña", ubi2, TipoVector.INSECTO))
+        vector3 = serviceVector.crear(VectorGlobal("perrito", ubi1, TipoVector.ANIMAL))
 
         patogeno1 = servicePatogeno.crear(Patogeno("Bacteria", 100, 100, 100, 30, 66))
         especie1 = servicePatogeno.agregarEspecie(patogeno1.getId(), "juanito", ubi2.getId())
@@ -145,7 +141,7 @@ class UbicacionServiceJpaTest {
         serviceVector.crear(VectorGlobal("Mariano", ubi1, TipoVector.HUMANO))
         val vector4 = serviceVector.crear(VectorGlobal("Juan", ubi1, TipoVector.INSECTO))
 
-        serviceVector.infectar(vector3Persistido.getId(), especie1.getId()!!)
+        serviceVector.infectar(vector3.getId(), especie1.getId()!!)
         serviceVector.infectar(vector4.getId(), especie2.getId()!!)
         serviceUbicacion.expandir(ubi1.getId())
 
@@ -173,7 +169,7 @@ class UbicacionServiceJpaTest {
     @Test
     fun errorCuandoSeIntentaMoverUnVectorAUnaUbicacionIdQueNoExiste(){
         Assertions.assertThrows(ErrorDeMovimiento::class.java) {
-            serviceUbicacion.mover(vector1Persistido.getId(), 50)
+            serviceUbicacion.mover(vector1.getId(), 50)
         }
     }
 
@@ -219,6 +215,7 @@ class UbicacionServiceJpaTest {
         dataService.cleanAll()
         ubicacionNeo4jDAO.detachDelete()
         ubicacionMongoDBDAO.deleteAll()
+        serviceVector.deleteAll()
     }
 
 }

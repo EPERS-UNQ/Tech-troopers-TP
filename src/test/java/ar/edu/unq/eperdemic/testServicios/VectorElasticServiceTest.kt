@@ -32,7 +32,6 @@ class VectorElasticServiceTest {
     lateinit var dataService: DataService
 
     lateinit var vector: VectorGlobal
-    lateinit var vectorPersistido: Vector
 
     lateinit var ubicacion: UbicacionGlobal
 
@@ -42,29 +41,29 @@ class VectorElasticServiceTest {
         serviceUbicacion.crear(ubicacion)
 
         vector = VectorGlobal("Pedro", ubicacion, TipoVector.HUMANO)
-        vectorPersistido = service.crear(vector)
+        vector = service.crear(vector)
 
         dataService = DataServiceImpl(HibernateDataDAO())
     }
 
-    @Test
+    /*@Test
     fun test() {
         Assertions.assertTrue(true)
-    }
+    }*/
 
-   /* @Test
+   @Test
     fun testDeRecuperacionDeTodosLosVectoresElastic() {
-        val vector2 = Vector("Fatiga", ubicacion.aJPA(), TipoVector.ANIMAL)
+        val vector2 = VectorGlobal("Fatiga", ubicacion, TipoVector.ANIMAL)
         service.crear(vector2)
 
         val vectoresElasticRecuperados = service.recuperarTodosElastic()
 
         Assertions.assertEquals(2, vectoresElasticRecuperados.size)
         Assertions.assertEquals("Pedro", vectoresElasticRecuperados[0].nombre)
-        Assertions.assertEquals("McDonalds", vectoresElasticRecuperados[0].ubicaciones[0].getNombre())
+        Assertions.assertEquals("McDonalds", vectoresElasticRecuperados[0].getUbicacionActual().nombre)
         Assertions.assertEquals("Fatiga", vectoresElasticRecuperados[1].nombre)
-        Assertions.assertEquals("McDonalds", vectoresElasticRecuperados[1].ubicaciones[0].getNombre())
-    }*/
+        Assertions.assertEquals("McDonalds", vectoresElasticRecuperados[1].getUbicacionActual().nombre)
+    }
 
     @AfterEach
     fun borrarModelo() {

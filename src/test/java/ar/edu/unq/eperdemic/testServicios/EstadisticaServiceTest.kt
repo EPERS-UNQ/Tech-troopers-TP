@@ -45,8 +45,6 @@ class EstadisticaServiceTest {
     lateinit var insecto    : VectorGlobal
     lateinit var insecto2   : VectorGlobal
 
-    lateinit var humanoPersistido : Vector
-
     lateinit var ubicacion: UbicacionGlobal
     lateinit var coordenada: GeoJsonPoint
 
@@ -69,7 +67,7 @@ class EstadisticaServiceTest {
         humano2    = VectorGlobal("Juan", ubicacion,TipoVector.HUMANO)
         golondrina = VectorGlobal("Pepita", ubicacion, TipoVector.ANIMAL)
 
-        humanoPersistido = serviceVector.crear(humano)
+        humano = serviceVector.crear(humano)
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
         servicePatogeno.crear(patogeno)
@@ -114,7 +112,7 @@ class EstadisticaServiceTest {
         serviceVector.infectar(humano3Persistido.getId(), especie2.getId()!!)
         serviceVector.infectar(golondrinaPersistida.getId(), especie2.getId()!!)
 
-        serviceVector.infectar(humanoPersistido.getId(), especie3.getId()!!)
+        serviceVector.infectar(humano.getId(), especie3.getId()!!)
 
         // especie2 -> Infectó dos humanos y un animal. Es mas lider esta.
         // especie  -> Infectó dos humanos y dos insecto.
@@ -221,9 +219,8 @@ class EstadisticaServiceTest {
 
     @AfterEach
     fun borrarRegistros() {
-
+        serviceVector.deleteAll()
         dataService.cleanAll()
-
     }
 
 }

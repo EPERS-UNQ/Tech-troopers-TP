@@ -67,13 +67,6 @@ class UbicacionServiceNeo4JTest {
     lateinit var joao     : VectorGlobal
     lateinit var maria    : VectorGlobal
 
-    lateinit var horneritoPersistido : Vector
-    lateinit var moscaPersistido     : Vector
-    lateinit var guanacoPersistido   : Vector
-    lateinit var abejaPersistido     : Vector
-    lateinit var joaoPersistido      : Vector
-    lateinit var mariaPersistido     : Vector
-
     lateinit var virus: Patogeno
     lateinit var bacteria: Patogeno
     lateinit var hongo: Patogeno
@@ -145,12 +138,12 @@ class UbicacionServiceNeo4JTest {
         propulsionMotora = PropulsionMotora()
         electroBranqueas = ElectroBranqueas()
 
-        horneritoPersistido = serviceVector.crear(hornerito)
-        guanacoPersistido   = serviceVector.crear(guanaco)
-        moscaPersistido     = serviceVector.crear(mosca)
-        abejaPersistido     = serviceVector.crear(abeja)
-        joaoPersistido      = serviceVector.crear(joao)
-        mariaPersistido     = serviceVector.crear(maria)
+        hornerito = serviceVector.crear(hornerito)
+        guanaco   = serviceVector.crear(guanaco)
+        mosca     = serviceVector.crear(mosca)
+        abeja     = serviceVector.crear(abeja)
+        joao      = serviceVector.crear(joao)
+        maria     = serviceVector.crear(maria)
 
         servicePatogeno.crear(virus)
         servicePatogeno.crear(bacteria)
@@ -224,9 +217,9 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorSoloSePuedeMoverEntrePaisesSiEstanConectadosPorAlgunTipoDeCamino() {
 
-        serviceUbicacion.mover(horneritoPersistido.getId(), urg.getId())
+        serviceUbicacion.mover(hornerito.getId(), urg.getId())
 
-        val ubicacionHornerito = serviceVector.recuperar(horneritoPersistido.getId()).ubicacion!!.getId()!!
+        val ubicacionHornerito = serviceVector.recuperar(hornerito.getId()).ubicacion!!.getId()!!
 
         Assertions.assertEquals(urg.getId(), ubicacionHornerito)
 
@@ -236,7 +229,7 @@ class UbicacionServiceNeo4JTest {
     fun unVectorHumanoNoSePuedeMoverPorCaminosAereos() {
 
         Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
-            serviceUbicacion.mover(joaoPersistido.getId(), ecu.getId())
+            serviceUbicacion.mover(joao.getId(), ecu.getId())
         }
 
     }
@@ -245,7 +238,7 @@ class UbicacionServiceNeo4JTest {
     fun unVectorInsectoNoSePuedeMoverPorCaminosMaritimo() {
 
         Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
-            serviceUbicacion.mover(abejaPersistido.getId(), vnz.getId())
+            serviceUbicacion.mover(abeja.getId(), vnz.getId())
         }
 
     }
@@ -254,7 +247,7 @@ class UbicacionServiceNeo4JTest {
     fun unVectorNoSePuedeMoverEntreUbicacionesQueNoTienenCaminos() {
 
         Assertions.assertThrows(ErrorUbicacionMuyLejana::class.java){
-            serviceUbicacion.mover(moscaPersistido.getId(), chl.getId())
+            serviceUbicacion.mover(mosca.getId(), chl.getId())
         }
 
     }
@@ -262,11 +255,11 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorSeMuevePorElCaminoMasCortoCuandoSeMuevePorVariasUbicaciones() {
 
-        Assertions.assertEquals(arg.getNombre(), horneritoPersistido.nombreDeUbicacionActual())
+        Assertions.assertEquals(arg.getNombre(), hornerito.ubicacion!!.getNombre())
 
-        serviceUbicacion.moverPorCaminoMasCorto(horneritoPersistido.getId(), ecu.getNombre())
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), ecu.getNombre())
 
-        val horneritoLuegoDeMoverse = serviceVector.recuperar(horneritoPersistido.getId())
+        val horneritoLuegoDeMoverse = serviceVector.recuperar(hornerito.getId())
 
         Assertions.assertEquals(ecu.getNombre(), horneritoLuegoDeMoverse.nombreDeUbicacionActual())
 
@@ -275,16 +268,16 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun cuandoUnVectorContagiadoSeMuevePorVariasUbicacionesTrataDeContagiarEnTodasEllas() {
 
-        val horneritoInfectado = serviceVector.recuperar(horneritoPersistido.getId())
+        val horneritoInfectado = serviceVector.recuperar(hornerito.getId())
 
-        Assertions.assertFalse(mariaPersistido.estaInfectadoCon(granulosis))
-        Assertions.assertFalse(abejaPersistido.estaInfectadoCon(granulosis))
+        Assertions.assertFalse(maria.aJPA().estaInfectadoCon(granulosis))
+        Assertions.assertFalse(abeja.aJPA().estaInfectadoCon(granulosis))
         Assertions.assertTrue(horneritoInfectado.estaInfectadoCon(granulosis))
 
-        serviceUbicacion.moverPorCaminoMasCorto(horneritoPersistido.getId(),col.getNombre())
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(),col.getNombre())
 
-        val abejaInfectada = serviceVector.recuperar(abejaPersistido.getId())
-        val mariaInfectada = serviceVector.recuperar(mariaPersistido.getId())
+        val abejaInfectada = serviceVector.recuperar(abeja.getId())
+        val mariaInfectada = serviceVector.recuperar(maria.getId())
 
         Assertions.assertTrue(abejaInfectada.estaInfectadoCon(granulosis))
         Assertions.assertTrue(mariaInfectada.estaInfectadoCon(granulosis))
@@ -295,7 +288,7 @@ class UbicacionServiceNeo4JTest {
     fun cuandoUnVectorHumanoConPropulsionMotoraPuedeCruzarUnCaminoDeTipoAereo() {
 
         Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
-            serviceUbicacion.mover(joaoPersistido.getId(), ecu.getId())
+            serviceUbicacion.mover(joao.getId(), ecu.getId())
         }
 
         val pepe = VectorGlobal("Pepe", bol, TipoVector.HUMANO)
@@ -303,27 +296,27 @@ class UbicacionServiceNeo4JTest {
         serviceMutacion.agregarMutacion(beauveriaBassiana.getId()!!, propulsionMotora)
 
         val beauveriaBassianaConMutacion = serviceEspecie.recuperar(beauveriaBassiana.getId()!!)
-        val joaoInfectado = serviceVector.recuperar(joaoPersistido.getId())
+        val joaoInfectado = serviceVector.recuperar(joao.getId())
 
-        Assertions.assertFalse(pepePersistido.estaInfectado())
+        Assertions.assertFalse(pepePersistido.aJPA().estaInfectado())
         Assertions.assertTrue(joaoInfectado.estaInfectado())
         Assertions.assertFalse(joaoInfectado.estaMutado())
 
-        serviceUbicacion.mover(joaoPersistido.getId(), bol.getId())
+        serviceUbicacion.mover(joao.getId(), bol.getId())
 
         val pepeInfectado = serviceVector.recuperar(pepePersistido.getId())
 
-        val joaoMutado = serviceVector.recuperar(joaoPersistido.getId())
+        val joaoMutado = serviceVector.recuperar(joao.getId())
 
         Assertions.assertTrue(pepeInfectado.estaInfectado())
         Assertions.assertTrue(beauveriaBassianaConMutacion.tieneLaMutacion(propulsionMotora))
         Assertions.assertTrue(joaoMutado.estaMutadoCon(propulsionMotora))
 
-        serviceUbicacion.mover(joaoPersistido.getId(), br.getId())
+        serviceUbicacion.mover(joao.getId(), br.getId())
 
-        serviceUbicacion.mover(joaoPersistido.getId(), ecu.getId())
+        serviceUbicacion.mover(joao.getId(), ecu.getId())
 
-        val joaoViajero = serviceVector.recuperar(joaoPersistido.getId())
+        val joaoViajero = serviceVector.recuperar(joao.getId())
 
         Assertions.assertEquals(ecu.getNombre(), joaoViajero.nombreDeUbicacionActual())
     }
@@ -332,7 +325,7 @@ class UbicacionServiceNeo4JTest {
     fun cuandoUnVectorInsectoConElectroBranqueasPuedeCruzarUnCaminoDeTipoMaritimo() {
 
         Assertions.assertThrows(ErrorUbicacionNoAlcanzable::class.java){
-            serviceUbicacion.mover(moscaPersistido.getId(), arg.getId())
+            serviceUbicacion.mover(mosca.getId(), arg.getId())
         }
 
         val pepe = VectorGlobal("Pepe", bol, TipoVector.HUMANO)
@@ -340,9 +333,9 @@ class UbicacionServiceNeo4JTest {
         serviceMutacion.agregarMutacion(wolbachia.getId()!!, electroBranqueas)
 
         val wolbachiaConMutacion = serviceEspecie.recuperar(wolbachia.getId()!!)
-        val moscaInfectada = serviceVector.recuperar(moscaPersistido.getId())
+        val moscaInfectada = serviceVector.recuperar(mosca.getId())
 
-        Assertions.assertFalse(pepePersistido.estaInfectado())
+        Assertions.assertFalse(pepePersistido.aJPA().estaInfectado())
         Assertions.assertTrue(moscaInfectada.estaInfectado())
         Assertions.assertFalse(moscaInfectada.estaMutado())
 
@@ -360,7 +353,7 @@ class UbicacionServiceNeo4JTest {
 
         serviceUbicacion.mover(moscaMutada.getId(), arg.getId())
 
-        val moscaViajera = serviceVector.recuperar(moscaPersistido.getId())
+        val moscaViajera = serviceVector.recuperar(mosca.getId())
 
         Assertions.assertEquals(arg.getNombre(), moscaViajera.nombreDeUbicacionActual())
     }
@@ -386,8 +379,8 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorTrataDeMoverseALaUbicacionQueYaEsta() {
 
-        serviceUbicacion.mover(horneritoPersistido.getId(), arg.getId())
-        val horneritoDespuesDeMoverse = serviceVector.recuperar(horneritoPersistido.getId())
+        serviceUbicacion.mover(hornerito.getId(), arg.getId())
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
 
         Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
 
@@ -396,8 +389,8 @@ class UbicacionServiceNeo4JTest {
     @Test
     fun unVectorTrataDeMoversePorElCaminoMasCortoALaUbicacionQueYaEsta() {
 
-        serviceUbicacion.moverPorCaminoMasCorto(horneritoPersistido.getId(), arg.getNombre())
-        val horneritoDespuesDeMoverse = serviceVector.recuperar(horneritoPersistido.getId())
+        serviceUbicacion.moverPorCaminoMasCorto(hornerito.getId(), arg.getNombre())
+        val horneritoDespuesDeMoverse = serviceVector.recuperar(hornerito.getId())
 
         Assertions.assertEquals(arg.getNombre(), horneritoDespuesDeMoverse.nombreDeUbicacionActual())
 
@@ -409,6 +402,7 @@ class UbicacionServiceNeo4JTest {
         dataService.cleanAll()
         ubicacionNeo4jDAO.detachDelete()
         ubicacionMongoDBDAO.deleteAll()
+        serviceVector.deleteAll()
     }
 
 }

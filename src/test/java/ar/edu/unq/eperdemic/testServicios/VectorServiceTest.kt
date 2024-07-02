@@ -40,9 +40,6 @@ class VectorServiceTest {
     lateinit var humano    : VectorGlobal
     lateinit var golondrina: VectorGlobal
 
-    lateinit var humanoPersistido    : Vector
-    lateinit var golondrinaPersistida: Vector
-
     lateinit var ubicacion: UbicacionGlobal
     lateinit var coordenada: GeoJsonPoint
 
@@ -62,7 +59,7 @@ class VectorServiceTest {
 
         patogeno  = Patogeno("Wachiturro", 90, 9, 9, 9, 67)
 
-        humanoPersistido = service.crear(humano)
+        humano = service.crear(humano)
 
         servicePatogeno.crear(patogeno)
 
@@ -91,14 +88,16 @@ class VectorServiceTest {
         golondrina.nombre = "Marta"
         service.updatear(pepita)
 
-        Assertions.assertEquals("Marta", pepita.nombre)
+        val pepitaRecuperada = service.recuperar(pepita.getId())
+
+        Assertions.assertEquals("Marta", pepitaRecuperada.nombre)
     }
 
     @Test
     fun testDeRecuperarUnVector(){
-        val otroHumano = service.recuperar(humanoPersistido.getId())
+        val otroHumano = service.recuperar(humano.getId())
 
-        Assertions.assertEquals(otroHumano.getId(), humanoPersistido.getId())
+        Assertions.assertEquals(otroHumano.getId(), humano.getId())
         Assertions.assertEquals(otroHumano.nombre, humano.nombre)
     }
 
@@ -108,8 +107,8 @@ class VectorServiceTest {
 
         val listaDeVectores = service.recuperarTodos()
 
-        Assertions.assertEquals(humanoPersistido.getId(), listaDeVectores.get(0).getId())
-        Assertions.assertEquals(humanoPersistido.nombre, listaDeVectores.get(0).nombre)
+        Assertions.assertEquals(humano.getId(), listaDeVectores.get(0).getId())
+        Assertions.assertEquals(humano.nombre, listaDeVectores.get(0).nombre)
         Assertions.assertEquals(pepita.getId(), listaDeVectores.get(1).getId())
         Assertions.assertEquals(pepita.nombre, listaDeVectores.get(1).nombre)
     }
@@ -119,7 +118,7 @@ class VectorServiceTest {
 
         val pepita = service.crear(golondrina)
 
-        Assertions.assertFalse(pepita.estaInfectado())
+        Assertions.assertFalse(pepita.aJPA().estaInfectado())
 
         service.infectar(pepita.getId(), especie.getId()!!)
 
@@ -166,6 +165,7 @@ class VectorServiceTest {
     @AfterEach
     fun cleanup() {
         dataService.cleanAll()
+        service.deleteAll()
     }
 
 }

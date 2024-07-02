@@ -26,7 +26,7 @@ class VectorServiceImpl () : VectorService {
     @Autowired private lateinit var vectorElasticDAO: VectorElasticDAO
     @Autowired private lateinit var ubicacionJpaDAO: UbicacionJpaDAO
 
-    override fun crear(vectorGlobal: VectorGlobal): Vector {
+    override fun crear(vectorGlobal: VectorGlobal): VectorGlobal {
         val ubicacion = vectorGlobal.ubicacion
         val vectorJpa = vectorGlobal.aJPA()
 
@@ -38,19 +38,35 @@ class VectorServiceImpl () : VectorService {
                 throw NoExisteLaUbicacion()
             }
         }
-        vectorElasticDAO.save(vectorGlobal.aElastic())
-        return vectorJpaDAO.save(vectorJpa)
+        val vectorElastisPersistido = vectorElasticDAO.save(vectorGlobal.aElastic())
+        val vectorJpaPersistido     = vectorJpaDAO.save(vectorJpa)
+        vectorGlobal.setId(vectorJpaPersistido.getId())
+        vectorGlobal.idElastic = vectorElastisPersistido.id
+        return vectorGlobal
     }
 
-    override fun updatear(vector: Vector) {
-        vectorJpaDAO.save(vector)
-        // ver si hay que actualizar el vectorElastic ya que solo importa el historial de ubicaciones
-        // y ese se guarda cada vez que se mueve
+    override fun updatear(vectorGlobal: VectorGlobal) {
+        val ubicacion = vectorGlobal.ubicacion
+        val vectorJpa = vectorGlobal.aJPA()
+
+        if ( ubicacion != null ) {
+            val ubicacionPersistida = ubicacionJpaDAO.recuperarPorNombreReal(ubicacion.getNombre())
+            if ( ubicacionPersistida != null ) {
+                vectorJpa.ubicacion = ubicacionPersistida
+            } else {
+                throw NoExisteLaUbicacion()
+            }
+        }
+        val vectorElastic = vectorGlobal.aElastic()
+        vectorElastic.id = vectorGlobal.idElastic
+        vectorElasticDAO.save(vectorElastic)
+        vectorJpa.setId(vectorGlobal.getId())
+        vectorJpaDAO.save(vectorJpa)
     }
 
-    override fun recuperar(idVector: Long): Vector {
+    override fun recuperar(vectorId: Long): Vector {
 
-        val vector = vectorJpaDAO.findByIdOrNull(idVector)
+        val vector = vectorJpaDAO.findByIdOrNull(vectorId)
         if (vector == null) {
             throw NoExisteElVector()
 

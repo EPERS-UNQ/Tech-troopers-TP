@@ -7,9 +7,9 @@ import ar.edu.unq.eperdemic.modelo.vector.VectorGlobal
 
 interface VectorService {
 
-    fun crear(vectorGlobal: VectorGlobal): Vector
+    fun crear(vectorGlobal: VectorGlobal): VectorGlobal
 
-    fun updatear(vector: Vector)
+    fun updatear(vectorGlobal: VectorGlobal)
 
     fun recuperar(vectorId: Long): Vector
 

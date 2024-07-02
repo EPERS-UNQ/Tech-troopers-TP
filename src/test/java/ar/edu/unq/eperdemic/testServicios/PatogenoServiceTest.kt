@@ -48,9 +48,6 @@ class PatogenoServiceTest {
     lateinit var coordenada2: GeoJsonPoint
     lateinit var coordenada3: GeoJsonPoint
 
-    lateinit var pepePersistido : Vector
-    lateinit var pedroPersistido: Vector
-
     @BeforeEach
     fun crearModelo() {
 
@@ -73,8 +70,8 @@ class PatogenoServiceTest {
 
         servicioPatogeno.crear(salmonella)
 
-        pedroPersistido = servicioVector.crear(pedro)
-        pepePersistido  = servicioVector.crear(pepe)
+        pedro = servicioVector.crear(pedro)
+        pepe  = servicioVector.crear(pepe)
 
         random = RandomGenerator.getInstance()
         random.setStrategy(NoAleatorioStrategy())
@@ -219,7 +216,7 @@ class PatogenoServiceTest {
 
         val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
-        servicioVector.infectar(pedroPersistido.getId(),enterica.getId()!!)
+        servicioVector.infectar(pedro.getId(),enterica.getId()!!)
 
         Assertions.assertFalse(servicioPatogeno.esPandemia(enterica.getId()!!))
 
@@ -230,8 +227,8 @@ class PatogenoServiceTest {
 
         val enterica: Especie = servicioPatogeno.agregarEspecie(salmonella.getId(), "Enterica", corea.getId())
 
-        servicioVector.infectar(pepePersistido.getId(),enterica.getId()!!)
-        servicioVector.infectar(pedroPersistido.getId(),enterica.getId()!!)
+        servicioVector.infectar(pepe.getId(),enterica.getId()!!)
+        servicioVector.infectar(pedro.getId(),enterica.getId()!!)
 
         Assertions.assertTrue(servicioPatogeno.esPandemia(enterica.getId()!!))
 
@@ -260,6 +257,7 @@ class PatogenoServiceTest {
     @AfterEach
     fun tearDown() {
         dataService.cleanAll()
+        servicioVector.deleteAll()
     }
 
 }

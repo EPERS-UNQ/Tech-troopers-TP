@@ -37,7 +37,12 @@ open class VectorElastic() {
     }
 
     fun aDTO(): VectorElasticDTO {
-        return VectorElasticDTO(this.id, this.nombre, this.tipo.toString(), null, this.ubicacionActual.aDTO())
+        val especiesDTOs = especies.map { especie -> especie.aDTO()!! }
+        return VectorElasticDTO(this.id, this.nombre, this.tipo.toString(), especiesDTOs.toMutableSet(), this.ubicacionActual.aDTO())
+    }
+
+    fun getUbicacionActual() : UbicacionElastic {
+        return this.ubicacionActual
     }
 
 }
